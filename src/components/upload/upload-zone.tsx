@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import { FileUp, UploadCloud } from "lucide-react";
+import { FileUp, Lock, Plus, UploadCloud } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -13,6 +13,7 @@ export interface UploadZoneProps {
   disabled?: boolean;
   compact?: boolean;
   hint?: string;
+  buttonLabel?: string;
 }
 
 const extensionByMime: Record<string, string> = {
@@ -29,6 +30,7 @@ export function UploadZone({
   disabled = false,
   compact = false,
   hint,
+  buttonLabel,
 }: UploadZoneProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -61,7 +63,17 @@ export function UploadZone({
     [disabled, onFiles],
   );
 
-  const defaultHint = `Drop ${multiple ? "files" : "a file"} here or select from your device. Everything stays on your computer.`;
+  const defaultBtnLabel =
+    buttonLabel ??
+    (accept.includes("application/pdf")
+      ? multiple
+        ? "Select PDF files"
+        : "Select PDF file"
+      : multiple
+        ? "Select images"
+        : "Select image");
+
+  const defaultHint = `or drop ${multiple ? "files" : "file"} here`;
 
   if (compact) {
     return (
@@ -79,11 +91,11 @@ export function UploadZone({
         <Button
           type="button"
           variant="outline"
-          className="w-full"
+          className="w-full h-11 border-dashed font-semibold hover:border-primary hover:text-primary gap-2 transition-all"
           onClick={openPicker}
           disabled={disabled}
         >
-          <FileUp className="size-4 text-primary" aria-hidden="true" />
+          <Plus className="size-4 text-primary" aria-hidden="true" />
           Add more files
         </Button>
       </div>
@@ -103,16 +115,8 @@ export function UploadZone({
         tabIndex={-1}
       />
       <div
-        role="button"
-        tabIndex={0}
-        aria-label="Select files"
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            openPicker();
-          }
-        }}
-        onClick={openPicker}
+        role="region"
+        aria-label="File dropzone"
         onDragOver={(event) => {
           event.preventDefault();
           if (!disabled) setIsDragging(true);
@@ -120,25 +124,53 @@ export function UploadZone({
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         className={cn(
-          "flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-8 text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "relative flex flex-col items-center justify-center rounded-3xl border-2 border-dashed p-10 sm:p-14 text-center transition-all duration-200",
           isDragging
-            ? "border-primary bg-primary/5"
-            : "border-border bg-card hover:border-primary/50 hover:bg-muted/40",
+            ? "border-primary bg-primary/8 scale-[1.01] shadow-xl"
+            : "border-border/80 bg-card hover:border-primary/50 hover:bg-muted/30 shadow-xs",
           disabled && "cursor-not-allowed opacity-60",
         )}
       >
-        <span className="inline-flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-          <UploadCloud className="size-6" aria-hidden="true" />
-        </span>
-        <p className="mt-4 text-sm font-medium">
-          <span className="text-primary underline-offset-4 hover:underline">
-            Select {multiple ? "files" : "a file"}
-          </span>{" "}
-          or drop {multiple ? "them" : "it"} here
-        </p>
-        <p className="mt-2 max-w-sm text-xs leading-relaxed text-muted-foreground">
+        {/* Upload Icon badge */}
+        <div className="relative mb-5">
+          <div className="inline-flex size-20 items-center justify-center rounded-3xl bg-primary/10 text-primary shadow-xs ring-8 ring-primary/5">
+            <UploadCloud className="size-10" aria-hidden="true" />
+          </div>
+        </div>
+
+        {/* Primary iLovePDF-style Red Action Button */}
+        <Button
+          type="button"
+          size="lg"
+          onClick={openPicker}
+          disabled={disabled}
+          className="h-14 px-8 text-base font-bold shadow-lg shadow-primary/25 bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl hover:scale-105 active:scale-95 transition-all gap-2.5 cursor-pointer"
+        >
+          <FileUp className="size-5" />
+          {defaultBtnLabel}
+        </Button>
+
+        {/* Drag Hint */}
+        <p className="mt-4 text-sm font-medium text-foreground/80">
           {hint ?? defaultHint}
         </p>
+
+        {/* Format Badges & Privacy Guarantee */}
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground">
+          {accept.map((mime) => (
+            <span
+              key={mime}
+              className="rounded-md border bg-muted/50 px-2 py-0.5 font-mono text-[11px]"
+            >
+              {mime.replace("application/", ".").replace("image/", ".").toUpperCase()}
+            </span>
+          ))}
+          <span className="text-muted-foreground/40">•</span>
+          <span className="flex items-center gap-1 font-medium text-muted-foreground">
+            <Lock className="size-3 text-emerald-600 dark:text-emerald-400" />
+            100% In-Browser & Private
+          </span>
+        </div>
       </div>
     </div>
   );

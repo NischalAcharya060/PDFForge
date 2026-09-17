@@ -1,159 +1,243 @@
 import Link from "next/link";
 import {
   ArrowRight,
+  Check,
+  Cpu,
   FileCheck2,
-  Gauge,
-  LockKeyhole,
+  Lock,
   MousePointerClick,
   ShieldCheck,
+  Sparkles,
   Zap,
 } from "lucide-react";
 
-import { popularTools, tools } from "@/config/tools";
+import { popularTools } from "@/config/tools";
 import { Container } from "@/components/layout/container";
-import { ToolCard, ToolQuickLink } from "@/components/home/tool-card";
+import { ToolQuickLink } from "@/components/home/tool-card";
 import { Button } from "@/components/ui/button";
-import { SectionHeading } from "@/components/home/section-heading";
+import { HomeToolBrowser } from "@/components/home/home-tool-browser";
+
+const comparisonPoints = [
+  {
+    feature: "File Privacy",
+    forge: "Processed in local RAM, never uploaded",
+    cloud: "Uploaded to third-party cloud servers",
+  },
+  {
+    feature: "Processing Speed",
+    forge: "Instant (zero upload/download latency)",
+    cloud: "Slow (waits for upload, queue, download)",
+  },
+  {
+    feature: "Account Required",
+    forge: "Never — 100% anonymous & unrestricted",
+    cloud: "Often requires sign-up, email & cookies",
+  },
+  {
+    feature: "File Size & Caps",
+    forge: "No artificial limits, limited only by device",
+    cloud: "Strict file caps unless on paid plans",
+  },
+  {
+    feature: "Document Watermarking",
+    forge: "Zero unwanted promotional watermarks",
+    cloud: "Often stamps branding on free tier",
+  },
+];
 
 const whyItems = [
   {
-    icon: LockKeyhole,
-    title: "Private by design",
+    icon: Lock,
+    title: "100% Private by Design",
     description:
-      "Every tool runs entirely in your browser. Your documents never get uploaded to a server.",
+      "Every tool executes entirely in your local browser sandbox. Your confidential documents never travel across the internet.",
   },
   {
     icon: Zap,
-    title: "Instant results",
+    title: "Zero Queue & Blazing Fast",
     description:
-      "No queues, no waiting rooms. Processing happens locally, so results are immediate.",
+      "No queues, no server cold starts. Operations complete as quickly as your CPU can crunch the bytes.",
   },
   {
     icon: MousePointerClick,
-    title: "No sign-up required",
+    title: "No Sign-Up or Accounts",
     description:
-      "Start working right away. No accounts, no emails, no friction — just tools.",
+      "Instant access with zero friction. No credit cards, no login passwords, no email collection.",
   },
   {
-    icon: Gauge,
-    title: "Free and unlimited",
+    icon: Cpu,
+    title: "Wasm & PDF-Lib Engine",
     description:
-      "No file caps, no watermarks, no hidden fees. Use the tools as much as you need.",
+      "Built on state-of-the-art WebAssembly and modern PDF specifications for high fidelity without quality degradation.",
   },
 ];
 
 const steps = [
   {
-    title: "Choose a tool",
-    description: "Pick the operation you need — merge, split, convert, compress, and more.",
+    step: "01",
+    title: "Select your PDF",
+    description: "Drag and drop your PDF or images into the tool dropzone.",
   },
   {
-    title: "Add your files",
-    description: "Drag and drop files from your device. Everything stays local.",
+    step: "02",
+    title: "Customize & Arrange",
+    description: "Reorder pages, pick compression levels, or set custom security passwords.",
   },
   {
-    title: "Download the result",
-    description: "Review your new document and download it instantly.",
+    step: "03",
+    title: "Download instantly",
+    description: "Save your freshly generated document directly to your device.",
   },
 ];
 
 const faqs = [
   {
-    question: "Are my files safe?",
+    question: "How does PDFForge process files without uploading them?",
     answer:
-      "Yes. PDFForge processes every document in your browser, on your device. Files are never uploaded to a server and never stored anywhere.",
+      "PDFForge uses modern browser capabilities (WebAssembly, ArrayBuffers, and JavaScript PDF engines) to read and manipulate files directly in your computer's RAM. The files never reach any server or external cloud storage.",
   },
   {
-    question: "Do I need to create an account?",
+    question: "Is PDFForge truly free?",
     answer:
-      "No. Every tool is available without an account. Processing is completely anonymous.",
+      "Yes! Because we don't have heavy cloud server processing costs, all basic and advanced PDF tools are 100% free with no hidden fees or promotional watermarks.",
   },
   {
-    question: "How large can my files be?",
+    question: "What is the maximum file size I can process?",
     answer:
-      "Because everything runs in your browser, practically the limit is your device's memory. Very large PDFs may take longer to process.",
+      "Since processing happens locally, the only limit is the memory of your device or browser tab. You can comfortably process documents of several hundred pages and large multi-megabyte PDFs.",
   },
   {
-    question: "Which tools are available?",
+    question: "Which PDF tools are available?",
     answer:
-      "You can merge, split, compress, rotate, and secure PDFs, convert JPG to PDF and PDF to JPG, and delete, extract, or reorder pages.",
+      "You can Merge PDFs, Split PDFs into pages or ranges, Compress PDF size, Rotate pages, Convert JPG to PDF, Convert PDF to JPG, Delete pages, Extract pages, Reorder pages, Protect with passwords, Add Page Numbers, and Stamp Watermarks.",
   },
 ];
 
 export default function HomePage() {
   return (
     <>
-      <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_0%,var(--accent),transparent)] opacity-60" />
+      {/* Hero Section */}
+      <section className="relative overflow-hidden border-b bg-gradient-to-b from-background via-muted/20 to-background">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_45%_at_50%_0%,var(--accent),transparent)] opacity-70" />
         <Container className="relative pt-16 pb-20 text-center sm:pt-24 sm:pb-28">
-          <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border bg-card px-4 py-1.5 text-sm text-muted-foreground shadow-sm">
-            <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
-            Files are processed in your browser — nothing is uploaded
+          {/* Privacy Trust Badge */}
+          <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border bg-card/90 px-4 py-1.5 text-xs font-semibold text-muted-foreground shadow-xs backdrop-blur-xs">
+            <ShieldCheck className="size-4 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+            <span>Files never leave your computer — 100% private in-browser</span>
           </div>
-          <h1 className="mx-auto max-w-3xl text-4xl font-semibold tracking-tight text-balance sm:text-6xl">
-            Your{" "}
-            <span className="text-primary">PDF</span> workspace
+
+          {/* Main Headline */}
+          <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight text-balance sm:text-6xl text-foreground">
+            Every tool you need to work with PDFs,{" "}
+            <span className="text-primary underline decoration-primary/30 decoration-wavy underline-offset-8">
+              all in one place
+            </span>
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-balance text-lg leading-relaxed text-muted-foreground">
-            Simple tools for merging, splitting, converting, compressing, and
-            managing PDF files — all private, all in your browser.
+
+          {/* Subtitle */}
+          <p className="mx-auto mt-6 max-w-2xl text-balance text-base leading-relaxed text-muted-foreground sm:text-lg">
+            Merge, split, compress, convert, watermark, and protect your PDF documents.
+            100% free, unlimited, and processed locally on your device.
           </p>
+
+          {/* CTA Buttons */}
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button size="lg" asChild>
-              <Link href="/tools">
-                Open all tools
-                <ArrowRight aria-hidden="true" />
+            <Button
+              size="lg"
+              asChild
+              className="h-13 px-8 text-base font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 rounded-2xl gap-2"
+            >
+              <Link href="/tools/merge-pdf">
+                Merge PDFs now
+                <ArrowRight className="size-4" aria-hidden="true" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link href="#popular-tools">Explore popular tools</Link>
+            <Button
+              size="lg"
+              variant="outline"
+              asChild
+              className="h-13 px-8 text-base font-semibold rounded-2xl shadow-xs"
+            >
+              <Link href="#tools">Explore all 12 tools</Link>
             </Button>
           </div>
 
-          <div className="mt-12 grid grid-cols-2 gap-2.5 sm:mt-14 sm:grid-cols-4 sm:gap-3">
-            {popularTools.map((tool) => (
+          {/* Quick Tool Links */}
+          <div className="mx-auto mt-12 max-w-4xl grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+            {popularTools.slice(0, 4).map((tool) => (
               <ToolQuickLink key={tool.slug} tool={tool} />
             ))}
           </div>
         </Container>
       </section>
 
-      <SectionHeading
-        id="popular-tools"
-        eyebrow="Toolbox"
-        title="Popular PDF tools"
-        description="Everything you need to handle PDFs — no install, no upload."
-      />
-      <Container className="pb-16 sm:pb-20">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {tools.map((tool) => (
-            <ToolCard key={tool.slug} tool={tool} />
-          ))}
-        </div>
-      </Container>
+      {/* Interactive Tool Browser (Search & Categories & Cards Grid) */}
+      <HomeToolBrowser />
 
-      <section className="border-t bg-muted/40">
-        <Container className="py-16 sm:py-20">
-          <SectionHeading
-            eyebrow="Why PDFForge"
-            title="A workspace built for your documents"
-            description="Premium tools without the compromises."
-            align="left"
-            className="mb-10"
-          />
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Why PDFForge vs Traditional Cloud Converters Matrix */}
+      <section className="border-t bg-muted/30 py-16 sm:py-20">
+        <Container>
+          <div className="mx-auto max-w-3xl text-center mb-12">
+            <div className="inline-flex items-center gap-1.5 rounded-full border bg-primary/10 px-3 py-1 text-xs font-bold text-primary mb-3">
+              <Sparkles className="size-3.5" />
+              THE PRIVACY ADVANTAGE
+            </div>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
+              Why PDFForge is built different
+            </h2>
+            <p className="mt-3 text-sm text-muted-foreground sm:text-base">
+              Traditional PDF websites upload your sensitive personal and work files to unknown cloud servers.
+              PDFForge does everything right inside your browser.
+            </p>
+          </div>
+
+          <div className="mx-auto max-w-4xl overflow-hidden rounded-3xl border bg-card shadow-md">
+            <div className="grid grid-cols-3 border-b bg-muted/40 p-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <div>Feature</div>
+              <div className="text-primary font-black">PDFForge (Browser)</div>
+              <div>Other PDF Sites</div>
+            </div>
+            <div className="divide-y text-xs sm:text-sm">
+              {comparisonPoints.map((pt) => (
+                <div key={pt.feature} className="grid grid-cols-3 items-center p-4 sm:p-5">
+                  <div className="font-semibold text-foreground">{pt.feature}</div>
+                  <div className="flex items-center gap-1.5 font-medium text-emerald-600 dark:text-emerald-400">
+                    <Check className="size-4 shrink-0" />
+                    <span>{pt.forge}</span>
+                  </div>
+                  <div className="text-muted-foreground">{pt.cloud}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Feature Highlights Grid */}
+      <section className="border-t py-16 sm:py-20">
+        <Container>
+          <div className="mx-auto max-w-2xl text-center mb-12">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground">
+              Engineered for speed, privacy, and simplicity
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              No bloated installs, no subscription walls, just pure productivity.
+            </p>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {whyItems.map((item) => (
               <div
                 key={item.title}
-                className="rounded-xl border bg-card p-6 shadow-sm"
+                className="group rounded-3xl border bg-card p-6 shadow-xs transition-all hover:border-primary/50 hover:shadow-md"
               >
-                <span className="inline-flex size-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <item.icon className="size-5" aria-hidden="true" />
+                <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+                  <item.icon className="size-6" aria-hidden="true" />
                 </span>
-                <h3 className="mt-4 font-semibold tracking-tight">
+                <h3 className="mt-4 font-bold text-base tracking-tight text-foreground">
                   {item.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
                   {item.description}
                 </p>
               </div>
@@ -162,67 +246,80 @@ export default function HomePage() {
         </Container>
       </section>
 
-      <section className="border-t">
-        <Container className="py-16 sm:py-20">
+      {/* How it Works Workflow */}
+      <section className="border-t bg-muted/30 py-16 sm:py-20">
+        <Container>
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <SectionHeading
-                eyebrow="How it works"
-                title="Three steps, zero fuss"
-                align="left"
-                className="mb-6"
-              />
-              <ol className="space-y-6">
-                {steps.map((step, index) => (
-                  <li key={step.title} className="flex gap-4">
-                    <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
-                      {index + 1}
+              <div className="inline-flex items-center gap-1.5 rounded-full border bg-primary/10 px-3 py-1 text-xs font-bold text-primary mb-3">
+                HOW IT WORKS
+              </div>
+              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                Three easy steps, zero setup required
+              </h2>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Get your PDF tasks finished in seconds without installing software or registering an account.
+              </p>
+
+              <div className="mt-8 space-y-6">
+                {steps.map((st) => (
+                  <div key={st.step} className="flex gap-4">
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground font-black text-sm shadow-sm">
+                      {st.step}
                     </span>
                     <div>
-                      <h3 className="font-semibold tracking-tight">
-                        {step.title}
-                      </h3>
-                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                        {step.description}
+                      <h3 className="font-bold text-base text-foreground">{st.title}</h3>
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                        {st.description}
                       </p>
                     </div>
-                  </li>
+                  </div>
                 ))}
-              </ol>
+              </div>
             </div>
-            <div className="rounded-2xl border bg-card p-8 shadow-sm">
-              <FileCheck2
-                className="size-10 text-primary"
-                aria-hidden="true"
-              />
-              <h3 className="mt-5 text-xl font-semibold tracking-tight">
-                Your files never leave your device
+
+            <div className="rounded-3xl border bg-card p-8 sm:p-10 shadow-lg relative overflow-hidden">
+              <div className="pointer-events-none absolute -right-8 -bottom-8 size-48 rounded-full bg-primary/5" />
+              <FileCheck2 className="size-12 text-primary" aria-hidden="true" />
+              <h3 className="mt-6 text-2xl font-bold tracking-tight text-foreground">
+                Your documents stay under your control
               </h3>
-              <p className="mt-3 leading-relaxed text-muted-foreground">
-                PDFForge is not a file transfer service. The processing engines
-                run inside your browser, so documents stay on your computer
-                from start to finish. Delete them whenever you like — there is
-                nothing stored to worry about.
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                When you process a document with PDFForge, your device performs the PDF compilation locally.
+                There are no network uploads, no server queues, and no cached backups left behind.
               </p>
+              <div className="mt-6 flex items-center gap-3">
+                <Button asChild className="font-semibold bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl">
+                  <Link href="/tools">Start using tools →</Link>
+                </Button>
+                <Button variant="outline" asChild className="rounded-xl">
+                  <Link href="/privacy">Read privacy policy</Link>
+                </Button>
+              </div>
             </div>
           </div>
         </Container>
       </section>
 
-      <section className="border-t bg-muted/40">
-        <Container className="py-16 sm:py-20">
-          <SectionHeading
-            eyebrow="FAQ"
-            title="Frequently asked questions"
-            className="mb-10"
-          />
+      {/* FAQ Accordion */}
+      <section className="border-t py-16 sm:py-20">
+        <Container>
+          <div className="mx-auto max-w-3xl text-center mb-10">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground">
+              Frequently Asked Questions
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Everything you need to know about PDFForge and browser-based PDF processing.
+            </p>
+          </div>
+
           <div className="mx-auto max-w-3xl space-y-3">
             {faqs.map((faq) => (
               <details
                 key={faq.question}
-                className="group rounded-xl border bg-card shadow-sm"
+                className="group rounded-2xl border bg-card shadow-xs transition-colors"
               >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 text-sm font-medium transition-colors hover:text-primary [&::-webkit-details-marker]:hidden">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 text-sm font-semibold transition-colors hover:text-primary [&::-webkit-details-marker]:hidden">
                   {faq.question}
                   <svg
                     width="16"
@@ -232,13 +329,13 @@ export default function HomePage() {
                     stroke="currentColor"
                     strokeWidth="2"
                     strokeLinecap="round"
-                    className="shrink-0 transition-transform group-open:rotate-180"
+                    className="shrink-0 transition-transform group-open:rotate-180 text-muted-foreground group-hover:text-primary"
                     aria-hidden="true"
                   >
                     <path d="m6 9 6 6 6-6" />
                   </svg>
                 </summary>
-                <p className="px-5 pb-5 text-sm leading-relaxed text-muted-foreground">
+                <p className="px-5 pb-5 text-xs sm:text-sm leading-relaxed text-muted-foreground border-t pt-3">
                   {faq.answer}
                 </p>
               </details>
@@ -247,20 +344,29 @@ export default function HomePage() {
         </Container>
       </section>
 
-      <section className="border-t">
+      {/* Bottom CTA Banner */}
+      <section className="border-t bg-gradient-to-b from-card to-muted/30">
         <Container className="py-16 text-center sm:py-24">
-          <h2 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-            Ready to forge your PDFs?
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-balance text-muted-foreground">
-            Pick a tool and start working. No sign-up, no upload, no waiting.
-          </p>
-          <Button size="lg" asChild className="mt-8">
-            <Link href="/tools">
-              Start now
-              <ArrowRight aria-hidden="true" />
-            </Link>
-          </Button>
+          <div className="mx-auto max-w-2xl space-y-4">
+            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+              Ready to forge your PDFs?
+            </h2>
+            <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Choose from 12 powerful PDF tools. No registration, no watermarks, completely free.
+            </p>
+            <div className="pt-4">
+              <Button
+                size="lg"
+                asChild
+                className="h-14 px-8 text-base font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl shadow-xl shadow-primary/25 hover:scale-105 active:scale-95 transition-all gap-2"
+              >
+                <Link href="/tools">
+                  Explore all tools
+                  <ArrowRight className="size-4" aria-hidden="true" />
+                </Link>
+              </Button>
+            </div>
+          </div>
         </Container>
       </section>
     </>

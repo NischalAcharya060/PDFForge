@@ -1,7 +1,17 @@
-import Link from "next/link";
-import { ArrowRight, Menu } from "lucide-react";
+"use client";
 
-import { navLinks } from "@/config/site";
+import { useState } from "react";
+import Link from "next/link";
+import {
+  ChevronDown,
+  LayoutGrid,
+  Menu,
+  ShieldCheck,
+  Sparkles,
+  X,
+} from "lucide-react";
+
+import { tools, toolCategories, type ToolCategory } from "@/config/tools";
 import { Container } from "@/components/layout/container";
 import { Logo } from "@/components/layout/logo";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
@@ -12,64 +22,296 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
+
+const mainCategories: { id: ToolCategory; label: string }[] = [
+  { id: "organize", label: "Organize PDF" },
+  { id: "compress", label: "Optimize PDF" },
+  { id: "convert", label: "Convert PDF" },
+  { id: "edit", label: "Edit PDF" },
+  { id: "security", label: "PDF Security" },
+];
 
 export function Header() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <Container className="flex h-16 items-center justify-between gap-4">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/90 backdrop-blur-md supports-[backdrop-filter]:bg-background/80">
+      <Container className="flex h-16 items-center justify-between gap-3">
+        {/* Brand Logo */}
         <Logo />
 
+        {/* Desktop Navigation */}
         <nav
           aria-label="Main navigation"
-          className="hidden md:flex items-center gap-1"
+          className="hidden lg:flex items-center gap-0.5 text-sm font-medium"
         >
-          {navLinks.map((link) => (
-            <Button
-              key={link.href}
-              variant="ghost"
-              asChild
-              className="text-foreground/80 hover:text-foreground"
-            >
-              <Link href={link.href}>{link.label}</Link>
-            </Button>
-          ))}
-        </nav>
+          <Button
+            variant="ghost"
+            asChild
+            className="text-foreground/80 hover:text-foreground font-semibold"
+          >
+            <Link href="/tools/merge-pdf">Merge PDF</Link>
+          </Button>
 
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
+          <Button
+            variant="ghost"
+            asChild
+            className="text-foreground/80 hover:text-foreground font-semibold"
+          >
+            <Link href="/tools/split-pdf">Split PDF</Link>
+          </Button>
+
+          <Button
+            variant="ghost"
+            asChild
+            className="text-foreground/80 hover:text-foreground font-semibold"
+          >
+            <Link href="/tools/compress-pdf">Compress PDF</Link>
+          </Button>
+
+          {/* Convert PDF Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon"
-                className="md:hidden"
-                aria-label="Open navigation menu"
+                className="gap-1 text-foreground/80 hover:text-foreground font-semibold"
               >
-                <Menu className="size-5" />
+                Convert PDF
+                <ChevronDown className="size-3.5 opacity-60" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-56 p-2 shadow-xl">
+              <div className="px-2 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Convert to / from PDF
+              </div>
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/tools/jpg-to-pdf"
+                  className="flex items-center gap-2.5 py-2 cursor-pointer"
+                >
+                  <span className="flex size-7 items-center justify-center rounded-md bg-rose-500/10 text-rose-600">
+                    JPG
+                  </span>
+                  <div>
+                    <div className="font-medium text-sm">JPG to PDF</div>
+                    <div className="text-xs text-muted-foreground">
+                      Convert images to PDF
+                    </div>
+                  </div>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/tools/pdf-to-jpg"
+                  className="flex items-center gap-2.5 py-2 cursor-pointer"
+                >
+                  <span className="flex size-7 items-center justify-center rounded-md bg-rose-500/10 text-rose-600">
+                    PDF
+                  </span>
+                  <div>
+                    <div className="font-medium text-sm">PDF to JPG</div>
+                    <div className="text-xs text-muted-foreground">
+                      Extract pages as images
+                    </div>
+                  </div>
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* All PDF Tools Mega-Menu */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="gap-1.5 text-foreground/90 hover:text-primary font-semibold"
+              >
+                <LayoutGrid className="size-4 text-primary" />
+                All PDF Tools
+                <ChevronDown className="size-3.5 opacity-60" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              align="end"
-              className="w-48 md:hidden"
+              align="center"
+              className="w-[94vw] max-w-5xl p-6 shadow-2xl rounded-2xl border bg-card/95 backdrop-blur-md"
             >
-              <DropdownMenuItem asChild>
-                <Link href="/tools">
-                  All tools
-                  <ArrowRight className="ml-auto" />
+              <div className="mb-4 flex items-center justify-between border-b pb-3">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="size-4 text-primary" />
+                  <span className="text-sm font-semibold tracking-tight">
+                    Every PDF Tool You Need — 100% In-Browser & Private
+                  </span>
+                </div>
+                <Link
+                  href="/tools"
+                  className="text-xs font-semibold text-primary hover:underline"
+                >
+                  Browse all catalog →
                 </Link>
-              </DropdownMenuItem>
-              {navLinks.map((link) => (
-                <DropdownMenuItem key={link.href} asChild>
-                  <Link href={link.href}>{link.label}</Link>
-                </DropdownMenuItem>
-              ))}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                {mainCategories.map((cat) => {
+                  const catMeta = toolCategories[cat.id];
+                  const catTools = tools.filter((t) => t.category === cat.id);
+                  if (catTools.length === 0) return null;
+
+                  return (
+                    <div key={cat.id} className="space-y-3">
+                      <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 pb-1 border-b">
+                        {catMeta.label}
+                      </div>
+                      <div className="space-y-1">
+                        {catTools.map((t) => {
+                          const Icon = t.icon;
+                          return (
+                            <Link
+                              key={t.slug}
+                              href={`/tools/${t.slug}`}
+                              className="group flex items-center gap-2.5 rounded-lg p-2 text-sm transition-colors hover:bg-muted/70"
+                            >
+                              <span
+                                className={cn(
+                                  "flex size-7 shrink-0 items-center justify-center rounded-md transition-colors",
+                                  catMeta.iconBgClass,
+                                )}
+                              >
+                                <Icon className="size-3.5" />
+                              </span>
+                              <div className="min-w-0">
+                                <div className="font-medium text-xs leading-none text-foreground group-hover:text-primary transition-colors truncate flex items-center gap-1">
+                                  {t.shortName}
+                                  {t.badgeText ? (
+                                    <span className="rounded bg-primary/15 px-1 py-0.2 text-[9px] font-bold text-primary">
+                                      {t.badgeText}
+                                    </span>
+                                  ) : null}
+                                </div>
+                              </div>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-6 flex items-center justify-between rounded-xl bg-muted/40 px-4 py-2.5 text-xs text-muted-foreground border">
+                <span className="flex items-center gap-1.5 font-medium text-foreground">
+                  <ShieldCheck className="size-4 text-emerald-600 dark:text-emerald-400" />
+                  Your documents never leave your device.
+                </span>
+                <span>No queue • No limit • No registration</span>
+              </div>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button asChild className="hidden sm:inline-flex">
-            <Link href="/tools">Open tools</Link>
+        </nav>
+
+        {/* Right Action & Theme */}
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+
+          <Button
+            asChild
+            size="sm"
+            className="hidden sm:inline-flex bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-xs"
+          >
+            <Link href="/tools">All tools</Link>
+          </Button>
+
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle navigation menu"
+          >
+            {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </Button>
         </div>
       </Container>
+
+      {/* Mobile Menu Drawer */}
+      {mobileOpen && (
+        <div className="lg:hidden border-t bg-background px-4 py-5 shadow-2xl max-h-[80vh] overflow-y-auto">
+          <div className="space-y-6">
+            <div className="flex flex-col gap-2">
+              <Button asChild className="w-full justify-start font-semibold">
+                <Link href="/tools" onClick={() => setMobileOpen(false)}>
+                  <LayoutGrid className="mr-2 size-4" />
+                  Explore All 12 PDF Tools
+                </Link>
+              </Button>
+            </div>
+
+            <div className="space-y-5">
+              {mainCategories.map((cat) => {
+                const catMeta = toolCategories[cat.id];
+                const catTools = tools.filter((t) => t.category === cat.id);
+                if (catTools.length === 0) return null;
+
+                return (
+                  <div key={cat.id} className="space-y-2">
+                    <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      {catMeta.label}
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      {catTools.map((t) => {
+                        const Icon = t.icon;
+                        return (
+                          <Link
+                            key={t.slug}
+                            href={`/tools/${t.slug}`}
+                            onClick={() => setMobileOpen(false)}
+                            className="flex items-center gap-2 rounded-lg border bg-card p-2.5 text-xs font-medium shadow-xs hover:border-primary/50"
+                          >
+                            <span
+                              className={cn(
+                                "flex size-6 shrink-0 items-center justify-center rounded",
+                                catMeta.iconBgClass,
+                              )}
+                            >
+                              <Icon className="size-3" />
+                            </span>
+                            <span className="truncate">{t.shortName}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="border-t pt-4 flex flex-col gap-2 text-sm text-muted-foreground">
+              <Link
+                href="/about"
+                onClick={() => setMobileOpen(false)}
+                className="hover:text-foreground"
+              >
+                About PDFForge
+              </Link>
+              <Link
+                href="/privacy"
+                onClick={() => setMobileOpen(false)}
+                className="hover:text-foreground"
+              >
+                Privacy Guarantee
+              </Link>
+              <Link
+                href="/terms"
+                onClick={() => setMobileOpen(false)}
+                className="hover:text-foreground"
+              >
+                Terms of Service
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

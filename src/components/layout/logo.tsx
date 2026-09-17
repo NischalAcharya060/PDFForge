@@ -22,13 +22,15 @@ export function Logo({ className }: { className?: string }) {
     <Link
       href="/"
       className={cn(
-        "flex items-center gap-2.5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "group flex items-center gap-2.5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         className,
       )}
       aria-label="PDFForge — home"
     >
       <ForgeMark />
-      <span className="text-lg font-semibold tracking-tight">PDFForge</span>
+      <span className="text-xl font-bold tracking-tight">
+        PDF<span className="text-primary font-black">Forge</span>
+      </span>
     </Link>
   );
 }

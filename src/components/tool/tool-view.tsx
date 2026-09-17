@@ -34,6 +34,8 @@ const toolComponents: Record<string, ToolComponent> = {
   "extract-pdf-pages": makeDynamicTool(() => import("@/components/tools/extract-pdf-pages")),
   "reorder-pdf-pages": makeDynamicTool(() => import("@/components/tools/reorder-pdf-pages")),
   "protect-pdf": makeDynamicTool(() => import("@/components/tools/protect-pdf")),
+  "page-numbers-pdf": makeDynamicTool(() => import("@/components/tools/page-numbers-pdf")),
+  "watermark-pdf": makeDynamicTool(() => import("@/components/tools/watermark-pdf")),
 };
 
 export function ToolView({ slug }: { slug: string }) {

@@ -10,11 +10,21 @@ import {
   Scissors,
   Trash2,
   ArrowDownUp,
+  Hash,
+  Stamp,
 } from "lucide-react";
 
 export type ToolCategory = "organize" | "convert" | "compress" | "edit" | "security";
 
 export type ProcessingMode = "client" | "server";
+
+export interface ToolCategoryMeta {
+  label: string;
+  description: string;
+  badgeClass: string;
+  iconBgClass: string;
+  accentBorder: string;
+}
 
 export interface ToolDefinition {
   slug: string;
@@ -28,31 +38,44 @@ export interface ToolDefinition {
   available: boolean;
   seoTitle: string;
   seoDescription: string;
+  badgeText?: string;
 }
 
-export const toolCategories: Record<
-  ToolCategory,
-  { label: string; description: string }
-> = {
+export const toolCategories: Record<ToolCategory, ToolCategoryMeta> = {
   organize: {
-    label: "Organize",
-    description: "Merge, split, and reorder your documents.",
-  },
-  convert: {
-    label: "Convert",
-    description: "Turn images and PDFs into other formats.",
+    label: "Organize PDF",
+    description: "Merge, split, remove, extract, and reorder your documents.",
+    badgeClass: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+    iconBgClass: "bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:bg-amber-500 group-hover:text-white",
+    accentBorder: "hover:border-amber-500/40",
   },
   compress: {
-    label: "Compress",
-    description: "Reduce file size without losing your work.",
+    label: "Compress PDF",
+    description: "Reduce file size while keeping visual fidelity.",
+    badgeClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+    iconBgClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white",
+    accentBorder: "hover:border-emerald-500/40",
+  },
+  convert: {
+    label: "Convert PDF",
+    description: "Turn images and PDFs into versatile formats.",
+    badgeClass: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
+    iconBgClass: "bg-rose-500/10 text-rose-600 dark:text-rose-400 group-hover:bg-rose-500 group-hover:text-white",
+    accentBorder: "hover:border-rose-500/40",
   },
   edit: {
-    label: "Edit",
-    description: "Make quick changes to pages.",
+    label: "Edit PDF",
+    description: "Rotate, stamp page numbers, or add watermarks.",
+    badgeClass: "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20",
+    iconBgClass: "bg-sky-500/10 text-sky-600 dark:text-sky-400 group-hover:bg-sky-500 group-hover:text-white",
+    accentBorder: "hover:border-sky-500/40",
   },
   security: {
-    label: "Security",
-    description: "Protect your documents.",
+    label: "PDF Security",
+    description: "Protect and encrypt your documents with passwords.",
+    badgeClass: "bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20",
+    iconBgClass: "bg-violet-500/10 text-violet-600 dark:text-violet-400 group-hover:bg-violet-500 group-hover:text-white",
+    accentBorder: "hover:border-violet-500/40",
   },
 };
 
@@ -202,6 +225,36 @@ export const tools: ToolDefinition[] = [
     seoDescription:
       "Password-protect your PDF with real encryption. Files are protected locally in your browser and never uploaded.",
   },
+  {
+    slug: "page-numbers-pdf",
+    name: "Page Numbers",
+    shortName: "Page Numbers",
+    description: "Add page numbers into PDF documents with custom position and format.",
+    category: "edit",
+    icon: Hash,
+    supportedExtensions: ["application/pdf"],
+    processingMode: "client",
+    available: true,
+    badgeText: "NEW",
+    seoTitle: "Add Page Numbers to PDF — Number PDF Pages Online | PDFForge",
+    seoDescription:
+      "Stamp page numbers on PDF files easily. Choose positions, margins, typography, and page formats.",
+  },
+  {
+    slug: "watermark-pdf",
+    name: "Watermark PDF",
+    shortName: "Watermark",
+    description: "Stamp text watermarks across PDF pages with custom angle and opacity.",
+    category: "edit",
+    icon: Stamp,
+    supportedExtensions: ["application/pdf"],
+    processingMode: "client",
+    available: true,
+    badgeText: "NEW",
+    seoTitle: "Watermark PDF — Stamp Text on PDF Online | PDFForge",
+    seoDescription:
+      "Stamp custom text watermarks on your PDF pages with adjustable opacity, angle, and position in your browser.",
+  },
 ];
 
 export function getToolBySlug(slug: string): ToolDefinition | undefined {
@@ -214,10 +267,12 @@ export function getToolsByCategory(category: ToolCategory): ToolDefinition[] {
 
 export const popularTools: ToolDefinition[] = [
   getToolBySlug("merge-pdf"),
-  getToolBySlug("compress-pdf"),
   getToolBySlug("split-pdf"),
+  getToolBySlug("compress-pdf"),
   getToolBySlug("pdf-to-jpg"),
   getToolBySlug("jpg-to-pdf"),
+  getToolBySlug("page-numbers-pdf"),
+  getToolBySlug("watermark-pdf"),
   getToolBySlug("rotate-pdf"),
   getToolBySlug("protect-pdf"),
 ].filter((tool): tool is ToolDefinition => Boolean(tool));

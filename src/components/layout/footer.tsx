@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Lock, ShieldCheck, Heart } from "lucide-react";
 
 import { legalLinks } from "@/config/site";
 import { tools } from "@/config/tools";
@@ -6,48 +7,46 @@ import { Container } from "@/components/layout/container";
 import { ForgeMark } from "@/components/layout/logo";
 
 export function Footer() {
+  const organizeTools = tools.filter(
+    (t) => t.category === "organize" || t.category === "compress",
+  );
+  const convertAndEditTools = tools.filter(
+    (t) => t.category === "convert" || t.category === "edit" || t.category === "security",
+  );
+
   return (
-    <footer className="border-t bg-background">
-      <Container className="py-12 lg:py-16">
-        <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr]">
+    <footer className="border-t bg-card/60 backdrop-blur-sm">
+      <Container className="py-14 lg:py-16">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+          {/* Brand Col */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
+            <Link href="/" className="flex items-center gap-2.5">
               <ForgeMark />
-              <span className="text-lg font-semibold tracking-tight">
-                PDFForge
+              <span className="text-xl font-bold tracking-tight">
+                PDF<span className="text-primary font-black">Forge</span>
               </span>
+            </Link>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Your free, aesthetic, and privacy-first PDF utility suite. Every tool
+              operates 100% inside your browser — zero files are uploaded to any server.
+            </p>
+            <div className="inline-flex items-center gap-2 rounded-full border bg-background px-3 py-1 text-xs text-muted-foreground">
+              <ShieldCheck className="size-3.5 text-emerald-600 dark:text-emerald-400" />
+              100% Client-Side Privacy
             </div>
-            <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Simple tools for merging, splitting, converting, compressing, and
-              managing PDF files.
-            </p>
-            <p className="flex items-center gap-2 text-sm text-muted-foreground">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
-              Files never leave your device.
-            </p>
           </div>
 
+          {/* Column 1: Organize & Optimize */}
           <div>
-            <h3 className="text-sm font-semibold">Tools</h3>
-            <ul className="mt-4 grid grid-cols-1 gap-2 text-sm text-muted-foreground">
-              {tools.slice(0, 6).map((tool) => (
+            <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
+              Organize & Optimize
+            </h3>
+            <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
+              {organizeTools.map((tool) => (
                 <li key={tool.slug}>
                   <Link
                     href={`/tools/${tool.slug}`}
-                    className="transition-colors hover:text-foreground hover:underline"
+                    className="transition-colors hover:text-primary hover:underline"
                   >
                     {tool.name}
                   </Link>
@@ -56,14 +55,36 @@ export function Footer() {
             </ul>
           </div>
 
+          {/* Column 2: Convert, Edit & Secure */}
           <div>
-            <h3 className="text-sm font-semibold">Company</h3>
-            <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
+              Convert, Edit & Secure
+            </h3>
+            <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
+              {convertAndEditTools.map((tool) => (
+                <li key={tool.slug}>
+                  <Link
+                    href={`/tools/${tool.slug}`}
+                    className="transition-colors hover:text-primary hover:underline"
+                  >
+                    {tool.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 3: Company & Security */}
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
+              Company & Legal
+            </h3>
+            <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
               {legalLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="transition-colors hover:text-foreground hover:underline"
+                    className="transition-colors hover:text-primary hover:underline"
                   >
                     {link.label}
                   </Link>
@@ -72,20 +93,31 @@ export function Footer() {
               <li>
                 <Link
                   href="/tools"
-                  className="transition-colors hover:text-foreground hover:underline"
+                  className="font-medium text-primary hover:underline"
                 >
-                  All tools
+                  All PDF Tools →
                 </Link>
               </li>
             </ul>
+
+            <div className="mt-6 rounded-xl border bg-background/80 p-3.5 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1.5 font-medium text-foreground mb-1">
+                <Lock className="size-3.5 text-primary" />
+                Zero-Upload Guarantee
+              </div>
+              Files are processed directly in RAM in your browser session.
+            </div>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t pt-6 text-sm text-muted-foreground sm:flex-row sm:items-center">
-          <p>
-            © {new Date().getFullYear()} PDFForge. All rights reserved.
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-6 text-xs text-muted-foreground sm:flex-row">
+          <p className="flex items-center gap-1">
+            © {new Date().getFullYear()} PDFForge. Crafted with{" "}
+            <Heart className="size-3 text-primary fill-primary inline" /> for productivity.
           </p>
-          <p>Processed entirely in your browser — nothing is uploaded.</p>
+          <p>
+            Processed entirely on your device via client-side WebAssembly & Web APIs.
+          </p>
         </div>
       </Container>
     </footer>
