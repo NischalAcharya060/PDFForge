@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -12,10 +13,29 @@ import {
 } from "lucide-react";
 
 import { popularTools, tools } from "@/config/tools";
+import { siteConfig } from "@/config/site";
+import { faqPageSchema, itemListSchema, webApplicationSchema } from "@/lib/schema";
+import { JsonLd } from "@/components/seo/json-ld";
 import { Container } from "@/components/layout/container";
 import { ToolQuickLink } from "@/components/home/tool-card";
 import { Button } from "@/components/ui/button";
 import { HomeToolBrowser } from "@/components/home/home-tool-browser";
+
+export const metadata: Metadata = {
+  title: "Free Online PDF Tools — Merge, Split, Compress & Convert | PDFForge",
+  description:
+    "18 free PDF tools that run 100% in your browser. Merge, split, compress, convert, rotate, watermark, sign and protect PDF files — no uploads, no account, no watermarks.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: siteConfig.url,
+    title: "Free Online PDF Tools — Merge, Split, Compress & Convert | PDFForge",
+    description:
+      "18 free PDF tools that run 100% in your browser. No uploads, no account, no watermarks.",
+  },
+};
 
 const comparisonPoints = [
   {
@@ -94,28 +114,74 @@ const faqs = [
   {
     question: "How does PDFForge process files without uploading them?",
     answer:
-      "PDFForge uses modern browser capabilities (WebAssembly, ArrayBuffers, and JavaScript PDF engines) to read and manipulate files directly in your computer's RAM. The files never reach any server or external cloud storage.",
+      "PDFForge uses modern browser capabilities — WebAssembly, ArrayBuffers, and JavaScript PDF engines — to read and manipulate files directly in your computer's RAM. The files never reach any server or external cloud storage.",
   },
   {
     question: "Is PDFForge truly free?",
     answer:
-      "Yes! Because we don't have heavy cloud server processing costs, all basic and advanced PDF tools are 100% free with no hidden fees or promotional watermarks.",
+      "Yes. Because there are no server processing costs, all 18 basic and advanced PDF tools are 100% free with no hidden fees, no promotional watermarks, and no limits on file count.",
   },
   {
     question: "What is the maximum file size I can process?",
     answer:
-      "Since processing happens locally, the only limit is the memory of your device or browser tab. You can comfortably process documents of several hundred pages and large multi-megabyte PDFs.",
+      "Since processing happens locally, the only limit is your device's memory and browser tab limits. You can comfortably process multi-page documents and large multi-megabyte PDFs without restrictions.",
   },
   {
-    question: "Which PDF tools are available?",
+    question: "Which PDF tools are available on PDFForge?",
     answer:
-      "You can Merge PDFs, Split PDFs into pages or ranges, Compress PDF size, Rotate pages, Convert JPG to PDF, Convert PDF to JPG, Delete pages, Extract pages, Reorder pages, Protect with passwords, Add Page Numbers, and Stamp Watermarks.",
+      "PDFForge offers 18 free PDF tools: Merge, Split, Compress, Rotate, JPG to PDF, PDF to JPG, Delete Pages, Extract Pages, Reorder Pages, Protect with Password, Unlock PDF, Page Numbers, Watermark, Sign PDF, WebP to PDF, PNG to PDF, PDF to PNG, and PDF to Text.",
+  },
+  {
+    question: "Can I use PDFForge on my phone or tablet?",
+    answer:
+      "Yes. PDFForge works in any modern mobile browser — iOS Safari and Android Chrome both supported — and scales responsively. No app install is needed to merge, compress, or convert PDFs on your mobile device.",
+  },
+  {
+    question: "Do I need to install any software to use PDFForge?",
+    answer:
+      "No. PDFForge runs entirely in your web browser. There is nothing to download or install, and no account or sign-up is required to access the full suite of PDF tools.",
+  },
+  {
+    question: "Is my data safe with PDFForge?",
+    answer:
+      "Absolutely. Your files are never uploaded anywhere — every operation runs in your browser's memory using client-side JavaScript and WebAssembly. Nothing is stored on a server, and we have no access to your documents.",
+  },
+  {
+    question: "How many files can I process at once?",
+    answer:
+      "There is no limit on the number of files you can process. The only constraint is your device's available memory, so feel free to process documents in bulk without restrictions.",
   },
 ];
 
 export default function HomePage() {
+  const homepageSchemas = [
+    faqPageSchema(faqs),
+    itemListSchema(
+      tools.map((t) => ({ name: t.name, slug: t.slug })),
+    ),
+    webApplicationSchema(
+      { name: `${siteConfig.name} PDF Tools`, slug: "", seoDescription: siteConfig.description },
+      {
+        url: `${siteConfig.url}/tools`,
+        featureList: [
+          "Merge and split PDFs",
+          "Compress PDF file size",
+          "Convert images to and from PDF",
+          "Add page numbers and watermarks",
+          "Password-protect and unlock PDFs",
+          "Sign documents electronically",
+          "100% private — no files uploaded",
+        ],
+      },
+    ),
+  ];
+
   return (
     <>
+      {homepageSchemas.map((schema, i) => (
+        <JsonLd key={`${schema["@type"]}-${i}`} data={schema} />
+      ))}
+
       {/* Hero Section */}
       <section className="relative overflow-hidden border-b bg-gradient-to-b from-background via-muted/20 to-background">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_45%_at_50%_0%,var(--accent),transparent)] opacity-70" />

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Cpu, Globe, Lock, ShieldCheck, Zap } from "lucide-react";
 
+import { siteConfig } from "@/config/site";
+import { JsonLd } from "@/components/seo/json-ld";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
 
@@ -9,7 +11,34 @@ export const metadata: Metadata = {
   title: "About PDFForge — Free, Fast & Private PDF Suite",
   description:
     "Learn about PDFForge's mission to provide a powerful, free, and completely private PDF toolbox running 100% in your browser.",
+  alternates: {
+    canonical: "/about",
+  },
+  openGraph: {
+    type: "website",
+    title: "About PDFForge — Free, Fast & Private PDF Suite",
+    description:
+      "Learn about PDFForge's mission to provide a powerful, free, and completely private PDF toolbox running 100% in your browser.",
+  },
 };
+
+const aboutSchemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: "About PDFForge",
+    url: `${siteConfig.url}/about`,
+    description:
+      "PDFForge is a free, privacy-focused PDF toolbox that runs entirely in your browser. No uploads, no accounts, no watermarks.",
+    mainEntity: {
+      "@type": "Organization",
+      name: siteConfig.name,
+      url: siteConfig.url,
+      email: siteConfig.supportEmail,
+      logo: `${siteConfig.url}/logo.png`,
+    },
+  },
+];
 
 const pillars = [
   {
@@ -41,6 +70,9 @@ const pillars = [
 export default function AboutPage() {
   return (
     <div className="py-16 sm:py-24">
+      {aboutSchemas.map((schema) => (
+        <JsonLd key={schema["@type"] as string} data={schema} />
+      ))}
       <Container className="max-w-4xl space-y-16">
         {/* Header */}
         <div className="space-y-4 text-center">

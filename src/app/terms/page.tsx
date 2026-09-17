@@ -4,6 +4,9 @@ import { Container } from "@/components/layout/container";
 export const metadata: Metadata = {
   title: "Terms of Service | PDFForge",
   description: "Terms of Service for using the PDFForge platform and tools.",
+  alternates: {
+    canonical: "/terms",
+  },
 };
 
 export default function TermsPage() {

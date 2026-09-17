@@ -1,0 +1,38 @@
+# PDFForge
+
+> Free, private, in-browser PDF tools. Merge, split, compress, convert, and secure PDF files — 100% free with no uploads.
+
+PDFForge is a free online PDF toolbox that processes every file entirely in the visitor's browser using WebAssembly and client-side JavaScript. Documents are never uploaded, stored, or transmitted to any server. There are no accounts, no paywalls, and no promotional watermarks.
+
+## Core tools
+
+- [Merge PDF](/tools/merge-pdf): Combine multiple PDF files into one document, with drag-and-drop reordering.
+- [Split PDF](/tools/split-pdf): Divide a PDF into single pages or custom ranges and download them as a ZIP.
+- [Compress PDF](/tools/compress-pdf): Reduce PDF file size with selectable compression levels.
+- [Rotate PDF](/tools/rotate-pdf): Rotate all or individual PDF pages by 90 or 180 degrees.
+- [Delete PDF Pages](/tools/delete-pdf-pages): Visually remove unwanted pages from a document.
+- [Extract PDF Pages](/tools/extract-pdf-pages): Create a new PDF from selected pages or ranges.
+- [Reorder PDF Pages](/tools/reorder-pdf-pages): Rearrange page order with drag and drop.
+- [JPG to PDF](/tools/jpg-to-pdf): Convert JPG, PNG, and WebP images into a single PDF.
+- [PDF to JPG](/tools/pdf-to-jpg): Export PDF pages as high-quality JPG images in a ZIP.
+- [PNG to PDF](/tools/png-to-pdf): Turn PNG images into a clean multi-page PDF.
+- [WebP to PDF](/tools/webp-to-pdf): Convert WebP images into a single PDF document.
+- [PDF to PNG](/tools/pdf-to-png): Export lossless PNG images from PDF pages with selectable DPI.
+- [PDF to Text](/tools/pdf-to-text): Extract readable text from a PDF with instant preview.
+- [Add Page Numbers](/tools/page-numbers-pdf): Stamp page numbers with custom position and format.
+- [Watermark PDF](/tools/watermark-pdf): Stamp text watermarks with adjustable opacity and angle.
+- [Sign PDF](/tools/sign-pdf): Draw, type, or upload an electronic signature onto a document.
+- [Protect PDF](/tools/protect-pdf): Encrypt a PDF with a password, processed entirely locally.
+- [Unlock PDF](/tools/unlock-pdf): Remove password protection from PDFs you have access to.
+
+## Key pages
+
+- [All PDF Tools](/tools)
+- [About PDFForge](/about)
+- [Privacy Policy](/privacy)
+- [Terms of Service](/terms)
+- [Pricing](/pricing.md)
+
+## Contact
+
+- Support email: contact@pdfforge.app

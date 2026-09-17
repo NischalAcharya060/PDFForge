@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: "Privacy Policy — 100% Client-Side Processing | PDFForge",
   description:
     "Read PDFForge's privacy policy. Learn how our zero-upload architecture ensures your documents never leave your computer.",
+  alternates: {
+    canonical: "/privacy",
+  },
 };
 
 const guarantees = [

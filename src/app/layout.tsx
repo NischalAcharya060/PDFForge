@@ -1,7 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { siteConfig } from "@/config/site";
+import { organizationSchema, websiteSchema } from "@/lib/schema";
+import { JsonLd } from "@/components/seo/json-ld";
 import {
   ThemeInitScript,
   ThemeProvider,
@@ -25,37 +27,71 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
     default: `${siteConfig.name} — ${siteConfig.tagline}`,
-    template: `%s | ${siteConfig.name}`,
+    template: `%s`,
   },
-  description: siteConfig.description,
+  description:
+    "Free online PDF tools: merge, split, compress, convert, rotate, watermark, protect & sign PDF files. 100% private — every file is processed locally in your browser and never uploaded.",
   applicationName: siteConfig.name,
+  generator: "Next.js",
   keywords: [
     "PDF tools",
+    "free PDF tools",
     "merge PDF",
     "split PDF",
     "compress PDF",
     "rotate PDF",
     "PDF to JPG",
+    "JPG to PDF",
+    "PDF to PNG",
+    "PNG to PDF",
+    "WebP to PDF",
+    "PDF to text",
+    "add page numbers to PDF",
+    "watermark PDF",
+    "sign PDF online",
+    "protect PDF with password",
+    "unlock PDF",
+    "delete PDF pages",
+    "extract PDF pages",
+    "reorder PDF pages",
     "convert PDF",
-    "protect PDF",
+    "online PDF converter",
+    "PDF editor",
+    "privacy-first PDF tools",
+    "no upload PDF",
   ],
+  authors: [{ name: siteConfig.name, url: siteConfig.url }],
+  creator: siteConfig.name,
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
     url: siteConfig.url,
     siteName: siteConfig.name,
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
-    description: siteConfig.description,
+    description:
+      "Merge, split, compress, convert, watermark, and protect PDF documents — 100% free, unlimited, and processed locally on your device.",
   },
   twitter: {
     card: "summary_large_image",
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
-    description: siteConfig.description,
+    description:
+      "Merge, split, compress, convert, watermark, and protect PDF documents — 100% free, unlimited, and processed locally on your device.",
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
+  category: "technology",
   icons: {
     icon: [
       { url: "/favicon/favicon-16x16.png", type: "image/png", sizes: "16x16" },
@@ -66,6 +102,14 @@ export const metadata: Metadata = {
     apple: "/favicon/apple-touch-icon.png",
   },
   manifest: "/favicon/site.webmanifest",
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
+  ],
+  colorScheme: "light dark",
 };
 
 export default function RootLayout({
@@ -94,6 +138,8 @@ export default function RootLayout({
           </main>
           <Footer />
         </ThemeProvider>
+        <JsonLd data={organizationSchema()} />
+        <JsonLd data={websiteSchema()} />
       </body>
     </html>
   );

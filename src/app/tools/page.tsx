@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { ShieldCheck, Sparkles } from "lucide-react";
 
 import { toolCategories, tools, type ToolCategory } from "@/config/tools";
+import { itemListSchema } from "@/lib/schema";
+import { JsonLd } from "@/components/seo/json-ld";
 import { Container } from "@/components/layout/container";
 import { ToolCard } from "@/components/home/tool-card";
 
@@ -9,6 +11,15 @@ export const metadata: Metadata = {
   title: "All PDF Tools — Merge, Split, Compress & Edit Online | PDFForge",
   description:
     "Browse every PDFForge tool — merge, split, compress, convert, rotate, watermark, protect, and organize PDF files in your browser. 100% free and private.",
+  alternates: {
+    canonical: "/tools",
+  },
+  openGraph: {
+    type: "website",
+    title: "All PDF Tools — Merge, Split, Compress & Edit Online | PDFForge",
+    description:
+      "Browse every PDFForge tool — merge, split, compress, convert, rotate, watermark, protect, and organize PDF files in your browser. 100% free and private.",
+  },
 };
 
 const categories: { id: ToolCategory; label: string }[] = [
@@ -22,6 +33,8 @@ const categories: { id: ToolCategory; label: string }[] = [
 export default function ToolsPage() {
   return (
     <>
+      <JsonLd data={itemListSchema(tools.map((t) => ({ name: t.name, slug: t.slug })))} />
+
       {/* Hero Header */}
       <section className="relative overflow-hidden border-b bg-gradient-to-b from-background via-muted/20 to-background">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_0%,var(--accent),transparent)] opacity-60" />

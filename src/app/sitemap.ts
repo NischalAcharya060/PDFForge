@@ -3,9 +3,9 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { tools } from "@/config/tools";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
+const LAST_MODIFIED = new Date("2026-09-17");
 
+export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: {
     path: string;
     changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
@@ -20,7 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const toolPages: MetadataRoute.Sitemap[number][] = tools.map((tool) => ({
     url: `${siteConfig.url}/tools/${tool.slug}`,
-    lastModified,
+    lastModified: LAST_MODIFIED,
     changeFrequency: "monthly",
     priority: 0.7,
   }));
@@ -28,7 +28,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...staticPages.map((page) => ({
       url: `${siteConfig.url}${page.path}`,
-      lastModified,
+      lastModified: LAST_MODIFIED,
       changeFrequency: page.changeFrequency,
       priority: page.priority,
     })),
