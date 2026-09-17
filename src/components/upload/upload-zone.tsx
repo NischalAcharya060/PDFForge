@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import { FileUp, Lock, Plus, UploadCloud } from "lucide-react";
+import { FileUp, Plus, UploadCloud } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -155,7 +155,7 @@ export function UploadZone({
           {hint ?? defaultHint}
         </p>
 
-        {/* Format Badges & Privacy Guarantee */}
+        {/* Format Badges */}
         <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground">
           {accept.map((mime) => (
             <span
@@ -165,11 +165,6 @@ export function UploadZone({
               {mime.replace("application/", ".").replace("image/", ".").toUpperCase()}
             </span>
           ))}
-          <span className="text-muted-foreground/40">•</span>
-          <span className="flex items-center gap-1 font-medium text-muted-foreground">
-            <Lock className="size-3 text-emerald-600 dark:text-emerald-400" />
-            100% In-Browser & Private
-          </span>
         </div>
       </div>
     </div>

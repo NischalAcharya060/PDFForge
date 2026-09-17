@@ -7,7 +7,7 @@ import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
 import { usePdfTool } from "@/lib/use-pdf-tool";
 import { fileToArrayBuffer } from "@/lib/files";
-import { compressPdf } from "@/lib/pdf/compress";
+import { compressPdf, type CompressionLevel } from "@/lib/pdf/compress";
 import { bytesToBlob } from "@/lib/download";
 import { Container } from "@/components/layout/container";
 import { UploadZone } from "@/components/upload/upload-zone";
@@ -18,6 +18,7 @@ import { ConfigurationPanel } from "@/components/tool/configuration-panel";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
 
 export default function CompressPdfTool({ tool }: { tool: ToolDefinition }) {
   const toolState = usePdfTool({
@@ -25,9 +26,10 @@ export default function CompressPdfTool({ tool }: { tool: ToolDefinition }) {
     multiple: false,
   });
 
-  const { files, status, message, result, error, addFiles, removeFile, clearFiles, run, reset } = toolState;
+  const { files, status, message, result, error, addFiles, removeFile, clearFiles, run, reset, setMessage } = toolState;
 
-  const [stripMetadata, setStripMetadata] = useState(true);
+  const [level, setLevel] = useState<CompressionLevel>("balanced");
+  const [maxCompression, setMaxCompression] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
 
   const process = useCallback(async (): Promise<PdfToolResult> => {
@@ -35,10 +37,17 @@ export default function CompressPdfTool({ tool }: { tool: ToolDefinition }) {
     if (!file) throw new Error("No file selected.");
     const bytes = await fileToArrayBuffer(file.file);
 
-    const compact = await compressPdf(bytes, { stripMetadata }, file.name);
+    const compact = await compressPdf(
+      bytes,
+      { level, maxCompression, onProgress: setMessage },
+      file.name,
+    );
     const blob = bytesToBlob(compact.bytes, "application/pdf");
-    const note =
-      compact.savedPercent > 0
+    const note = compact.imageBased
+      ? compact.savedPercent > 0
+        ? "Pages were rasterized to JPEG images to maximize compression. Text in the result is no longer selectable."
+        : "The file could not be reduced further and was returned unchanged."
+      : compact.savedPercent > 0
         ? `The file was reduced by ${compact.savedPercent}%. Source images are not downsampled, so image-heavy documents may still be large.`
         : "This PDF could not be reduced further; the original file is returned.";
 
@@ -50,7 +59,7 @@ export default function CompressPdfTool({ tool }: { tool: ToolDefinition }) {
       savedPercent: compact.savedPercent,
       note,
     };
-  }, [files, stripMetadata]);
+  }, [files, level, maxCompression, setMessage]);
 
   const handleSubmit = useCallback(async () => {
     setLocalError(null);
@@ -83,19 +92,45 @@ export default function CompressPdfTool({ tool }: { tool: ToolDefinition }) {
                 title="Compression options"
                 description="All processing happens in your browser — your files never leave this device."
               >
-                <div className="flex items-center gap-2">
-                  <Checkbox
-                    id="compress-strip-metadata"
-                    checked={stripMetadata}
-                    onChange={(event) => setStripMetadata(event.target.checked)}
-                  />
-                  <Label htmlFor="compress-strip-metadata" className="cursor-pointer">
-                    Remove document metadata
-                  </Label>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <Label htmlFor="compress-level" className="mb-2 block">
+                      Compression level
+                    </Label>
+                    <Select
+                      id="compress-level"
+                      value={level}
+                      disabled={maxCompression}
+                      onChange={(event) =>
+                        setLevel(event.target.value as CompressionLevel)
+                      }
+                    >
+                      <option value="light">Light</option>
+                      <option value="balanced">Balanced</option>
+                      <option value="strong">Strong</option>
+                    </Select>
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      Light re-serializes the document and keeps its properties. Balanced also
+                      strips metadata; Strong removes XMP data too.
+                    </p>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="compress-max"
+                        checked={maxCompression}
+                        onChange={(event) => setMaxCompression(event.target.checked)}
+                      />
+                      <Label htmlFor="compress-max" className="cursor-pointer">
+                        Maximum compression (image-based)
+                      </Label>
+                    </div>
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      Renders every page to a JPEG for the smallest file size. Text becomes a
+                      non-selectable image.
+                    </p>
+                  </div>
                 </div>
-                <p className="mt-2 text-xs text-muted-foreground">
-                  Stripping author, title, and producer fields also reduces size.
-                </p>
               </ConfigurationPanel>
 
               {error || localError ? (
