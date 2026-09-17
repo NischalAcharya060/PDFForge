@@ -32,7 +32,50 @@ export default function DeletePdfPagesTool({ tool }: { tool: ToolDefinition }) {
 
   const selectedCount = selected.size;
 
+  const resetState = useCallback(() => {
+    setSelected(new Set());
+    setPageCount(0);
+    setPreviewError(null);
+    setLocalError(null);
+  }, []);
+
+  const handleAddFiles = useCallback(
+    (newFiles: File[]) => {
+      resetState();
+      addFiles(newFiles);
+    },
+    [addFiles, resetState],
+  );
+
+  const handleRemoveFile = useCallback(
+    (id: string) => {
+      resetState();
+      removeFile(id);
+    },
+    [removeFile, resetState],
+  );
+
+  const handleClearFiles = useCallback(() => {
+    resetState();
+    clearFiles();
+  }, [clearFiles, resetState],
+  );
+
+  const handleReset = useCallback(() => {
+    resetState();
+    reset();
+  }, [reset, resetState]);
+
+  const handleLoadInfo = useCallback(
+    ({ pageCount: total }: { pageCount: number }) => {
+      setPageCount(total);
+      setPreviewError(null);
+    },
+    [],
+  );
+
   const togglePage = useCallback((index: number) => {
+    setLocalError(null);
     setSelected((previous) => {
       const next = new Set(previous);
       if (next.has(index)) next.delete(index);
@@ -56,7 +99,7 @@ export default function DeletePdfPagesTool({ tool }: { tool: ToolDefinition }) {
       filename: "after-delete.pdf",
       size: blob.size,
       inputSize: file.size,
-      pageCount: (pageCount || 0) - indices.length,
+      pageCount: Math.max(0, (pageCount || 0) - indices.length),
     };
   }, [files, selected, pageCount]);
 
@@ -81,7 +124,7 @@ export default function DeletePdfPagesTool({ tool }: { tool: ToolDefinition }) {
             <UploadZone
               accept={tool.supportedExtensions}
               multiple={false}
-              onFiles={addFiles}
+              onFiles={handleAddFiles}
               hint="Remove unwanted pages from a PDF. Keep pages are kept."
             />
           ) : null}
@@ -90,8 +133,8 @@ export default function DeletePdfPagesTool({ tool }: { tool: ToolDefinition }) {
             <div className="flex flex-col gap-6">
               <FileList
                 files={files}
-                onRemove={removeFile}
-                onClear={clearFiles}
+                onRemove={handleRemoveFile}
+                onClear={handleClearFiles}
                 showPageCount
               />
 
@@ -100,7 +143,7 @@ export default function DeletePdfPagesTool({ tool }: { tool: ToolDefinition }) {
                   file={files[0].file}
                   selected={selected}
                   onToggleSelection={togglePage}
-                  onLoadInfo={({ pageCount: total }) => setPageCount(total)}
+                  onLoadInfo={handleLoadInfo}
                   onError={setPreviewError}
                   selectLabel={`${selectedCount} page${selectedCount === 1 ? "" : "s"} selected for deletion`}
                 />
@@ -120,7 +163,7 @@ export default function DeletePdfPagesTool({ tool }: { tool: ToolDefinition }) {
                 <ProcessingState message={message} />
               ) : null}
               {status === "completed" && result ? (
-                <ResultPanel result={result} onReset={reset} />
+                <ResultPanel result={result} onReset={handleReset} />
               ) : null}
 
               {status !== "processing" && status !== "completed" ? (
@@ -138,7 +181,10 @@ export default function DeletePdfPagesTool({ tool }: { tool: ToolDefinition }) {
                     <Button
                       variant="ghost"
                       size="lg"
-                      onClick={() => setSelected(new Set())}
+                      onClick={() => {
+                        setSelected(new Set());
+                        setLocalError(null);
+                      }}
                     >
                       Clear selection
                     </Button>

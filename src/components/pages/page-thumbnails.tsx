@@ -46,80 +46,122 @@ export function PageThumbnails({
 }: PageThumbnailsProps) {
   const [thumbs, setThumbs] = useState<ThumbState[]>([]);
   const [pageCount, setPageCount] = useState(0);
+  const [isLoadingDoc, setIsLoadingDoc] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const docRef = useRef<Awaited<ReturnType<typeof openPdfForRendering>> | null>(null);
+
+  // Store latest callbacks in refs so they never trigger effect re-runs
+  const onLoadInfoRef = useRef(onLoadInfo);
+  const onErrorRef = useRef(onError);
+
+  useEffect(() => {
+    onLoadInfoRef.current = onLoadInfo;
+  });
+
+  useEffect(() => {
+    onErrorRef.current = onError;
+  });
 
   const displayOrder =
     order && order.length > 0
       ? order
       : Array.from({ length: pageCount }, (_, i) => i);
 
-  const load = useCallback(
-    async (currentFile: File) => {
-      const previous = docRef.current;
-      docRef.current = null;
-      await destroyPdfDocument(previous);
+  useEffect(() => {
+    if (!file) {
+      return;
+    }
+
+    let isCancelled = false;
+    let currentDoc: Awaited<ReturnType<typeof openPdfForRendering>> | null = null;
+
+    async function loadDocument(currentFile: File) {
+      setIsLoadingDoc(true);
       setThumbs([]);
       setPageCount(0);
 
-      let doc;
       try {
-        doc = await openPdfForRendering(await currentFile.arrayBuffer());
-        docRef.current = doc;
-        const total = doc.numPages;
-        if (total > MAX_THUMBNAIL_PAGES) {
-          setThumbs([]);
-          setPageCount(0);
-          onLoadInfo?.({ pageCount: 0 });
-          onError?.(
-            `This document has ${total} pages. The preview is limited to ${MAX_THUMBNAIL_PAGES} pages.`,
-          );
+        const arrayBuffer = await currentFile.arrayBuffer();
+        if (isCancelled) return;
+
+        const doc = await openPdfForRendering(arrayBuffer);
+        if (isCancelled) {
+          void destroyPdfDocument(doc);
           return;
         }
+        currentDoc = doc;
+
+        const total = doc.numPages;
+        if (total > MAX_THUMBNAIL_PAGES) {
+          if (!isCancelled) {
+            setThumbs([]);
+            setPageCount(0);
+            setIsLoadingDoc(false);
+            onLoadInfoRef.current?.({ pageCount: 0 });
+            onErrorRef.current?.(
+              `This document has ${total} pages. The preview is limited to ${MAX_THUMBNAIL_PAGES} pages.`,
+            );
+          }
+          return;
+        }
+
+        if (isCancelled) return;
+
         setPageCount(total);
-        onLoadInfo?.({ pageCount: total });
+        setIsLoadingDoc(false);
+        onLoadInfoRef.current?.({ pageCount: total });
         setThumbs(
           Array.from({ length: total }, (_, i) => ({ index: i, status: "loading" })),
         );
 
-        const canvas = canvasRef.current;
         for (let i = 0; i < total; i++) {
-          if (!canvas) break;
-          const pdfPage = await doc.getPage(i + 1);
-          const canvasEl = document.createElement("canvas");
-          await renderPageToCanvas({ canvas: canvasEl, page: pdfPage, scale: 0.32 });
-          const dataUrl = canvasEl.toDataURL("image/png");
-          setThumbs((previous) =>
-            previous.map((thumb) =>
-              thumb.index === i ? { ...thumb, status: "ready", dataUrl } : thumb,
-            ),
-          );
+          if (isCancelled) break;
+          try {
+            const pdfPage = await doc.getPage(i + 1);
+            if (isCancelled) break;
+
+            const canvasEl = document.createElement("canvas");
+            await renderPageToCanvas({ canvas: canvasEl, page: pdfPage, scale: 0.32 });
+            if (isCancelled) break;
+
+            const dataUrl = canvasEl.toDataURL("image/png");
+            if (isCancelled) break;
+
+            setThumbs((previous) =>
+              previous.map((thumb) =>
+                thumb.index === i ? { ...thumb, status: "ready", dataUrl } : thumb,
+              ),
+            );
+          } catch (err) {
+            if (isCancelled) break;
+            console.error(`Failed to render thumbnail for page ${i + 1}:`, err);
+            setThumbs((previous) =>
+              previous.map((thumb) =>
+                thumb.index === i ? { ...thumb, status: "error" } : thumb,
+              ),
+            );
+          }
           await new Promise((resolve) => setTimeout(resolve, 0));
         }
       } catch (error) {
+        if (isCancelled) return;
         setThumbs([]);
         setPageCount(0);
-        onLoadInfo?.({ pageCount: 0 });
-        onError?.(toErrorMessage(error));
+        setIsLoadingDoc(false);
+        onLoadInfoRef.current?.({ pageCount: 0 });
+        onErrorRef.current?.(toErrorMessage(error));
       }
-    },
-    [onError, onLoadInfo],
-  );
-
-  useEffect(() => {
-    if (file) {
-      // Async pdf.js render pipeline; load() only calls setState after awaiting.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      void load(file);
     }
+
+    void loadDocument(file);
+
     return () => {
-      if (docRef.current) {
-        void destroyPdfDocument(docRef.current);
-        docRef.current = null;
+      isCancelled = true;
+      if (currentDoc) {
+        void destroyPdfDocument(currentDoc);
+        currentDoc = null;
       }
     };
-  }, [file, load]);
+  }, [file]);
 
   const move = useCallback(
     (from: number, direction: -1 | 1) => {
@@ -149,20 +191,29 @@ export function PageThumbnails({
     [displayOrder, draggedIndex, onOrderChange],
   );
 
-  if (!file || pageCount === 0) {
+  if (!file) {
     return (
       <div className="w-full rounded-xl border bg-card p-8 text-center shadow-sm">
         <p className="text-sm text-muted-foreground">
           Preview appears here once a PDF is selected.
         </p>
-        <canvas ref={canvasRef} className="hidden" aria-hidden="true" />
+      </div>
+    );
+  }
+
+  if (isLoadingDoc || pageCount === 0) {
+    return (
+      <div className="flex w-full items-center justify-center gap-2 rounded-xl border bg-card p-8 text-center shadow-sm">
+        <Loader2 className="size-5 animate-spin text-muted-foreground" aria-hidden="true" />
+        <p className="text-sm text-muted-foreground">
+          Loading document preview...
+        </p>
       </div>
     );
   }
 
   return (
     <div className="w-full">
-      <canvas ref={canvasRef} className="hidden" aria-hidden="true" />
       {selectLabel ? (
         <p className="mb-3 text-sm text-muted-foreground">{selectLabel}</p>
       ) : null}

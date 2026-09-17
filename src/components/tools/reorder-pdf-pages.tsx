@@ -30,6 +30,54 @@ export default function ReorderPdfPagesTool({ tool }: { tool: ToolDefinition }) 
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [localError, setLocalError] = useState<string | null>(null);
 
+  const resetState = useCallback(() => {
+    setOrder([]);
+    setPageCount(0);
+    setPreviewError(null);
+    setLocalError(null);
+  }, []);
+
+  const handleAddFiles = useCallback(
+    (newFiles: File[]) => {
+      resetState();
+      addFiles(newFiles);
+    },
+    [addFiles, resetState],
+  );
+
+  const handleRemoveFile = useCallback(
+    (id: string) => {
+      resetState();
+      removeFile(id);
+    },
+    [removeFile, resetState],
+  );
+
+  const handleClearFiles = useCallback(() => {
+    resetState();
+    clearFiles();
+  }, [clearFiles, resetState],
+  );
+
+  const handleReset = useCallback(() => {
+    resetState();
+    reset();
+  }, [reset, resetState]);
+
+  const handleLoadInfo = useCallback(
+    ({ pageCount: total }: { pageCount: number }) => {
+      setPageCount(total);
+      setOrder(Array.from({ length: total }, (_, i) => i));
+      setPreviewError(null);
+    },
+    [],
+  );
+
+  const handleOrderChange = useCallback((next: number[]) => {
+    setOrder(next);
+    setLocalError(null);
+  }, []);
+
   const isDefaultOrder = (() => {
     if (order.length === 0) return true;
     return order.every((index, position) => index === position);
@@ -38,18 +86,22 @@ export default function ReorderPdfPagesTool({ tool }: { tool: ToolDefinition }) 
   const process = useCallback(async (): Promise<PdfToolResult> => {
     const file = files[0];
     if (!file) throw new Error("No file selected.");
-    if (order.length === 0) throw new Error("No pages to arrange.");
+    const effectiveOrder =
+      order.length > 0
+        ? order
+        : Array.from({ length: pageCount }, (_, i) => i);
+    if (effectiveOrder.length === 0) throw new Error("No pages to arrange.");
     const bytes = await fileToArrayBuffer(file.file);
-    const bytesOut = await reorderPdf(bytes, order, file.name);
+    const bytesOut = await reorderPdf(bytes, effectiveOrder, file.name);
     const blob = bytesToBlob(bytesOut, "application/pdf");
     return {
       blob,
       filename: "reordered.pdf",
       size: blob.size,
       inputSize: file.size,
-      pageCount: order.length,
+      pageCount: effectiveOrder.length,
     };
-  }, [files, order]);
+  }, [files, order, pageCount]);
 
   const handleSubmit = useCallback(async () => {
     setLocalError(null);
@@ -64,7 +116,7 @@ export default function ReorderPdfPagesTool({ tool }: { tool: ToolDefinition }) 
             <UploadZone
               accept={tool.supportedExtensions}
               multiple={false}
-              onFiles={addFiles}
+              onFiles={handleAddFiles}
               hint="Drag pages into the order you want, or use the arrow buttons."
             />
           ) : null}
@@ -73,8 +125,8 @@ export default function ReorderPdfPagesTool({ tool }: { tool: ToolDefinition }) 
             <div className="flex flex-col gap-6">
               <FileList
                 files={files}
-                onRemove={removeFile}
-                onClear={clearFiles}
+                onRemove={handleRemoveFile}
+                onClear={handleClearFiles}
                 showPageCount
               />
 
@@ -82,14 +134,8 @@ export default function ReorderPdfPagesTool({ tool }: { tool: ToolDefinition }) 
                 <PageThumbnails
                   file={files[0].file}
                   order={order}
-                  onOrderChange={(next) => {
-                    setOrder(next);
-                    setLocalError(null);
-                  }}
-                  onLoadInfo={({ pageCount: total }) => {
-                    setPageCount(total);
-                    setOrder(Array.from({ length: total }, (_, i) => i));
-                  }}
+                  onOrderChange={handleOrderChange}
+                  onLoadInfo={handleLoadInfo}
                   onError={setPreviewError}
                   selectLabel="Drag thumbnails to reorder, or use the arrows on each page."
                 />
@@ -109,7 +155,7 @@ export default function ReorderPdfPagesTool({ tool }: { tool: ToolDefinition }) 
                 <ProcessingState message={message} />
               ) : null}
               {status === "completed" && result ? (
-                <ResultPanel result={result} onReset={reset} />
+                <ResultPanel result={result} onReset={handleReset} />
               ) : null}
 
               {status !== "processing" && status !== "completed" ? (
