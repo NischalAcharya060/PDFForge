@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Loader2 } from "lucide-react";
+import { Loader2, RotateCw } from "lucide-react";
 
 import {
   destroyPdfDocument,
@@ -25,6 +25,7 @@ export interface PageThumbnailsProps {
   onError?: (message: string) => void;
   disabled?: boolean;
   selectLabel?: string;
+  pageRotation?: (index: number) => number;
 }
 
 interface ThumbState {
@@ -43,6 +44,7 @@ export function PageThumbnails({
   onError,
   disabled = false,
   selectLabel,
+  pageRotation,
 }: PageThumbnailsProps) {
   const [thumbs, setThumbs] = useState<ThumbState[]>([]);
   const [pageCount, setPageCount] = useState(0);
@@ -222,6 +224,7 @@ export function PageThumbnails({
           const thumb = thumbs[originalIndex];
           const isSelected = selected?.has(originalIndex) ?? false;
           const isDragging = draggedIndex === displayIndex;
+          const rotation = pageRotation ? pageRotation(originalIndex) : 0;
           return (
             <li
               key={originalIndex}
@@ -251,17 +254,26 @@ export function PageThumbnails({
                   disabled && "cursor-default",
                 )}
               >
-                <div className="relative aspect-[3/4] w-full overflow-hidden rounded border bg-muted/40">
+                <div className="relative aspect-[3/4] w-full overflow-hidden rounded border bg-muted/40 flex items-center justify-center">
                   {thumb?.status === "ready" && thumb.dataUrl ? (
-                    <Image
-                      src={thumb.dataUrl}
-                      alt={`Preview of page ${originalIndex + 1}`}
-                      fill
-                      unoptimized
-                      sizes="160px"
-                      className="object-contain"
-                      loading="lazy"
-                    />
+                    <div
+                      className="relative size-full transition-transform duration-300 ease-in-out"
+                      style={{
+                        transform: rotation
+                          ? `rotate(${rotation}deg) scale(${rotation % 180 !== 0 ? 0.72 : 1})`
+                          : undefined,
+                      }}
+                    >
+                      <Image
+                        src={thumb.dataUrl}
+                        alt={`Preview of page ${originalIndex + 1}`}
+                        fill
+                        unoptimized
+                        sizes="160px"
+                        className="object-contain"
+                        loading="lazy"
+                      />
+                    </div>
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center">
                       <Loader2
@@ -275,17 +287,25 @@ export function PageThumbnails({
                   <span className="text-xs font-medium tabular-nums text-muted-foreground">
                     {originalIndex + 1}
                   </span>
-                  {onToggleSelection ? (
-                    <span
-                      className={cn(
-                        "size-4 rounded-full border",
-                        isSelected
-                          ? "border-primary bg-primary"
-                          : "border-border",
-                      )}
-                      aria-hidden="true"
-                    />
-                  ) : null}
+                  <div className="flex items-center gap-1">
+                    {rotation ? (
+                      <span className="flex items-center gap-0.5 rounded bg-primary/15 px-1 py-0.5 text-[9px] font-bold text-primary">
+                        <RotateCw className="size-2.5" />
+                        {rotation}°
+                      </span>
+                    ) : null}
+                    {onToggleSelection ? (
+                      <span
+                        className={cn(
+                          "size-4 rounded-full border",
+                          isSelected
+                            ? "border-primary bg-primary"
+                            : "border-border",
+                        )}
+                        aria-hidden="true"
+                      />
+                    ) : null}
+                  </div>
                 </div>
               </button>
               {onOrderChange ? (

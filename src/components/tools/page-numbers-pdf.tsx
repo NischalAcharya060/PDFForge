@@ -17,6 +17,7 @@ import { bytesToBlob } from "@/lib/download";
 import { Container } from "@/components/layout/container";
 import { UploadZone } from "@/components/upload/upload-zone";
 import { FileList } from "@/components/files/file-list";
+import { PdfDocumentPreview } from "@/components/pages/pdf-document-preview";
 import { ProcessingState } from "@/components/tool/processing-state";
 import { ResultPanel } from "@/components/tool/result-panel";
 import { ConfigurationPanel } from "@/components/tool/configuration-panel";
@@ -48,6 +49,7 @@ export default function PageNumbersPdfTool({ tool }: { tool: ToolDefinition }) {
   const [startNumber, setStartNumber] = useState(1);
   const [fontSize, setFontSize] = useState(10);
   const [pageCount, setPageCount] = useState(0);
+  const [previewPageIndex, setPreviewPageIndex] = useState(0);
   const [localError, setLocalError] = useState<string | null>(null);
 
   const handleAddFiles = useCallback(
@@ -190,6 +192,51 @@ export default function PageNumbersPdfTool({ tool }: { tool: ToolDefinition }) {
                   </div>
                 </div>
               </ConfigurationPanel>
+
+              {/* Preview Section */}
+              <PdfDocumentPreview
+                file={files[0].file}
+                pageIndex={previewPageIndex}
+                onPageChange={setPreviewPageIndex}
+                onLoadInfo={({ pageCount: total }) => setPageCount(total)}
+                title="Page Numbers Preview"
+                subtitle="Live visual preview showing number placement and style on your document"
+                renderOverlay={({ scale, pageIndex }) => {
+                  const marginPx = Math.max(12, Math.round(32 * scale));
+                  const currentNum = pageIndex + startNumber;
+                  let text = `${currentNum}`;
+                  if (format === "page-of-total") {
+                    text = `Page ${currentNum} of ${pageCount || "n"}`;
+                  } else if (format === "n-slash-total") {
+                    text = `${currentNum} / ${pageCount || "n"}`;
+                  }
+
+                  const positionStyles: Record<PageNumberPosition, React.CSSProperties> = {
+                    "top-left": { top: marginPx, left: marginPx },
+                    "top-center": { top: marginPx, left: "50%", transform: "translateX(-50%)" },
+                    "top-right": { top: marginPx, right: marginPx },
+                    "bottom-left": { bottom: marginPx, left: marginPx },
+                    "bottom-center": { bottom: marginPx, left: "50%", transform: "translateX(-50%)" },
+                    "bottom-right": { bottom: marginPx, right: marginPx },
+                  };
+
+                  return (
+                    <div
+                      className="absolute pointer-events-none select-none transition-all duration-200"
+                      style={{
+                        ...positionStyles[position],
+                        fontSize: `${Math.max(9, Math.round(fontSize * scale))}px`,
+                        color: "rgb(60, 60, 60)",
+                        fontFamily: "Helvetica, Arial, sans-serif",
+                      }}
+                    >
+                      <span className="rounded bg-primary/15 px-2 py-0.5 font-medium text-primary ring-1 ring-primary/40 shadow-xs backdrop-blur-xs">
+                        {text}
+                      </span>
+                    </div>
+                  );
+                }}
+              />
 
               {error || localError ? (
                 <div

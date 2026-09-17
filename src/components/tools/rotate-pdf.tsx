@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { RotateCw, TriangleAlert } from "lucide-react";
+import { Grid, Eye, RotateCw, TriangleAlert, CheckCheck, XSquare } from "lucide-react";
 
 import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
@@ -19,6 +19,7 @@ import { Container } from "@/components/layout/container";
 import { UploadZone } from "@/components/upload/upload-zone";
 import { FileList } from "@/components/files/file-list";
 import { PageThumbnails } from "@/components/pages/page-thumbnails";
+import { PdfDocumentPreview } from "@/components/pages/pdf-document-preview";
 import { ProcessingState } from "@/components/tool/processing-state";
 import { ResultPanel } from "@/components/tool/result-panel";
 import { ConfigurationPanel } from "@/components/tool/configuration-panel";
@@ -47,8 +48,18 @@ export default function RotatePdfTool({ tool }: { tool: ToolDefinition }) {
   const [rotation, setRotation] = useState<RotationDegrees>(90);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [localError, setLocalError] = useState<string | null>(null);
+  const [previewMode, setPreviewMode] = useState<"grid" | "single">("grid");
+  const [singlePageIndex, setSinglePageIndex] = useState(0);
 
   const selectedCount = selected.size;
+
+  const handleSelectAll = useCallback(() => {
+    setSelected(new Set(Array.from({ length: pageCount }, (_, i) => i)));
+  }, [pageCount]);
+
+  const handleDeselectAll = useCallback(() => {
+    setSelected(new Set());
+  }, []);
 
   const process = useCallback(async (): Promise<PdfToolResult> => {
     const file = files[0];
@@ -130,37 +141,132 @@ export default function RotatePdfTool({ tool }: { tool: ToolDefinition }) {
                   ))}
                 </div>
 
-                <div className="mt-4 flex items-center gap-2">
-                  <Checkbox
-                    id="rotate-all"
-                    checked={applyToAll}
-                    onChange={(event) => setApplyToAll(event.target.checked)}
-                  />
-                  <Label htmlFor="rotate-all" className="cursor-pointer">
-                    Apply to all pages
-                  </Label>
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t pt-4">
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="rotate-all"
+                      checked={applyToAll}
+                      onChange={(event) => {
+                        const checked = event.target.checked;
+                        setApplyToAll(checked);
+                        if (!checked && selected.size === 0) {
+                          // Pre-select all pages when switching to manual so user doesn't face empty selection
+                          setSelected(new Set(Array.from({ length: pageCount }, (_, i) => i)));
+                        }
+                      }}
+                    />
+                    <Label htmlFor="rotate-all" className="cursor-pointer font-medium">
+                      Apply rotation to all pages
+                    </Label>
+                  </div>
+
+                  {!applyToAll && pageCount > 0 ? (
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleSelectAll}
+                        className="h-7 text-xs"
+                      >
+                        <CheckCheck className="mr-1 size-3" />
+                        Select all
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleDeselectAll}
+                        className="h-7 text-xs"
+                      >
+                        <XSquare className="mr-1 size-3" />
+                        Deselect all
+                      </Button>
+                    </div>
+                  ) : null}
                 </div>
               </ConfigurationPanel>
 
-              {!applyToAll ? (
-                <div>
+              {/* Preview Section */}
+              <div className="rounded-2xl border bg-card p-4 sm:p-6 shadow-xs space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-3">
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground">Page Preview</h3>
+                    <p className="text-xs text-muted-foreground">
+                      {applyToAll
+                        ? `All ${pageCount || ""} pages will rotate by ${rotation}°`
+                        : `${selectedCount} of ${pageCount} pages selected for rotation (click cards to toggle)`}
+                    </p>
+                  </div>
+
+                  {/* View Mode Toggle: Grid vs Single Page */}
+                  <div className="flex items-center rounded-lg border bg-muted/40 p-0.5 text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setPreviewMode("grid")}
+                      className={cn(
+                        "flex items-center gap-1.5 rounded-md px-2.5 py-1 font-medium transition-colors",
+                        previewMode === "grid"
+                          ? "bg-background text-foreground shadow-xs"
+                          : "text-muted-foreground hover:text-foreground",
+                      )}
+                    >
+                      <Grid className="size-3.5" />
+                      All pages
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPreviewMode("single")}
+                      className={cn(
+                        "flex items-center gap-1.5 rounded-md px-2.5 py-1 font-medium transition-colors",
+                        previewMode === "single"
+                          ? "bg-background text-foreground shadow-xs"
+                          : "text-muted-foreground hover:text-foreground",
+                      )}
+                    >
+                      <Eye className="size-3.5" />
+                      Single page
+                    </button>
+                  </div>
+                </div>
+
+                {previewMode === "grid" ? (
                   <PageThumbnails
                     file={files[0].file}
-                    selected={selected}
-                    onToggleSelection={(index) =>
+                    selected={applyToAll ? undefined : selected}
+                    onToggleSelection={(index) => {
+                      if (applyToAll) {
+                        setApplyToAll(false);
+                        const next = new Set(Array.from({ length: pageCount }, (_, i) => i));
+                        next.delete(index);
+                        setSelected(next);
+                        return;
+                      }
                       setSelected((previous) => {
                         const next = new Set(previous);
                         if (next.has(index)) next.delete(index);
                         else next.add(index);
                         return next;
-                      })
-                    }
-                    onLoadInfo={({ pageCount: total }) => setPageCount(total)}
+                      });
+                    }}
+                    onLoadInfo={({ pageCount: total }) => {
+                      setPageCount(total);
+                    }}
                     onError={setPreviewError}
-                    selectLabel={`${selectedCount} page${selectedCount === 1 ? "" : "s"} selected for rotation`}
+                    pageRotation={(index) => (applyToAll || selected.has(index) ? rotation : 0)}
                   />
-                </div>
-              ) : null}
+                ) : (
+                  <PdfDocumentPreview
+                    file={files[0].file}
+                    pageIndex={singlePageIndex}
+                    onPageChange={setSinglePageIndex}
+                    rotation={applyToAll || selected.has(singlePageIndex) ? rotation : 0}
+                    subtitle={`Previewing page ${singlePageIndex + 1} with ${
+                      applyToAll || selected.has(singlePageIndex) ? `${rotation}° rotation` : "no rotation"
+                    }`}
+                  />
+                )}
+              </div>
 
               {error || localError || previewError ? (
                 <div

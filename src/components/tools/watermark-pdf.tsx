@@ -13,6 +13,7 @@ import { bytesToBlob } from "@/lib/download";
 import { Container } from "@/components/layout/container";
 import { UploadZone } from "@/components/upload/upload-zone";
 import { FileList } from "@/components/files/file-list";
+import { PdfDocumentPreview } from "@/components/pages/pdf-document-preview";
 import { ProcessingState } from "@/components/tool/processing-state";
 import { ResultPanel } from "@/components/tool/result-panel";
 import { ConfigurationPanel } from "@/components/tool/configuration-panel";
@@ -21,6 +22,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+
+const colorStyleMap: Record<WatermarkColor, string> = {
+  gray: "rgb(107, 114, 128)",
+  red: "rgb(239, 68, 68)",
+  black: "rgb(0, 0, 0)",
+  blue: "rgb(37, 99, 235)",
+};
 
 const presetWords = ["CONFIDENTIAL", "DRAFT", "COPY", "INTERNAL ONLY", "SAMPLE"];
 
@@ -45,6 +53,7 @@ export default function WatermarkPdfTool({ tool }: { tool: ToolDefinition }) {
   const [opacity, setOpacity] = useState(0.25);
   const [fontSize, setFontSize] = useState(52);
   const [pageCount, setPageCount] = useState(0);
+  const [previewPageIndex, setPreviewPageIndex] = useState(0);
   const [localError, setLocalError] = useState<string | null>(null);
 
   const handleAddFiles = useCallback(
@@ -218,6 +227,33 @@ export default function WatermarkPdfTool({ tool }: { tool: ToolDefinition }) {
                   </div>
                 </div>
               </ConfigurationPanel>
+
+              {/* Preview Section */}
+              <PdfDocumentPreview
+                file={files[0].file}
+                pageIndex={previewPageIndex}
+                onPageChange={setPreviewPageIndex}
+                onLoadInfo={({ pageCount: total }) => setPageCount(total)}
+                title="Watermark Preview"
+                subtitle="Live visual preview showing your watermark placed across the document"
+                renderOverlay={({ scale }) => (
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+                    <span
+                      className="font-bold tracking-wider text-center whitespace-nowrap transition-all duration-150"
+                      style={{
+                        fontSize: `${Math.max(12, Math.round(fontSize * scale))}px`,
+                        color: colorStyleMap[color] || colorStyleMap.gray,
+                        opacity,
+                        transform: `rotate(${rotation}deg)`,
+                        transformOrigin: "center center",
+                        fontFamily: "Helvetica, Arial, sans-serif",
+                      }}
+                    >
+                      {text || "CONFIDENTIAL"}
+                    </span>
+                  </div>
+                )}
+              />
 
               {error || localError ? (
                 <div
