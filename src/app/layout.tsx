@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { siteConfig } from "@/config/site";
 import { organizationSchema, websiteSchema } from "@/lib/schema";
 import { JsonLd } from "@/components/seo/json-ld";
+import { PwaRegister } from "@/components/pwa/pwa-register";
 import {
   ThemeInitScript,
   ThemeProvider,
@@ -96,12 +97,22 @@ export const metadata: Metadata = {
     icon: [
       { url: "/favicon/favicon-16x16.png", type: "image/png", sizes: "16x16" },
       { url: "/favicon/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon/favicon-48x48.png", type: "image/png", sizes: "48x48" },
       { url: "/favicon/android-chrome-192x192.png", type: "image/png", sizes: "192x192" },
       { url: "/favicon/android-chrome-512x512.png", type: "image/png", sizes: "512x512" },
+      { url: "/favicon/maskable-512x512.png", type: "image/png", sizes: "512x512" },
     ],
     apple: "/favicon/apple-touch-icon.png",
   },
   manifest: "/favicon/site.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "PDFForge",
+    statusBarStyle: "black-translucent",
+  },
+  formatDetection: {
+    telephone: false,
+  },
 };
 
 export const viewport: Viewport = {
@@ -137,6 +148,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <PwaRegister />
         </ThemeProvider>
         <JsonLd data={organizationSchema()} />
         <JsonLd data={websiteSchema()} />
