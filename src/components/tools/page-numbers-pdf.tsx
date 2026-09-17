@@ -6,7 +6,7 @@ import { Hash, TriangleAlert } from "lucide-react";
 import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
 import { usePdfTool } from "@/lib/use-pdf-tool";
-import { fileToArrayBuffer } from "@/lib/files";
+import { fileToArrayBuffer, outputFileName } from "@/lib/files";
 import {
   addPageNumbers,
   type PageNumberFormat,
@@ -81,12 +81,12 @@ export default function PageNumbersPdfTool({ tool }: { tool: ToolDefinition }) {
     const blob = bytesToBlob(bytesOut, "application/pdf");
     return {
       blob,
-      filename: "numbered.pdf",
+      filename: outputFileName(file.name, tool.slug, "pdf"),
       size: blob.size,
       inputSize: file.size,
       pageCount,
     };
-  }, [files, position, format, startNumber, fontSize, pageCount, setMessage]);
+  }, [files, position, format, startNumber, fontSize, pageCount, setMessage, tool.slug]);
 
   const handleSubmit = useCallback(async () => {
     setLocalError(null);

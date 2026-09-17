@@ -6,7 +6,7 @@ import { ListOrdered, RotateCcw, TriangleAlert } from "lucide-react";
 import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
 import { usePdfTool } from "@/lib/use-pdf-tool";
-import { fileToArrayBuffer } from "@/lib/files";
+import { fileToArrayBuffer, outputFileName } from "@/lib/files";
 import { reorderPdf } from "@/lib/pdf/reorder";
 import { bytesToBlob } from "@/lib/download";
 import { Container } from "@/components/layout/container";
@@ -96,12 +96,12 @@ export default function ReorderPdfPagesTool({ tool }: { tool: ToolDefinition }) 
     const blob = bytesToBlob(bytesOut, "application/pdf");
     return {
       blob,
-      filename: "reordered.pdf",
+      filename: outputFileName(file.name, tool.slug, "pdf"),
       size: blob.size,
       inputSize: file.size,
       pageCount: effectiveOrder.length,
     };
-  }, [files, order, pageCount]);
+  }, [files, order, pageCount, tool.slug]);
 
   const handleSubmit = useCallback(async () => {
     setLocalError(null);

@@ -6,7 +6,7 @@ import { Eye, EyeOff, LockOpen, TriangleAlert } from "lucide-react";
 import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
 import { usePdfTool } from "@/lib/use-pdf-tool";
-import { fileToArrayBuffer } from "@/lib/files";
+import { fileToArrayBuffer, outputFileName } from "@/lib/files";
 import { unlockPdf } from "@/lib/pdf/unlock";
 import { bytesToBlob } from "@/lib/download";
 import { Container } from "@/components/layout/container";
@@ -71,15 +71,14 @@ export default function UnlockPdfTool({ tool }: { tool: ToolDefinition }) {
     const bytes = await fileToArrayBuffer(file.file);
     const bytesOut = await unlockPdf(bytes, password, file.name);
     const blob = bytesToBlob(bytesOut, "application/pdf");
-    const baseName = file.name.replace(/\.pdf$/i, "");
     return {
       blob,
-      filename: `${baseName}-unlocked.pdf`,
+      filename: outputFileName(file.name, tool.slug, "pdf"),
       size: blob.size,
       inputSize: file.size,
       note: "Password security and restrictions have been removed. This PDF can now be opened without a password.",
     };
-  }, [files, password]);
+  }, [files, password, tool.slug]);
 
   const handleSubmit = useCallback(async () => {
     if (!password) {

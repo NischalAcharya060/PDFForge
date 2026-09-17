@@ -6,7 +6,7 @@ import { ArrowRight, Combine, FileCheck, Layers, TriangleAlert } from "lucide-re
 import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
 import { usePdfTool } from "@/lib/use-pdf-tool";
-import { fileToArrayBuffer } from "@/lib/files";
+import { fileToArrayBuffer, outputFileName } from "@/lib/files";
 import { mergePdfs } from "@/lib/pdf/merge";
 import { bytesToBlob } from "@/lib/download";
 import { Container } from "@/components/layout/container";
@@ -48,11 +48,11 @@ export default function MergePdfTool({ tool }: { tool: ToolDefinition }) {
     const blob = bytesToBlob(bytes, "application/pdf");
     return {
       blob,
-      filename: "merged.pdf",
+      filename: outputFileName(files[0].name, tool.slug, "pdf"),
       size: blob.size,
       inputSize: files.reduce((sum, file) => sum + file.size, 0),
     };
-  }, [files, setMessage]);
+  }, [files, setMessage, tool.slug]);
 
   const handleSubmit = useCallback(async () => {
     if (files.length < 2) {

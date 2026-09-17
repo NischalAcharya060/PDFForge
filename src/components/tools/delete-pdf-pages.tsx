@@ -6,7 +6,7 @@ import { Trash2, TriangleAlert } from "lucide-react";
 import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
 import { usePdfTool } from "@/lib/use-pdf-tool";
-import { fileToArrayBuffer } from "@/lib/files";
+import { fileToArrayBuffer, outputFileName } from "@/lib/files";
 import { deletePages } from "@/lib/pdf/delete-pages";
 import { bytesToBlob } from "@/lib/download";
 import { Container } from "@/components/layout/container";
@@ -96,12 +96,12 @@ export default function DeletePdfPagesTool({ tool }: { tool: ToolDefinition }) {
     const blob = bytesToBlob(bytesOut, "application/pdf");
     return {
       blob,
-      filename: "after-delete.pdf",
+      filename: outputFileName(file.name, tool.slug, "pdf"),
       size: blob.size,
       inputSize: file.size,
       pageCount: Math.max(0, (pageCount || 0) - indices.length),
     };
-  }, [files, selected, pageCount]);
+  }, [files, selected, pageCount, tool.slug]);
 
   const handleSubmit = useCallback(async () => {
     if (selectedCount === 0) {

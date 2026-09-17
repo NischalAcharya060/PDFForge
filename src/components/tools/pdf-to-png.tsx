@@ -6,7 +6,7 @@ import { FileImage, TriangleAlert } from "lucide-react";
 import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
 import { usePdfTool } from "@/lib/use-pdf-tool";
-import { fileToArrayBuffer } from "@/lib/files";
+import { fileToArrayBuffer, outputFileName } from "@/lib/files";
 import { pdfToPng } from "@/lib/pdf/pdf-to-png";
 import { bytesToBlob, createZipBlob } from "@/lib/download";
 import { Container } from "@/components/layout/container";
@@ -80,10 +80,9 @@ export default function PdfToPngTool({ tool }: { tool: ToolDefinition }) {
 
     if (parts.length === 1) {
       const blob = bytesToBlob(parts[0].bytes, "image/png");
-      const base = file.name.replace(/\.pdf$/i, "");
       return {
         blob,
-        filename: `${base}.png`,
+        filename: outputFileName(file.name, tool.slug, "png"),
         size: blob.size,
         inputSize: file.size,
         pageCount: 1,
@@ -94,7 +93,7 @@ export default function PdfToPngTool({ tool }: { tool: ToolDefinition }) {
       name: part.name,
       blob: bytesToBlob(part.bytes, "image/png"),
     }));
-    const zipName = `${file.name.replace(/\.pdf$/i, "")}-png-images.zip`;
+    const zipName = outputFileName(file.name, tool.slug, "zip");
     const zipBlob = await createZipBlob(blobs, setMessage);
 
     return {
@@ -105,7 +104,7 @@ export default function PdfToPngTool({ tool }: { tool: ToolDefinition }) {
       isZip: true,
       pageCount: parts.length,
     };
-  }, [files, scale, setMessage]);
+  }, [files, scale, setMessage, tool.slug]);
 
   const handleSubmit = useCallback(async () => {
     setLocalError(null);

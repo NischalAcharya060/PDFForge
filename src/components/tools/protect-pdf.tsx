@@ -6,7 +6,7 @@ import { Lock, TriangleAlert } from "lucide-react";
 import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
 import { usePdfTool } from "@/lib/use-pdf-tool";
-import { fileToArrayBuffer } from "@/lib/files";
+import { fileToArrayBuffer, outputFileName } from "@/lib/files";
 import { encryptPdf } from "@/lib/pdf/encrypt";
 import { bytesToBlob } from "@/lib/download";
 import { Container } from "@/components/layout/container";
@@ -43,12 +43,12 @@ export default function ProtectPdfTool({ tool }: { tool: ToolDefinition }) {
     const blob = bytesToBlob(bytesOut, "application/pdf");
     return {
       blob,
-      filename: "protected.pdf",
+      filename: outputFileName(file.name, tool.slug, "pdf"),
       size: blob.size,
       inputSize: file.size,
       note: `This PDF now requires the password you set to open. There is no recovery — keep it safe.`,
     };
-  }, [files, password, allowPrint]);
+  }, [files, password, allowPrint, tool.slug]);
 
   const handleSubmit = useCallback(async () => {
     if (password.length < MIN_PASSWORD) {

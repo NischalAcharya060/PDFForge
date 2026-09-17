@@ -6,7 +6,7 @@ import { Grid, Eye, RotateCw, TriangleAlert, CheckCheck, XSquare } from "lucide-
 import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
 import { usePdfTool } from "@/lib/use-pdf-tool";
-import { fileToArrayBuffer } from "@/lib/files";
+import { fileToArrayBuffer, outputFileName } from "@/lib/files";
 import { countPdfPages } from "@/lib/pdf/document";
 import {
   rotationMapForAll,
@@ -82,12 +82,12 @@ export default function RotatePdfTool({ tool }: { tool: ToolDefinition }) {
     const blob = bytesToBlob(bytesOut, "application/pdf");
     return {
       blob,
-      filename: "rotated.pdf",
+      filename: outputFileName(file.name, tool.slug, "pdf"),
       size: blob.size,
       inputSize: file.size,
       pageCount,
     };
-  }, [files, applyToAll, selected, pageCount, rotation]);
+  }, [files, applyToAll, selected, pageCount, rotation, tool.slug]);
 
   const handleSubmit = useCallback(async () => {
     setLocalError(null);

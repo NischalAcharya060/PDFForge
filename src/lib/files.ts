@@ -16,6 +16,29 @@ export function baseName(name: string): string {
   return sanitized.slice(0, dot);
 }
 
+export const PDF_FORGE_BRAND = "PDFForge";
+
+/**
+ * Human-friendly tool token for filenames, e.g. `compress-pdf` -> `compress`.
+ */
+export function toolFileNameToken(slug: string): string {
+  return slug.replace(/-pdf$/i, "");
+}
+
+/**
+ * Build a branded output filename following the convention:
+ * `{original-name}-{tool}-PDFForge.{extension}`
+ */
+export function outputFileName(
+  originalName: string,
+  toolSlug: string,
+  extension: string,
+): string {
+  const base = baseName(originalName) || "untitled";
+  const ext = extension.replace(/^\./, "").toLowerCase() || "pdf";
+  return `${base}-${toolFileNameToken(toolSlug)}-${PDF_FORGE_BRAND}.${ext}`;
+}
+
 export function fileExtension(name: string): string {
   const dot = name.lastIndexOf(".");
   if (dot < 0 || dot === name.length - 1) return "";

@@ -18,7 +18,7 @@ import {
 import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
 import { usePdfTool } from "@/lib/use-pdf-tool";
-import { fileToArrayBuffer } from "@/lib/files";
+import { fileToArrayBuffer, outputFileName } from "@/lib/files";
 import { countPdfPages } from "@/lib/pdf/document";
 import { openPdfForRendering, renderPageToCanvas, destroyPdfDocument } from "@/lib/pdf/pdfjs";
 import { signPdf, type SignaturePlacement } from "@/lib/pdf/sign-pdf";
@@ -389,13 +389,13 @@ export default function SignPdfTool({ tool }: { tool: ToolDefinition }) {
 
     return {
       blob,
-      filename: `${file.name.replace(/\.pdf$/i, "")}-signed.pdf`,
+      filename: outputFileName(file.name, tool.slug, "pdf"),
       size: blob.size,
       inputSize: file.size,
       pageCount,
       note: `Signature added to page ${currentPageIndex + 1}.`,
     };
-  }, [files, activeSigDataUrl, currentPageIndex, xPercent, yPercent, widthPercent, includeDate, dateText, pageCount]);
+  }, [files, activeSigDataUrl, currentPageIndex, xPercent, yPercent, widthPercent, includeDate, dateText, pageCount, tool.slug]);
 
   const handleSubmit = useCallback(async () => {
     if (!activeSigDataUrl) {

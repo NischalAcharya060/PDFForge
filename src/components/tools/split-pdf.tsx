@@ -6,7 +6,7 @@ import { Scissors, TriangleAlert } from "lucide-react";
 import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
 import { usePdfTool } from "@/lib/use-pdf-tool";
-import { fileToArrayBuffer } from "@/lib/files";
+import { fileToArrayBuffer, outputFileName } from "@/lib/files";
 import { countPdfPages } from "@/lib/pdf/document";
 import { splitIntoGroups, splitIntoPages } from "@/lib/pdf/split";
 import { extractPages } from "@/lib/pdf/extract";
@@ -100,7 +100,7 @@ export default function SplitPdfTool({ tool }: { tool: ToolDefinition }) {
         name: part.name,
         blob: bytesToBlob(part.bytes, "application/pdf"),
       }));
-      const zipName = "split.zip";
+      const zipName = outputFileName(file.name, tool.slug, "zip");
       const zipBlob = await createZipBlob(blobs, setMessage);
       return {
         blob: zipBlob,
@@ -130,7 +130,7 @@ export default function SplitPdfTool({ tool }: { tool: ToolDefinition }) {
         name: part.name,
         blob: bytesToBlob(part.bytes, "application/pdf"),
       }));
-      const zipName = "split.zip";
+      const zipName = outputFileName(file.name, tool.slug, "zip");
       const zipBlob = await createZipBlob(blobs, setMessage);
       return {
         blob: zipBlob,
@@ -150,12 +150,12 @@ export default function SplitPdfTool({ tool }: { tool: ToolDefinition }) {
     const blob = bytesToBlob(bytesOut, "application/pdf");
     return {
       blob,
-      filename: "extracted-pages.pdf",
+      filename: outputFileName(file.name, tool.slug, "pdf"),
       size: blob.size,
       inputSize: file.size,
       pageCount: indices.length,
     };
-  }, [files, mode, pageCount, ranges, parsedSelected, setMessage]);
+  }, [files, mode, pageCount, ranges, parsedSelected, setMessage, tool.slug]);
 
   const handleSubmit = useCallback(async () => {
     setLocalError(null);

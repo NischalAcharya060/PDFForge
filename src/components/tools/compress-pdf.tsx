@@ -6,7 +6,7 @@ import { FileArchive, TriangleAlert } from "lucide-react";
 import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
 import { usePdfTool } from "@/lib/use-pdf-tool";
-import { fileToArrayBuffer } from "@/lib/files";
+import { fileToArrayBuffer, outputFileName } from "@/lib/files";
 import { compressPdf, type CompressionLevel } from "@/lib/pdf/compress";
 import { bytesToBlob } from "@/lib/download";
 import { Container } from "@/components/layout/container";
@@ -53,13 +53,13 @@ export default function CompressPdfTool({ tool }: { tool: ToolDefinition }) {
 
     return {
       blob,
-      filename: "compressed.pdf",
+      filename: outputFileName(file.name, tool.slug, "pdf"),
       size: blob.size,
       inputSize: file.size,
       savedPercent: compact.savedPercent,
       note,
     };
-  }, [files, level, maxCompression, setMessage]);
+  }, [files, level, maxCompression, setMessage, tool.slug]);
 
   const handleSubmit = useCallback(async () => {
     setLocalError(null);

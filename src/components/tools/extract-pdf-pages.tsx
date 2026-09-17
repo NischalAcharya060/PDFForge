@@ -6,7 +6,7 @@ import { FileOutput, TriangleAlert } from "lucide-react";
 import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
 import { usePdfTool } from "@/lib/use-pdf-tool";
-import { fileToArrayBuffer } from "@/lib/files";
+import { fileToArrayBuffer, outputFileName } from "@/lib/files";
 import { extractPages } from "@/lib/pdf/extract";
 import { countPdfPages } from "@/lib/pdf/document";
 import { parsePageRanges } from "@/lib/range";
@@ -93,12 +93,12 @@ export default function ExtractPdfPagesTool({ tool }: { tool: ToolDefinition }) 
     const blob = bytesToBlob(bytesOut, "application/pdf");
     return {
       blob,
-      filename: "extracted-pages.pdf",
+      filename: outputFileName(file.name, tool.slug, "pdf"),
       size: blob.size,
       inputSize: file.size,
       pageCount: indices.length,
     };
-  }, [files, mode, ranges, pageCount, selected]);
+  }, [files, mode, ranges, pageCount, selected, tool.slug]);
 
   const handleSubmit = useCallback(async () => {
     setLocalError(null);

@@ -6,7 +6,7 @@ import { FileImage, TriangleAlert } from "lucide-react";
 import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
 import { usePdfTool } from "@/lib/use-pdf-tool";
-import { fileToArrayBuffer } from "@/lib/files";
+import { fileToArrayBuffer, outputFileName } from "@/lib/files";
 import { pdfToImages } from "@/lib/pdf/pdf-to-images";
 import { bytesToBlob, createZipBlob } from "@/lib/download";
 import { Container } from "@/components/layout/container";
@@ -74,7 +74,7 @@ export default function PdfToJpgTool({ tool }: { tool: ToolDefinition }) {
       name: part.name,
       blob: bytesToBlob(part.bytes, "image/jpeg"),
     }));
-    const zipName = "images.zip";
+    const zipName = outputFileName(file.name, tool.slug, "zip");
     const zipBlob = await createZipBlob(blobs, setMessage);
     return {
       blob: zipBlob,
@@ -84,7 +84,7 @@ export default function PdfToJpgTool({ tool }: { tool: ToolDefinition }) {
       isZip: true,
       pageCount: parts.length,
     };
-  }, [files, quality, setMessage]);
+  }, [files, quality, setMessage, tool.slug]);
 
   const handleSubmit = useCallback(async () => {
     setLocalError(null);

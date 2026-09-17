@@ -6,7 +6,7 @@ import { Image as ImageIcon, TriangleAlert } from "lucide-react";
 import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
 import { usePdfTool, createId } from "@/lib/use-pdf-tool";
-import { baseName, fileToArrayBuffer } from "@/lib/files";
+import { fileToArrayBuffer, outputFileName } from "@/lib/files";
 import { imagesToPdf, type PdfOrientation, type PdfPageSize } from "@/lib/pdf/images-to-pdf";
 import { bytesToBlob } from "@/lib/download";
 import { Container } from "@/components/layout/container";
@@ -99,12 +99,12 @@ export default function JpgToPdfTool({ tool }: { tool: ToolDefinition }) {
     const blob = bytesToBlob(bytes, "application/pdf");
     return {
       blob,
-      filename: `${baseName(files[0].name)}.pdf`,
+      filename: outputFileName(files[0].name, tool.slug, "pdf"),
       size: blob.size,
       inputSize: files.reduce((sum, file) => sum + file.size, 0),
       pageCount: files.length,
     };
-  }, [files, pageSize, orientation, margin, setMessage]);
+  }, [files, pageSize, orientation, margin, setMessage, tool.slug]);
 
   const handleSubmit = useCallback(async () => {
     if (files.length === 0) {

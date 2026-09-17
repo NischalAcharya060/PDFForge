@@ -6,7 +6,7 @@ import { Stamp, TriangleAlert } from "lucide-react";
 import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
 import { usePdfTool } from "@/lib/use-pdf-tool";
-import { fileToArrayBuffer } from "@/lib/files";
+import { fileToArrayBuffer, outputFileName } from "@/lib/files";
 import { addWatermark, type WatermarkColor } from "@/lib/pdf/watermark";
 import { countPdfPages } from "@/lib/pdf/document";
 import { bytesToBlob } from "@/lib/download";
@@ -86,12 +86,12 @@ export default function WatermarkPdfTool({ tool }: { tool: ToolDefinition }) {
     const blob = bytesToBlob(bytesOut, "application/pdf");
     return {
       blob,
-      filename: "watermarked.pdf",
+      filename: outputFileName(file.name, tool.slug, "pdf"),
       size: blob.size,
       inputSize: file.size,
       pageCount,
     };
-  }, [files, text, rotation, color, opacity, fontSize, pageCount, setMessage]);
+  }, [files, text, rotation, color, opacity, fontSize, pageCount, setMessage, tool.slug]);
 
   const handleSubmit = useCallback(async () => {
     if (!text.trim()) {

@@ -6,7 +6,7 @@ import { Check, Copy, FileText, TriangleAlert } from "lucide-react";
 import type { ToolDefinition } from "@/config/tools";
 import type { PdfToolResult } from "@/lib/types";
 import { usePdfTool } from "@/lib/use-pdf-tool";
-import { fileToArrayBuffer } from "@/lib/files";
+import { fileToArrayBuffer, outputFileName } from "@/lib/files";
 import { extractPdfText } from "@/lib/pdf/extract-text";
 import { Container } from "@/components/layout/container";
 import { UploadZone } from "@/components/upload/upload-zone";
@@ -80,16 +80,15 @@ export default function PdfToTextTool({ tool }: { tool: ToolDefinition }) {
     setExtractedText(text);
 
     const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    const baseName = file.name.replace(/\.pdf$/i, "");
     return {
       blob,
-      filename: `${baseName}.txt`,
+      filename: outputFileName(file.name, tool.slug, "txt"),
       size: blob.size,
       inputSize: file.size,
       pageCount,
       note: `Successfully extracted text from ${pageCount} ${pageCount === 1 ? "page" : "pages"}.`,
     };
-  }, [files, setMessage]);
+  }, [files, setMessage, tool.slug]);
 
   const handleSubmit = useCallback(async () => {
     setLocalError(null);
