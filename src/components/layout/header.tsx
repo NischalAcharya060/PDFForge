@@ -6,7 +6,6 @@ import {
   ChevronDown,
   LayoutGrid,
   Menu,
-  ShieldCheck,
   Sparkles,
   X,
 } from "lucide-react";
@@ -196,14 +195,6 @@ export function Header() {
                     </div>
                   );
                 })}
-              </div>
-
-              <div className="mt-6 flex items-center justify-between rounded-xl bg-muted/40 px-4 py-2.5 text-xs text-muted-foreground border">
-                <span className="flex items-center gap-1.5 font-medium text-foreground">
-                  <ShieldCheck className="size-4 text-emerald-600 dark:text-emerald-400" />
-                  Your documents never leave your device.
-                </span>
-                <span>No queue • No limit • No registration</span>
               </div>
             </DropdownMenuContent>
           </DropdownMenu>

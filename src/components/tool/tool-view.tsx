@@ -36,6 +36,12 @@ const toolComponents: Record<string, ToolComponent> = {
   "protect-pdf": makeDynamicTool(() => import("@/components/tools/protect-pdf")),
   "page-numbers-pdf": makeDynamicTool(() => import("@/components/tools/page-numbers-pdf")),
   "watermark-pdf": makeDynamicTool(() => import("@/components/tools/watermark-pdf")),
+  "sign-pdf": makeDynamicTool(() => import("@/components/tools/sign-pdf")),
+  "webp-to-pdf": makeDynamicTool(() => import("@/components/tools/webp-to-pdf")),
+  "png-to-pdf": makeDynamicTool(() => import("@/components/tools/png-to-pdf")),
+  "pdf-to-png": makeDynamicTool(() => import("@/components/tools/pdf-to-png")),
+  "unlock-pdf": makeDynamicTool(() => import("@/components/tools/unlock-pdf")),
+  "pdf-to-text": makeDynamicTool(() => import("@/components/tools/pdf-to-text")),
 };
 
 export function ToolView({ slug }: { slug: string }) {

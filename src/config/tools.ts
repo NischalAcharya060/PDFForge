@@ -12,6 +12,9 @@ import {
   ArrowDownUp,
   Hash,
   Stamp,
+  PenTool,
+  FileText,
+  LockOpen,
 } from "lucide-react";
 
 export type ToolCategory = "organize" | "convert" | "compress" | "edit" | "security";
@@ -235,7 +238,6 @@ export const tools: ToolDefinition[] = [
     supportedExtensions: ["application/pdf"],
     processingMode: "client",
     available: true,
-    badgeText: "NEW",
     seoTitle: "Add Page Numbers to PDF — Number PDF Pages Online | PDFForge",
     seoDescription:
       "Stamp page numbers on PDF files easily. Choose positions, margins, typography, and page formats.",
@@ -250,10 +252,93 @@ export const tools: ToolDefinition[] = [
     supportedExtensions: ["application/pdf"],
     processingMode: "client",
     available: true,
-    badgeText: "NEW",
     seoTitle: "Watermark PDF — Stamp Text on PDF Online | PDFForge",
     seoDescription:
       "Stamp custom text watermarks on your PDF pages with adjustable opacity, angle, and position in your browser.",
+  },
+  {
+    slug: "sign-pdf",
+    name: "Sign PDF",
+    shortName: "Sign PDF",
+    description: "Draw, type, or upload an electronic signature and place it onto PDF pages.",
+    category: "edit",
+    icon: PenTool,
+    supportedExtensions: ["application/pdf"],
+    processingMode: "client",
+    available: true,
+    seoTitle: "Sign PDF — Add Signature to PDF Online Free | PDFForge",
+    seoDescription:
+      "Electronically sign PDF documents in your browser. Draw with mouse or touch, type in cursive font, or upload a signature image.",
+  },
+  {
+    slug: "webp-to-pdf",
+    name: "WebP to PDF",
+    shortName: "WebP → PDF",
+    description: "Convert modern WebP images into a single organized PDF document.",
+    category: "convert",
+    icon: Image,
+    supportedExtensions: ["image/webp"],
+    processingMode: "client",
+    available: true,
+    seoTitle: "WebP to PDF — Convert WebP Images to PDF Online | PDFForge",
+    seoDescription:
+      "Convert WebP pictures to PDF with custom margins, orientation, and page sizing entirely on your device.",
+  },
+  {
+    slug: "png-to-pdf",
+    name: "PNG to PDF",
+    shortName: "PNG → PDF",
+    description: "Convert transparent and high-resolution PNG images into clean PDF files.",
+    category: "convert",
+    icon: FileImage,
+    supportedExtensions: ["image/png"],
+    processingMode: "client",
+    available: true,
+    seoTitle: "PNG to PDF — Convert PNG Images to PDF Online | PDFForge",
+    seoDescription:
+      "Turn PNG images into PDF documents easily. Reorder pages and customize layout locally in your browser.",
+  },
+  {
+    slug: "pdf-to-png",
+    name: "PDF to PNG",
+    shortName: "PDF → PNG",
+    description: "Export crisp, lossless PNG images from PDF pages with selectable resolution.",
+    category: "convert",
+    icon: FileImage,
+    supportedExtensions: ["application/pdf"],
+    processingMode: "client",
+    available: true,
+    seoTitle: "PDF to PNG — Convert PDF Pages to PNG Images | PDFForge",
+    seoDescription:
+      "Convert PDF pages to lossless PNG images with adjustable DPI. Download individual pages or a ZIP archive.",
+  },
+  {
+    slug: "unlock-pdf",
+    name: "Unlock PDF",
+    shortName: "Unlock",
+    description: "Remove passwords and security restrictions from protected PDF documents.",
+    category: "security",
+    icon: LockOpen,
+    supportedExtensions: ["application/pdf"],
+    processingMode: "client",
+    available: true,
+    seoTitle: "Unlock PDF — Remove PDF Password Security Online | PDFForge",
+    seoDescription:
+      "Decrypt password-protected PDFs and remove opening restrictions. 100% private, decrypted locally in your browser.",
+  },
+  {
+    slug: "pdf-to-text",
+    name: "PDF to Text",
+    shortName: "PDF → Text",
+    description: "Extract readable text content from PDF pages into a clean text document.",
+    category: "convert",
+    icon: FileText,
+    supportedExtensions: ["application/pdf"],
+    processingMode: "client",
+    available: true,
+    seoTitle: "PDF to Text — Extract Text from PDF Online | PDFForge",
+    seoDescription:
+      "Extract text from any PDF document with instant browser preview, one-click copy, and .txt download.",
   },
 ];
 
@@ -267,10 +352,14 @@ export function getToolsByCategory(category: ToolCategory): ToolDefinition[] {
 
 export const popularTools: ToolDefinition[] = [
   getToolBySlug("merge-pdf"),
+  getToolBySlug("sign-pdf"),
   getToolBySlug("split-pdf"),
   getToolBySlug("compress-pdf"),
+  getToolBySlug("webp-to-pdf"),
   getToolBySlug("pdf-to-jpg"),
+  getToolBySlug("pdf-to-png"),
   getToolBySlug("jpg-to-pdf"),
+  getToolBySlug("unlock-pdf"),
   getToolBySlug("page-numbers-pdf"),
   getToolBySlug("watermark-pdf"),
   getToolBySlug("rotate-pdf"),
