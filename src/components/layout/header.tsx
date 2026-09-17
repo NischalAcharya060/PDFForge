@@ -31,6 +31,17 @@ const mainCategories: { id: ToolCategory; label: string }[] = [
   { id: "security", label: "PDF Security" },
 ];
 
+const convertTools = tools.filter((tool) => tool.category === "convert");
+
+const convertBadge: Record<string, string> = {
+  "jpg-to-pdf": "JPG",
+  "png-to-pdf": "PNG",
+  "webp-to-pdf": "WebP",
+  "pdf-to-jpg": "PDF",
+  "pdf-to-png": "PDF",
+  "pdf-to-text": "PDF",
+};
+
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -80,42 +91,28 @@ export function Header() {
                 <ChevronDown className="size-3.5 opacity-60" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56 p-2 shadow-xl">
+            <DropdownMenuContent align="start" className="w-80 p-2 shadow-xl">
               <div className="px-2 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Convert to / from PDF
               </div>
-              <DropdownMenuItem asChild>
-                <Link
-                  href="/tools/jpg-to-pdf"
-                  className="flex items-center gap-2.5 py-2 cursor-pointer"
-                >
-                  <span className="flex size-7 items-center justify-center rounded-md bg-rose-500/10 text-rose-600">
-                    JPG
-                  </span>
-                  <div>
-                    <div className="font-medium text-sm">JPG to PDF</div>
-                    <div className="text-xs text-muted-foreground">
-                      Convert images to PDF
+              {convertTools.map((t) => (
+                <DropdownMenuItem key={t.slug} asChild>
+                  <Link
+                    href={`/tools/${t.slug}`}
+                    className="flex items-center gap-2.5 py-2 cursor-pointer"
+                  >
+                    <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-rose-500/10 text-rose-600 text-[10px] font-bold leading-none">
+                      {convertBadge[t.slug] ?? "PDF"}
+                    </span>
+                    <div className="min-w-0">
+                      <div className="font-medium text-sm">{t.name}</div>
+                      <div className="text-xs text-muted-foreground truncate">
+                        {t.description}
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link
-                  href="/tools/pdf-to-jpg"
-                  className="flex items-center gap-2.5 py-2 cursor-pointer"
-                >
-                  <span className="flex size-7 items-center justify-center rounded-md bg-rose-500/10 text-rose-600">
-                    PDF
-                  </span>
-                  <div>
-                    <div className="font-medium text-sm">PDF to JPG</div>
-                    <div className="text-xs text-muted-foreground">
-                      Extract pages as images
-                    </div>
-                  </div>
-                </Link>
-              </DropdownMenuItem>
+                  </Link>
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
 

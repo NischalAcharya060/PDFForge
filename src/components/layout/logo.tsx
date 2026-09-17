@@ -7,12 +7,12 @@ export function ForgeMark({ className }: { className?: string }) {
   return (
     <Image
       src="/logo.png"
-      alt=""
-      width={36}
-      height={36}
+      alt="PDFForge Logo"
+      width={40}
+      height={40}
       priority
       aria-hidden="true"
-      className={cn("size-9 shrink-0 object-contain dark:invert", className)}
+      className={cn("size-10 shrink-0 object-contain", className)}
     />
   );
 }
