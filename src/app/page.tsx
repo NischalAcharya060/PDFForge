@@ -11,7 +11,7 @@ import {
   Zap,
 } from "lucide-react";
 
-import { popularTools } from "@/config/tools";
+import { popularTools, tools } from "@/config/tools";
 import { Container } from "@/components/layout/container";
 import { ToolQuickLink } from "@/components/home/tool-card";
 import { Button } from "@/components/ui/button";
@@ -158,7 +158,7 @@ export default function HomePage() {
               asChild
               className="h-13 px-8 text-base font-semibold rounded-2xl shadow-xs"
             >
-              <Link href="#tools">Explore all 12 tools</Link>
+              <Link href="#tools">Explore all {tools.length} tools</Link>
             </Button>
           </div>
 
@@ -352,7 +352,7 @@ export default function HomePage() {
               Ready to forge your PDFs?
             </h2>
             <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Choose from 12 powerful PDF tools. No registration, no watermarks, completely free.
+              Choose from {tools.length} powerful PDF tools. No registration, no watermarks, completely free.
             </p>
             <div className="pt-4">
               <Button

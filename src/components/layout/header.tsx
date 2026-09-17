@@ -233,7 +233,7 @@ export function Header() {
               <Button asChild className="w-full justify-start font-semibold">
                 <Link href="/tools" onClick={() => setMobileOpen(false)}>
                   <LayoutGrid className="mr-2 size-4" />
-                  Explore All 12 PDF Tools
+                  Explore All {tools.length} PDF Tools
                 </Link>
               </Button>
             </div>

@@ -37,15 +37,17 @@ export default function CompressPdfTool({ tool }: { tool: ToolDefinition }) {
 
     const compact = await compressPdf(bytes, { stripMetadata }, file.name);
     const blob = bytesToBlob(compact.bytes, "application/pdf");
-    const saved = Math.max(0, file.size - compact.bytes.byteLength);
-    const savedPercent = file.size > 0 ? (saved / file.size) * 100 : 0;
-    const note = `The file was reduced by ${Math.round(savedPercent)}%. Source images are not downsampled, so image-heavy documents may still be large.`;
+    const note =
+      compact.savedPercent > 0
+        ? `The file was reduced by ${compact.savedPercent}%. Source images are not downsampled, so image-heavy documents may still be large.`
+        : "This PDF could not be reduced further; the original file is returned.";
 
     return {
       blob,
       filename: "compressed.pdf",
       size: blob.size,
       inputSize: file.size,
+      savedPercent: compact.savedPercent,
       note,
     };
   }, [files, stripMetadata]);
