@@ -7,6 +7,7 @@ import {
   FileCheck2,
   Lock,
   MousePointerClick,
+  Play,
   ShieldCheck,
   Sparkles,
   Zap,
@@ -239,6 +240,39 @@ export default function HomePage() {
 
       {/* Interactive Tool Browser (Search & Categories & Cards Grid) */}
       <HomeToolBrowser />
+
+      {/* Promo Video */}
+      <section className="border-t py-16 sm:py-20">
+        <Container>
+          <div className="mx-auto max-w-3xl text-center mb-12">
+            <div className="inline-flex items-center gap-1.5 rounded-full border bg-primary/10 px-3 py-1 text-xs font-bold text-primary mb-3">
+              <Play className="size-3.5" />
+              SEE IT IN ACTION
+            </div>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
+              The whole product, in 20 seconds
+            </h2>
+            <p className="mt-3 text-sm text-muted-foreground sm:text-base">
+              Watch how PDFForge merges, converts, and protects your documents —
+              completely in your browser, so your files never leave your computer.
+            </p>
+          </div>
+
+          <div className="mx-auto max-w-4xl overflow-hidden rounded-3xl border bg-black/5 p-2 shadow-lg">
+            <video
+              className="w-full aspect-video rounded-2xl bg-black"
+              src="/brag.mp4"
+              poster="/brag-poster.jpg"
+              controls
+              playsInline
+              preload="metadata"
+              aria-label="PDFForge product demo video"
+            >
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </Container>
+      </section>
 
       {/* Why PDFForge vs Traditional Cloud Converters Matrix */}
       <section className="border-t bg-muted/30 py-16 sm:py-20">

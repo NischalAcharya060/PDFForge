@@ -5,7 +5,7 @@ export const siteConfig = {
     "Simple tools for merging, splitting, converting, compressing, and managing PDF files. Everything runs in your browser.",
   url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   ogImage: "/logo.png",
-  supportEmail: "contact@pdfforge.app",
+  supportEmail: "Nischal060@gmail.com",
 } as const;
 
 export const navLinks = [

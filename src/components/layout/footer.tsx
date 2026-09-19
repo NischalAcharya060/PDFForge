@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Lock, ShieldCheck, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 
 import { legalLinks } from "@/config/site";
 import { tools } from "@/config/tools";
@@ -30,10 +30,6 @@ export function Footer() {
               Your free, aesthetic, and privacy-first PDF utility suite. Every tool
               operates 100% inside your browser — zero files are uploaded to any server.
             </p>
-            <div className="inline-flex items-center gap-2 rounded-full border bg-background px-3 py-1 text-xs text-muted-foreground">
-              <ShieldCheck className="size-3.5 text-emerald-600 dark:text-emerald-400" />
-              100% Client-Side Privacy
-            </div>
           </div>
 
           {/* Column 1: Organize & Optimize */}
@@ -99,14 +95,6 @@ export function Footer() {
                 </Link>
               </li>
             </ul>
-
-            <div className="mt-6 rounded-xl border bg-background/80 p-3.5 text-xs text-muted-foreground">
-              <div className="flex items-center gap-1.5 font-medium text-foreground mb-1">
-                <Lock className="size-3.5 text-primary" />
-                Zero-Upload Guarantee
-              </div>
-              Files are processed directly in RAM in your browser session.
-            </div>
           </div>
         </div>
 
@@ -116,7 +104,16 @@ export function Footer() {
             <Heart className="size-3 text-primary fill-primary inline" /> for productivity.
           </p>
           <p>
-            Processed entirely on your device via client-side WebAssembly & Web APIs.
+            Developed by{" "}
+            <a
+              href="https://acharyanischal.com.np"
+              target="_blank"
+              rel="noopener"
+              className="font-semibold text-foreground transition-colors hover:text-primary hover:underline"
+            >
+              Nischal Acharya
+            </a>
+            .
           </p>
         </div>
       </Container>

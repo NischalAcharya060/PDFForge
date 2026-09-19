@@ -88,7 +88,14 @@ export default function PrivacyPage() {
             <h3 className="text-base font-bold text-foreground">4. Contact</h3>
             <p>
               If you have any questions or security concerns regarding PDFForge, feel free to contact
-              our team at <code className="text-primary font-mono">contact@pdfforge.app</code>.
+              us at{" "}
+              <a
+                href="mailto:Nischal060@gmail.com"
+                className="font-mono text-primary hover:underline"
+              >
+                Nischal060@gmail.com
+              </a>
+              .
             </p>
           </section>
         </div>
