@@ -71,7 +71,7 @@ export default function SplitPdfTool({ tool }: { tool: ToolDefinition }) {
         setMessage(`${total} pages detected`);
       })
       .catch((err) => {
-        setPreviewError(err instanceof Error ? err.message : "Could not read this PDF.");
+        setPreviewError(err instanceof Error ? err.message : "We couldn't read this PDF. It may be damaged — please try another file.");
       });
   }, [files, setMessage]);
 
@@ -90,7 +90,7 @@ export default function SplitPdfTool({ tool }: { tool: ToolDefinition }) {
 
   const process = useCallback(async (): Promise<PdfToolResult> => {
     const file = files[0];
-    if (!file) throw new Error("No file selected.");
+    if (!file) throw new Error("Please add a file to get started — drag one into the upload area above.");
     const bytes = await fileToArrayBuffer(file.file);
 
     if (mode === "all") {
@@ -122,7 +122,7 @@ export default function SplitPdfTool({ tool }: { tool: ToolDefinition }) {
         groups.push(indices);
       }
       if (groups.length === 0) {
-        throw new Error("Enter at least one page or range, e.g. 1-3, 5, 8-10.");
+        throw new Error("Enter at least one page or range to extract — for example: 1-3, 5, 8-10.");
       }
       if (groups.length > MAX_OUTPUTS) throw TooManyPages(MAX_OUTPUTS);
       const parts = await splitIntoGroups(bytes, groups, file.name, setMessage);
@@ -144,7 +144,7 @@ export default function SplitPdfTool({ tool }: { tool: ToolDefinition }) {
 
     const indices = parsedSelected();
     if (indices.length === 0) {
-      throw new Error("Select at least one page to extract.");
+      throw new Error("Select at least one page to extract, then try again.");
     }
     const bytesOut = await extractPages(bytes, indices, file.name);
     const blob = bytesToBlob(bytesOut, "application/pdf");
@@ -160,24 +160,24 @@ export default function SplitPdfTool({ tool }: { tool: ToolDefinition }) {
   const handleSubmit = useCallback(async () => {
     setLocalError(null);
     if (mode === "ranges" && !ranges.trim()) {
-      setLocalError("Enter a page range, e.g. 1-3, 5, 8-10.");
+      setLocalError("Enter a page range to split — for example: 1-3, 5, 8-10.");
       return;
     }
     if (mode === "ranges") {
       try {
         parsePageRanges(ranges, pageCount);
       } catch (err) {
-        setLocalError(err instanceof Error ? err.message : "Invalid range.");
+        setLocalError(err instanceof Error ? err.message : "That page range isn't valid. Please check it and try again.");
         return;
       }
     }
     if (mode === "selected" && selectedCount === 0) {
-      setLocalError("Select at least one page.");
+      setLocalError("Select at least one page to split, then try again.");
       return;
     }
     if (mode === "all" && pageCount > MAX_OUTPUTS) {
       setLocalError(
-        `This PDF has ${pageCount} pages. You can split a maximum of ${MAX_OUTPUTS} pages here.`,
+        `This PDF has ${pageCount} pages, which is more than the ${MAX_OUTPUTS}-page limit for splitting all pages at once. Try selecting specific pages instead.`,
       );
       return;
     }

@@ -56,7 +56,7 @@ export default function MergePdfTool({ tool }: { tool: ToolDefinition }) {
 
   const handleSubmit = useCallback(async () => {
     if (files.length < 2) {
-      setLocalError("Add at least two PDF files to merge.");
+      setLocalError("Add at least two PDF files to merge, then try again.");
       return;
     }
     setLocalError(null);

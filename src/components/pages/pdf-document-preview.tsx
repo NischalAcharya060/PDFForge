@@ -254,7 +254,7 @@ export function PdfDocumentPreview({
       {/* Error state */}
       {errorMessage ? (
         <div className="py-8 text-center text-xs text-destructive">
-          <p>Failed to load preview: {errorMessage}</p>
+          <p>We couldn&apos;t load the preview: {errorMessage}</p>
         </div>
       ) : null}
 

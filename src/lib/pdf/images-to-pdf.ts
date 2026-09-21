@@ -49,7 +49,7 @@ async function decodeRaster(
   canvas.width = bitmap.width;
   canvas.height = bitmap.height;
   const context = canvas.getContext("2d");
-  if (!context) throw new Error("Canvas unavailable");
+  if (!context) throw new Error("Your browser couldn't draw the image for conversion. Please update your browser and try again.");
   context.drawImage(bitmap, 0, 0);
   bitmap.close();
 
@@ -59,7 +59,7 @@ async function decodeRaster(
 
   const blob: Blob = await new Promise((resolve, reject) =>
     canvas.toBlob(
-      (result) => (result ? resolve(result) : reject(new Error("Encoding failed"))),
+      (result) => (result ? resolve(result) : reject(new Error("We couldn't encode one of the images. Please try a different image."))),
       pixelType,
       quality,
     ),
@@ -72,7 +72,7 @@ function pageSizePoints(pageSize: PdfPageSize, orientation: PdfOrientation): [nu
   let size: [number, number];
   if (pageSize === "letter") size = LETTER_PORTRAIT;
   else if (pageSize === "a4") size = A4_PORTRAIT;
-  else throw new Error("Unknown page size");
+  else throw new Error("That page size isn't supported. Choose A4 or Letter and try again.");
 
   const landscape =
     orientation === "landscape" || (orientation === "auto" && size[0] < size[1])
@@ -111,7 +111,7 @@ export async function imagesToPdf(
   options: ImagesToPdfOptions,
   onProgress?: (message: string) => void,
 ): Promise<Uint8Array> {
-  if (images.length === 0) throw new Error("No images to convert.");
+  if (images.length === 0) throw new Error("There are no images to convert. Please add at least one image and try again.");
   if (!isBrowserRasterSupported()) throw BrowserProcessingUnavailable();
 
   const doc = await PDFDocument.create();

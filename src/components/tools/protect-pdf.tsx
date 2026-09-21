@@ -37,7 +37,7 @@ export default function ProtectPdfTool({ tool }: { tool: ToolDefinition }) {
 
   const process = useCallback(async (): Promise<PdfToolResult> => {
     const file = files[0];
-    if (!file) throw new Error("No file selected.");
+    if (!file) throw new Error("Please add a file to get started — drag one into the upload area above.");
     const bytes = await fileToArrayBuffer(file.file);
     const bytesOut = await encryptPdf(bytes, { userPassword: password, allowPrint }, file.name);
     const blob = bytesToBlob(bytesOut, "application/pdf");
@@ -52,11 +52,11 @@ export default function ProtectPdfTool({ tool }: { tool: ToolDefinition }) {
 
   const handleSubmit = useCallback(async () => {
     if (password.length < MIN_PASSWORD) {
-      setLocalError(`The password must be at least ${MIN_PASSWORD} characters long.`);
+      setLocalError(`Your password needs to be at least ${MIN_PASSWORD} characters long.`);
       return;
     }
     if (password !== confirm) {
-      setLocalError("The passwords do not match.");
+      setLocalError("The two passwords don't match. Please re-enter them.");
       return;
     }
     setLocalError(null);

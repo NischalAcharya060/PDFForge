@@ -368,10 +368,10 @@ export default function SignPdfTool({ tool }: { tool: ToolDefinition }) {
   // Submission process
   const process = useCallback(async (): Promise<PdfToolResult> => {
     const file = files[0];
-    if (!file) throw new Error("No file selected.");
+    if (!file) throw new Error("Please add a file to get started — drag one into the upload area above.");
 
     if (!activeSigDataUrl) {
-      throw new Error("Please create, type, or upload your signature first.");
+      throw new Error("Add your signature before continuing — draw, type, or upload one first.");
     }
 
     const bytes = await fileToArrayBuffer(file.file);
@@ -399,7 +399,7 @@ export default function SignPdfTool({ tool }: { tool: ToolDefinition }) {
 
   const handleSubmit = useCallback(async () => {
     if (!activeSigDataUrl) {
-      setLocalError("Please draw, type, or upload a signature before submitting.");
+      setLocalError("Add your signature before submitting — draw, type, or upload one first.");
       return;
     }
     setLocalError(null);

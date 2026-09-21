@@ -86,10 +86,10 @@ export default function DeletePdfPagesTool({ tool }: { tool: ToolDefinition }) {
 
   const process = useCallback(async (): Promise<PdfToolResult> => {
     const file = files[0];
-    if (!file) throw new Error("No file selected.");
+    if (!file) throw new Error("Please add a file to get started — drag one into the upload area above.");
     const indices = [...selected].sort((a, b) => a - b);
     if (indices.length === 0) {
-      throw new Error("Select the pages you want to delete.");
+      throw new Error("Select at least one page to delete, then try again.");
     }
     const bytes = await fileToArrayBuffer(file.file);
     const bytesOut = await deletePages(bytes, indices, file.name);
@@ -105,11 +105,11 @@ export default function DeletePdfPagesTool({ tool }: { tool: ToolDefinition }) {
 
   const handleSubmit = useCallback(async () => {
     if (selectedCount === 0) {
-      setLocalError("Select at least one page to delete.");
+      setLocalError("Select at least one page to delete, then try again.");
       return;
     }
     if (selectedCount >= pageCount) {
-      setLocalError("You cannot delete every page. Keep at least one.");
+      setLocalError("A PDF needs at least one page. Deselect one page before deleting.");
       return;
     }
     setLocalError(null);

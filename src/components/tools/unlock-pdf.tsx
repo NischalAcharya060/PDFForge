@@ -64,9 +64,9 @@ export default function UnlockPdfTool({ tool }: { tool: ToolDefinition }) {
 
   const process = useCallback(async (): Promise<PdfToolResult> => {
     const file = files[0];
-    if (!file) throw new Error("No file selected.");
+    if (!file) throw new Error("Please add a file to get started — drag one into the upload area above.");
     if (!password) {
-      throw new Error("Please enter the password to decrypt this document.");
+      throw new Error("Enter the document password to continue.");
     }
     const bytes = await fileToArrayBuffer(file.file);
     const bytesOut = await unlockPdf(bytes, password, file.name);
@@ -82,7 +82,7 @@ export default function UnlockPdfTool({ tool }: { tool: ToolDefinition }) {
 
   const handleSubmit = useCallback(async () => {
     if (!password) {
-      setLocalError("Please enter the document password.");
+      setLocalError("Enter the document password to continue.");
       return;
     }
     setLocalError(null);

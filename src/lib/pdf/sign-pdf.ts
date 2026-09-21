@@ -19,7 +19,7 @@ export interface SignaturePlacement {
 function dataUrlToBytes(dataUrl: string): Uint8Array {
   const commaIndex = dataUrl.indexOf(",");
   if (commaIndex === -1) {
-    throw new Error("Invalid signature image format.");
+    throw new Error("That signature image couldn't be read. Please use a PNG or JPG file and try again.");
   }
   const base64 = dataUrl.slice(commaIndex + 1);
   const binaryString = atob(base64);

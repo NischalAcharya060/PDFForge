@@ -20,7 +20,7 @@ export async function encryptPdf(
   assertPdfBytes(data, displayName);
 
   if (!options.userPassword) {
-    throw new Error("A password is required to protect the file.");
+    throw new Error("Enter a password to protect this PDF, then try again.");
   }
 
   let doc: PDFDocument;
@@ -32,7 +32,7 @@ export async function encryptPdf(
   } catch (error) {
     if (error instanceof Error && error.message.includes("encrypted")) {
       throw new Error(
-        "This PDF is already password protected. Add editing permissions instead.",
+        "This PDF is already password protected. Remove its password first, then add a new one.",
       );
     }
     throw InvalidPDF(displayName);

@@ -22,56 +22,58 @@ export const UnsupportedFileType = (
 ): PdfToolError =>
   new PdfToolError(
     "UnsupportedFileType",
-    `${displayName} is not a supported file type for this tool.`,
+    `"${displayName}" isn't a file type this tool can open. Check the accepted formats shown in the upload area and try again.`,
   );
 
 export const FileTooLarge = (maxMB: number): PdfToolError =>
   new PdfToolError(
     "FileTooLarge",
-    `File is too large. The maximum supported size is ${maxMB} MB.`,
+    `This file is too large to process. The maximum supported size is ${maxMB} MB — try a smaller file, or compress it first and then retry.`,
   );
 
 export const InvalidPDF = (displayName = "file"): PdfToolError =>
   new PdfToolError(
     "InvalidPDF",
-    `${displayName} does not look like a valid PDF. Please check the file and try again.`,
+    `We couldn't open "${displayName}" because it doesn't appear to be a valid PDF. It may be damaged or saved with the wrong extension — please try another file.`,
   );
 
 export const PasswordProtectedPDF = (displayName = "file"): PdfToolError =>
   new PdfToolError(
     "PasswordProtectedPDF",
-    `${displayName} is password protected and cannot be read. Unlock it first and try again.`,
+    `"${displayName}" is locked with a password, so we can't read it. Unlock it with the correct password first, then try again.`,
   );
 
 export const TooManyPages = (max: number): PdfToolError =>
   new PdfToolError(
     "TooManyPages",
-    `This document has too many pages to process in your browser. Please split it into smaller files first (up to ${max} pages).`,
+    `This document has more pages than can be processed in a single pass. Split it into smaller parts of up to ${max} pages each, then process them one at a time.`,
   );
 
 export const BrowserProcessingUnavailable = (): PdfToolError =>
   new PdfToolError(
     "BrowserProcessingUnavailable",
-    "This tool requires a modern browser with support for client-side processing. Please try a recent version of Chrome, Firefox, Safari, or Edge.",
+    "This tool runs entirely in your browser, but your current browser doesn't support the features it needs. Please update to the latest Chrome, Firefox, Safari, or Edge and try again.",
   );
 
 export const ProcessingFailed = (detail?: string): PdfToolError =>
   new PdfToolError(
     "ProcessingFailed",
-    detail ? `Processing failed: ${detail}` : "Processing failed. Please try again.",
+    detail
+      ? `We couldn't finish processing your file: ${detail}`
+      : "We couldn't finish processing your file. Please try again — if the problem continues, the document may be damaged or unusually complex.",
   );
 
 export function toErrorMessage(error: unknown): string {
   if (error instanceof PdfToolError) return error.message;
   if (error instanceof Error) {
     const message = error.message;
-    if (message.includes("is encrypted")) return "This PDF is password protected and cannot be read.";
-    if (message.includes("PasswordException")) return "This PDF is password protected and cannot be read.";
-    if (message.includes("InvalidPDFException")) return "This does not look like a valid PDF.";
+    if (message.includes("is encrypted")) return "This PDF is password protected. Unlock it first, then try again.";
+    if (message.includes("PasswordException")) return "This PDF is password protected. Unlock it first, then try again.";
+    if (message.includes("InvalidPDFException")) return "This file doesn't appear to be a valid PDF. It may be damaged — please try another file.";
     if (/failed to parse|corrupt|malformed/i.test(message)) {
-      return "This PDF appears to be corrupt or unsupported. Please try another file.";
+      return "This PDF looks damaged or unsupported, so we couldn't read it. Please try a different file.";
     }
-    return "Something went wrong while processing your file. Please try again.";
+    return "Something unexpected went wrong while processing your file. Your file never left your device — please try again, or choose a different file.";
   }
-  return "Something went wrong while processing your file. Please try again.";
+  return "Something unexpected went wrong while processing your file. Your file never left your device — please try again, or choose a different file.";
 }

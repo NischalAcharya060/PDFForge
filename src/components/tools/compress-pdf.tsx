@@ -34,7 +34,7 @@ export default function CompressPdfTool({ tool }: { tool: ToolDefinition }) {
 
   const process = useCallback(async (): Promise<PdfToolResult> => {
     const file = files[0];
-    if (!file) throw new Error("No file selected.");
+    if (!file) throw new Error("Please add a file to get started — drag one into the upload area above.");
     const bytes = await fileToArrayBuffer(file.file);
 
     const compact = await compressPdf(

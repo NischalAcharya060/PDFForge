@@ -85,12 +85,12 @@ export default function ReorderPdfPagesTool({ tool }: { tool: ToolDefinition }) 
 
   const process = useCallback(async (): Promise<PdfToolResult> => {
     const file = files[0];
-    if (!file) throw new Error("No file selected.");
+    if (!file) throw new Error("Please add a file to get started — drag one into the upload area above.");
     const effectiveOrder =
       order.length > 0
         ? order
         : Array.from({ length: pageCount }, (_, i) => i);
-    if (effectiveOrder.length === 0) throw new Error("No pages to arrange.");
+    if (effectiveOrder.length === 0) throw new Error("There are no pages to rearrange. Please add a PDF with at least one page and try again.");
     const bytes = await fileToArrayBuffer(file.file);
     const bytesOut = await reorderPdf(bytes, effectiveOrder, file.name);
     const blob = bytesToBlob(bytesOut, "application/pdf");

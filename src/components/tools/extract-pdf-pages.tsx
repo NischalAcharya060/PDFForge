@@ -76,7 +76,7 @@ export default function ExtractPdfPagesTool({ tool }: { tool: ToolDefinition }) 
 
   const process = useCallback(async (): Promise<PdfToolResult> => {
     const file = files[0];
-    if (!file) throw new Error("No file selected.");
+    if (!file) throw new Error("Please add a file to get started — drag one into the upload area above.");
     const bytes = await fileToArrayBuffer(file.file);
 
     let indices: number[];
@@ -86,7 +86,7 @@ export default function ExtractPdfPagesTool({ tool }: { tool: ToolDefinition }) 
       indices = [...selected].sort((a, b) => a - b);
     }
     if (indices.length === 0) {
-      throw new Error("Select the pages you want to keep.");
+      throw new Error("Select at least one page to keep, then try again.");
     }
 
     const bytesOut = await extractPages(bytes, indices, file.name);
@@ -104,17 +104,17 @@ export default function ExtractPdfPagesTool({ tool }: { tool: ToolDefinition }) 
     setLocalError(null);
     if (mode === "ranges") {
       if (!ranges.trim()) {
-        setLocalError("Enter a page range, e.g. 1-3, 5, 8-10.");
+        setLocalError("Enter a page range to extract — for example: 1-3, 5, 8-10.");
         return;
       }
       try {
         parsePageRanges(ranges, pageCount);
       } catch (err) {
-        setLocalError(err instanceof Error ? err.message : "Invalid range.");
+        setLocalError(err instanceof Error ? err.message : "That page range isn't valid. Please check it and try again.");
         return;
       }
     } else if (selectedCount === 0) {
-      setLocalError("Select at least one page to extract.");
+      setLocalError("Select at least one page to extract, then try again.");
       return;
     }
     await run(process);

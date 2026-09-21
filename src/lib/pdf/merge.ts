@@ -6,7 +6,7 @@ export async function mergePdfs(
   onProgress?: (message: string) => void,
 ): Promise<Uint8Array> {
   if (sources.length === 0) {
-    throw new Error("No files to merge.");
+    throw new Error("There are no files to merge. Please add at least two PDFs and try again.");
   }
 
   const out = await createPdfDocument();

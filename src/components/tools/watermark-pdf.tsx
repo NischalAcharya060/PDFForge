@@ -74,8 +74,8 @@ export default function WatermarkPdfTool({ tool }: { tool: ToolDefinition }) {
 
   const process = useCallback(async (): Promise<PdfToolResult> => {
     const file = files[0];
-    if (!file) throw new Error("No file selected.");
-    if (!text.trim()) throw new Error("Please enter watermark text.");
+    if (!file) throw new Error("Please add a file to get started — drag one into the upload area above.");
+    if (!text.trim()) throw new Error("Enter the watermark text you want to add, then try again.");
     const bytes = await fileToArrayBuffer(file.file);
     const bytesOut = await addWatermark(
       bytes,

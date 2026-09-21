@@ -13,7 +13,7 @@ export async function unlockPdf(
   assertPdfBytes(data, displayName);
 
   if (!password) {
-    throw new Error("Please enter the password to unlock this document.");
+    throw new Error("Enter the document password to continue.");
   }
 
   let doc: PDFDocument;
@@ -27,7 +27,7 @@ export async function unlockPdf(
     if (error instanceof Error) {
       const msg = error.message.toLowerCase();
       if (msg.includes("password") || msg.includes("encrypted") || msg.includes("decrypt")) {
-        throw new Error("Incorrect password. Please check your password and try again.");
+        throw new Error("That password didn't work. Double-check it (passwords are case-sensitive) and try again.");
       }
     }
     throw InvalidPDF(displayName);

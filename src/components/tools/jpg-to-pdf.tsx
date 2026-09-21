@@ -86,7 +86,7 @@ export default function JpgToPdfTool({ tool }: { tool: ToolDefinition }) {
   }, [removeThumbUrls, clearFiles]);
 
   const process = useCallback(async (): Promise<PdfToolResult> => {
-    if (files.length === 0) throw new Error("No images selected.");
+    if (files.length === 0) throw new Error("Please add at least one image to continue — drag them into the upload area above.");
     const inputs = [];
     for (const file of files) {
       inputs.push({
@@ -108,7 +108,7 @@ export default function JpgToPdfTool({ tool }: { tool: ToolDefinition }) {
 
   const handleSubmit = useCallback(async () => {
     if (files.length === 0) {
-      setLocalError("Add at least one image.");
+      setLocalError("Add at least one image to continue.");
       return;
     }
     setLocalError(null);

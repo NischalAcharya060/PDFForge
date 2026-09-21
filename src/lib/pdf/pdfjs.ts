@@ -43,7 +43,7 @@ export async function renderPageToCanvas({
   canvas.width = Math.max(1, Math.ceil(viewport.width));
   canvas.height = Math.max(1, Math.ceil(viewport.height));
   const context = canvas.getContext("2d");
-  if (!context) throw new Error("Canvas unavailable");
+  if (!context) throw new Error("Your browser couldn't render a page preview. Please update your browser and try again.");
   context.fillStyle = "#ffffff";
   context.fillRect(0, 0, canvas.width, canvas.height);
   // pdf.js v6 expects the canvas itself (canvasContext is gone).

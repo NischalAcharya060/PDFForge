@@ -104,7 +104,9 @@ export function usePdfTool(options: UsePdfToolOptions): PdfToolApi {
           ? maxFiles - previous.length
           : 1 - previous.length;
         if (remaining <= 0) {
-          error ??= `You can add up to ${maxFiles} files at a time.`;
+          error ??= multiple
+            ? `You can add up to ${maxFiles} files at a time. Remove a file first to add another.`
+            : "This tool handles one file at a time. Remove the current file before adding another.";
           return previous;
         }
         const merged = [...previous, ...accepted].slice(0, maxFiles);

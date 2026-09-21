@@ -105,7 +105,7 @@ export default function WebpToPdfTool({ tool }: { tool: ToolDefinition }) {
   }, [removeThumbUrls, reset]);
 
   const process = useCallback(async (): Promise<PdfToolResult> => {
-    if (files.length === 0) throw new Error("No WebP images selected.");
+    if (files.length === 0) throw new Error("Please add at least one WebP image to continue — drag them into the upload area above.");
     const inputs = [];
     for (const file of files) {
       inputs.push({

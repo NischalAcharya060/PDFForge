@@ -8,7 +8,7 @@ export function parsePageRanges(
 ): number[] {
   const raw = input.trim();
   if (!raw) {
-    throw new Error("Enter at least one page or range, e.g. 1-3, 5, 8-10.");
+    throw new Error("Enter at least one page or range to continue — for example: 1-3, 5, 8-10.");
   }
 
   const maxSelectable = maxPages ?? Infinity;
@@ -22,7 +22,7 @@ export function parsePageRanges(
 
     const match = /^(\d+)(?:\s*-\s*(\d+))?$/.exec(part);
     if (!match) {
-      throw new Error(`"${part}" is not a valid page or range.`);
+      throw new Error(`We couldn't understand "${part}". Use page numbers or ranges like 1-3, 5, or 8-10.`);
     }
 
     const start = Number(match[1]);
@@ -30,11 +30,11 @@ export function parsePageRanges(
 
     if (start < 1 || end < 1 || start > pageCount || end > pageCount) {
       throw new Error(
-        `Pages must be between 1 and ${pageCount}. "${part}" is out of range.`,
+        `The page range "${part}" is outside this document. Pages must be between 1 and ${pageCount}.`,
       );
     }
     if (start > end) {
-      throw new Error(`Range "${part}" starts after it ends.`);
+      throw new Error(`The range "${part}" starts after it ends. Swap the numbers and try again.`);
     }
 
     for (let page = start; page <= end; page++) {
@@ -46,11 +46,11 @@ export function parsePageRanges(
   }
 
   if (pages.length === 0) {
-    throw new Error("Enter at least one page or range, e.g. 1-3, 5, 8-10.");
+    throw new Error("Enter at least one page or range to continue — for example: 1-3, 5, 8-10.");
   }
   if (pages.length > maxSelectable) {
     throw new Error(
-      `You can select up to ${maxSelectable} pages at once. Please narrow the range.`,
+      `You can select up to ${maxSelectable} pages at a time. Please narrow your range and try again.`,
     );
   }
 

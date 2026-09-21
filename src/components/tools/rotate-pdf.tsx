@@ -63,7 +63,7 @@ export default function RotatePdfTool({ tool }: { tool: ToolDefinition }) {
 
   const process = useCallback(async (): Promise<PdfToolResult> => {
     const file = files[0];
-    if (!file) throw new Error("No file selected.");
+    if (!file) throw new Error("Please add a file to get started — drag one into the upload area above.");
     const bytes = await fileToArrayBuffer(file.file);
 
     let targets: RotationMap;
@@ -75,7 +75,7 @@ export default function RotatePdfTool({ tool }: { tool: ToolDefinition }) {
     }
 
     if (Object.keys(targets).length === 0) {
-      throw new Error("Select at least one page to rotate.");
+      throw new Error("Select at least one page to rotate, then try again.");
     }
 
     const bytesOut = await rotatePdf(bytes, targets, file.name);
@@ -92,7 +92,7 @@ export default function RotatePdfTool({ tool }: { tool: ToolDefinition }) {
   const handleSubmit = useCallback(async () => {
     setLocalError(null);
     if (!applyToAll && selectedCount === 0) {
-      setLocalError("Select the pages you want to rotate, or switch to all pages.");
+      setLocalError("Select at least one page to rotate, or choose to apply rotation to all pages.");
       return;
     }
     await run(process);
