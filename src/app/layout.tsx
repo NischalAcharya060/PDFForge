@@ -190,13 +190,14 @@ export const metadata: Metadata = {
   category: "technology",
   icons: {
     icon: [
-      { url: "/favicon/favicon-16x16.png", type: "image/png", sizes: "16x16" },
       { url: "/favicon/favicon-32x32.png", type: "image/png", sizes: "32x32" },
       { url: "/favicon/favicon-48x48.png", type: "image/png", sizes: "48x48" },
+      { url: "/favicon/favicon-16x16.png", type: "image/png", sizes: "16x16" },
       { url: "/favicon/android-chrome-192x192.png", type: "image/png", sizes: "192x192" },
       { url: "/favicon/android-chrome-512x512.png", type: "image/png", sizes: "512x512" },
       { url: "/favicon/maskable-512x512.png", type: "image/png", sizes: "512x512" },
     ],
+    shortcut: "/favicon.ico",
     apple: "/favicon/apple-touch-icon.png",
   },
   manifest: "/favicon/site.webmanifest",

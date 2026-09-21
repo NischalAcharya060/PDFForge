@@ -1,7 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Search, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Combine,
+  Lock,
+  PenTool,
+  RefreshCw,
+  Search,
+  Sparkles,
+  Zap,
+  ArrowLeftRight,
+  X,
+} from "lucide-react";
 
 import { tools, type ToolCategory } from "@/config/tools";
 import { ToolCard } from "@/components/home/tool-card";
@@ -10,18 +20,40 @@ import { cn } from "@/lib/utils";
 
 type FilterTab = "all" | ToolCategory;
 
-const filterTabs: { id: FilterTab; label: string }[] = [
-  { id: "all", label: "All Tools" },
-  { id: "organize", label: "Organize" },
-  { id: "compress", label: "Optimize" },
-  { id: "convert", label: "Convert" },
-  { id: "edit", label: "Edit" },
-  { id: "security", label: "Security" },
+const filterTabs: {
+  id: FilterTab;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+}[] = [
+  { id: "all", label: "All Tools", icon: Sparkles },
+  { id: "organize", label: "Organize", icon: Combine },
+  { id: "compress", label: "Optimize", icon: Zap },
+  { id: "convert", label: "Convert", icon: ArrowLeftRight },
+  { id: "edit", label: "Edit", icon: PenTool },
+  { id: "security", label: "Security", icon: Lock },
 ];
 
 export function HomeToolBrowser() {
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<FilterTab>("all");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Global hotkey '/' to jump to search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        e.key === "/" &&
+        document.activeElement?.tagName !== "INPUT" &&
+        document.activeElement?.tagName !== "TEXTAREA"
+      ) {
+        e.preventDefault();
+        inputRef.current?.focus();
+        inputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const filteredTools = useMemo(() => {
     return tools.filter((tool) => {
@@ -41,41 +73,57 @@ export function HomeToolBrowser() {
   }, [selectedCategory, query]);
 
   return (
-    <section id="tools" className="scroll-mt-16 py-12 sm:py-16">
+    <section id="tools" className="relative scroll-mt-20 py-16 sm:py-24">
       <Container>
         {/* Search & Filter Header Bar */}
         <div className="mx-auto max-w-4xl space-y-6">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
-              Most Popular PDF Tools
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
+              <Sparkles className="size-3.5" />
+              <span>COMPLETE CLIENT-SIDE SUITE</span>
+            </div>
+            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+              Explore All {tools.length} PDF Tools
             </h2>
-            <p className="mt-2 text-sm text-muted-foreground sm:text-base">
-              Select a tool below or search to merge, split, compress, watermark, or protect your files.
+            <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Every tool executes immediately in your browser memory. No queue, no files sent over the wire.
             </p>
           </div>
 
-          {/* Search Input Box */}
-          <div className="relative mx-auto max-w-xl">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-muted-foreground">
-              <Search className="size-5 text-primary" />
+          {/* Search Input Box with Ambient Backlight */}
+          <div className="relative mx-auto max-w-2xl group">
+            <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-gradient-to-r from-primary/20 via-amber-500/10 to-primary/20 opacity-40 blur-lg transition duration-500 group-hover:opacity-75" />
+            
+            <div className="relative flex items-center rounded-2xl border-2 border-border/80 bg-card/90 shadow-sm backdrop-blur-md transition-all duration-200 focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
+              <div className="pointer-events-none flex items-center pl-4 text-muted-foreground">
+                <Search className="size-5 text-primary transition-transform duration-200 group-focus-within:scale-110" />
+              </div>
+              <input
+                ref={inputRef}
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search any tool: merge, split, compress, watermark, protect..."
+                className="w-full bg-transparent py-4 pl-3.5 pr-20 text-sm font-medium placeholder:text-muted-foreground/60 focus:outline-none text-foreground"
+              />
+              
+              <div className="absolute right-3 flex items-center gap-1.5">
+                {query ? (
+                  <button
+                    type="button"
+                    onClick={() => setQuery("")}
+                    className="flex size-7 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer transition-colors"
+                    aria-label="Clear search"
+                  >
+                    <X className="size-4" />
+                  </button>
+                ) : (
+                  <kbd className="pointer-events-none hidden sm:inline-flex h-6 items-center gap-0.5 rounded-md border border-border bg-muted/60 px-2 font-mono text-[10px] font-semibold text-muted-foreground shadow-2xs">
+                    /
+                  </kbd>
+                )}
+              </div>
             </div>
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search any tool: merge, split, compress, watermark, protect..."
-              className="w-full rounded-2xl border-2 border-border/80 bg-card py-3.5 pl-12 pr-10 text-sm font-medium shadow-xs transition-colors placeholder:text-muted-foreground/70 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
-            />
-            {query && (
-              <button
-                type="button"
-                onClick={() => setQuery("")}
-                className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-muted-foreground hover:text-foreground"
-                aria-label="Clear search"
-              >
-                <X className="size-4" />
-              </button>
-            )}
           </div>
 
           {/* Category Filter Pills */}
@@ -87,6 +135,7 @@ export function HomeToolBrowser() {
                   : tools.filter((t) => t.category === tab.id).length;
 
               const isSelected = selectedCategory === tab.id;
+              const TabIcon = tab.icon;
 
               return (
                 <button
@@ -94,16 +143,22 @@ export function HomeToolBrowser() {
                   type="button"
                   onClick={() => setSelectedCategory(tab.id)}
                   className={cn(
-                    "flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-all cursor-pointer shadow-xs",
+                    "group relative flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition-all duration-200 cursor-pointer shadow-xs",
                     isSelected
-                      ? "bg-primary text-primary-foreground shadow-md shadow-primary/25 scale-105"
-                      : "border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground",
+                      ? "bg-primary text-primary-foreground shadow-md shadow-primary/25 scale-[1.03]"
+                      : "border border-border/80 bg-card/80 text-muted-foreground hover:border-primary/40 hover:text-foreground backdrop-blur-xs",
                   )}
                 >
+                  <TabIcon
+                    className={cn(
+                      "size-3.5 transition-transform duration-200 group-hover:rotate-6",
+                      isSelected ? "text-primary-foreground" : "text-muted-foreground/80 group-hover:text-primary",
+                    )}
+                  />
                   <span>{tab.label}</span>
                   <span
                     className={cn(
-                      "rounded-full px-1.5 py-0.2 text-[10px]",
+                      "rounded-full px-1.5 py-0.2 text-[10px] font-mono",
                       isSelected
                         ? "bg-white/20 text-white"
                         : "bg-muted text-muted-foreground",
@@ -115,6 +170,28 @@ export function HomeToolBrowser() {
               );
             })}
           </div>
+
+          {/* Results count indication */}
+          {(query || selectedCategory !== "all") && (
+            <div className="flex items-center justify-between text-xs text-muted-foreground px-1 pt-1">
+              <span>
+                Showing <strong className="text-foreground">{filteredTools.length}</strong> of {tools.length} tools
+                {selectedCategory !== "all" ? ` in ${selectedCategory}` : ""}
+                {query ? ` matching "${query}"` : ""}
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setQuery("");
+                  setSelectedCategory("all");
+                }}
+                className="flex items-center gap-1 font-semibold text-primary hover:underline cursor-pointer"
+              >
+                <RefreshCw className="size-3" />
+                Reset filters
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Tools Grid */}
@@ -126,13 +203,13 @@ export function HomeToolBrowser() {
               ))}
             </div>
           ) : (
-            <div className="rounded-3xl border border-dashed p-12 text-center">
-              <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-muted text-muted-foreground mb-3">
-                <Search className="size-6" />
+            <div className="rounded-3xl border-2 border-dashed border-border/80 bg-card/50 p-12 text-center backdrop-blur-xs">
+              <span className="inline-flex size-14 items-center justify-center rounded-2xl bg-muted text-muted-foreground mb-3 shadow-inner">
+                <Search className="size-6 text-primary" />
               </span>
-              <h3 className="font-bold text-base">No matching tools found</h3>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Try searching for &quot;merge&quot;, &quot;compress&quot;, &quot;split&quot;, or &quot;protect&quot;.
+              <h3 className="font-bold text-lg text-foreground">No matching PDF tools found</h3>
+              <p className="mt-1 max-w-sm mx-auto text-xs sm:text-sm text-muted-foreground">
+                We couldn&apos;t find anything matching &quot;{query}&quot;. Try searching for &quot;merge&quot;, &quot;compress&quot;, &quot;split&quot;, or &quot;protect&quot;.
               </p>
               <button
                 type="button"
@@ -140,9 +217,10 @@ export function HomeToolBrowser() {
                   setQuery("");
                   setSelectedCategory("all");
                 }}
-                className="mt-4 text-xs font-semibold text-primary hover:underline"
+                className="mt-5 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-md shadow-primary/20 hover:bg-primary/90 transition-all cursor-pointer"
               >
-                Reset filters
+                <RefreshCw className="size-3.5" />
+                Show All {tools.length} Tools
               </button>
             </div>
           )}
