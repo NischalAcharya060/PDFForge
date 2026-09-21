@@ -4,7 +4,8 @@ export const siteConfig = {
   description:
     "Simple tools for merging, splitting, converting, compressing, and managing PDF files. Everything runs in your browser.",
   url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
-  ogImage: "/logo.png",
+  ogImage: "/og-image.png",
+  twitterImage: "/twitter.png",
   supportEmail: "Nischal060@gmail.com",
 } as const;
 
