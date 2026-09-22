@@ -14,44 +14,69 @@
   <body>
     <header id="toolbar">
       <div class="toolbar-group left">
+        <div class="app-brand" title="PDFForge Desktop Viewer">
+          <svg viewBox="0 0 24 24" fill="none" class="brand-icon">
+            <rect width="24" height="24" rx="6" fill="#e5484d" />
+            <path d="M7 6h6l4 4v8a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z" fill="#fff" opacity="0.95" />
+            <path d="M13 6v4h4" fill="#e5484d" opacity="0.4" />
+            <text x="8" y="16" font-size="6" font-weight="900" fill="#e5484d" font-family="system-ui">PDF</text>
+          </svg>
+        </div>
         <button id="btn-open" class="icon-btn" title="Open PDF (Ctrl+O)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
             <path d="M3 9h18" />
           </svg>
         </button>
-        <button id="btn-print" class="icon-btn" title="Print (Ctrl+P)">
+        <button id="btn-print" class="icon-btn" title="Print (Ctrl+P)" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 9V3h12v6" />
             <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
             <rect x="6" y="14" width="12" height="7" rx="1" />
           </svg>
         </button>
-        <span id="doc-name">PDFForge Viewer</span>
+        <button id="btn-find" class="icon-btn" title="Find in document (Ctrl+F)" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7" />
+            <line x1="21" y1="21" x2="16" y2="16" />
+          </svg>
+        </button>
+        <button id="btn-info" class="icon-btn" title="Document properties (Ctrl+D)" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="16" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12.01" y2="8" />
+          </svg>
+        </button>
+        <span class="toolbar-sep"></span>
+        <span id="doc-name" title="No document opened">PDFForge Viewer</span>
       </div>
 
       <div class="toolbar-group center">
-        <button id="btn-prev" class="icon-btn" title="Previous page (←)">
+        <button id="btn-prev" class="icon-btn" title="Previous page (←)" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15 6l-6 6 6 6" />
+            <path d="M15 18l-6-6 6-6" />
           </svg>
         </button>
-        <span id="page-indicator">— of —</span>
-        <button id="btn-next" class="icon-btn" title="Next page (→)">
+        <div class="page-nav-box" title="Page navigation">
+          <input type="number" id="page-jump-input" min="1" value="1" title="Type page number and press Enter" disabled />
+          <span id="page-indicator">— of —</span>
+        </div>
+        <button id="btn-next" class="icon-btn" title="Next page (→)" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 6l6 6-6 6" />
+            <path d="M9 18l6-6-6-6" />
           </svg>
         </button>
       </div>
 
       <div class="toolbar-group right">
-        <button id="btn-fit-width" class="icon-btn" title="Fit to width">
+        <button id="btn-fit-width" class="icon-btn" title="Fit to width" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 8l-5 4 5 4" />
             <path d="M15 8l5 4-5 4" />
           </svg>
         </button>
-        <button id="btn-fit-page" class="icon-btn" title="Fit to page">
+        <button id="btn-fit-page" class="icon-btn" title="Fit to page" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 9V4h5" />
             <path d="M20 9V4h-5" />
@@ -59,15 +84,15 @@
             <path d="M20 15v5h-5" />
           </svg>
         </button>
-        <button id="btn-zoom-out" class="icon-btn" title="Zoom out (Ctrl+-)">
+        <button id="btn-zoom-out" class="icon-btn" title="Zoom out (Ctrl+-)" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <circle cx="11" cy="11" r="7" />
             <path d="M8 11h6" />
             <path d="M21 21l-4.3-4.3" />
           </svg>
         </button>
-        <select id="zoom-select" aria-label="Zoom level" title="Zoom level"></select>
-        <button id="btn-zoom-in" class="icon-btn" title="Zoom in (Ctrl++)">
+        <select id="zoom-select" aria-label="Zoom level" title="Zoom level" disabled></select>
+        <button id="btn-zoom-in" class="icon-btn" title="Zoom in (Ctrl++)" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <circle cx="11" cy="11" r="7" />
             <path d="M8 11h6" />
@@ -75,13 +100,26 @@
             <path d="M21 21l-4.3-4.3" />
           </svg>
         </button>
+        <button id="btn-rotate" class="icon-btn" title="Rotate clockwise (Ctrl+R)" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+            <path d="M21 3v5h-5" />
+          </svg>
+        </button>
         <span class="toolbar-sep"></span>
-        <button id="btn-thumbs" class="icon-btn" title="Toggle thumbnails (T)">
+        <button id="btn-thumbs" class="icon-btn" title="Toggle sidebar (T)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
             <rect x="3" y="3" width="7" height="7" rx="1.5" />
             <rect x="14" y="3" width="7" height="7" rx="1.5" />
             <rect x="3" y="14" width="7" height="7" rx="1.5" />
             <rect x="14" y="14" width="7" height="7" rx="1.5" />
+          </svg>
+        </button>
+        <button id="btn-shortcuts" class="icon-btn" title="Keyboard shortcuts (?)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
           </svg>
         </button>
         <button id="btn-theme" class="icon-btn" title="Toggle dark mode (D)">
@@ -98,32 +136,67 @@
 
     <div id="viewport">
       <aside id="thumbnails" hidden>
-        <div id="thumb-list"></div>
+        <div class="sidebar-tabs">
+          <button id="tab-thumbs" class="sidebar-tab active" title="Thumbnails">Pages</button>
+          <button id="tab-outline" class="sidebar-tab" title="Document bookmarks">Outline</button>
+        </div>
+        <div id="thumb-list" class="sidebar-panel"></div>
+        <div id="outline-list" class="sidebar-panel" hidden>
+          <div class="empty-outline">No outline in this document</div>
+        </div>
       </aside>
       <main id="page-host" tabindex="0"></main>
     </div>
 
     <div id="empty-state">
       <div class="empty-card">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
-          <path d="M9 13h6" />
-          <path d="M9 17h6" />
-        </svg>
-        <h1>Open a PDF</h1>
-        <button id="btn-open-empty" class="primary-btn">Open PDF</button>
+        <div class="empty-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <path d="M14 2v6h6" />
+            <path d="M16 13H8" />
+            <path d="M16 17H8" />
+            <path d="M10 9H8" />
+          </svg>
+        </div>
+        <h1>PDFForge Viewer</h1>
+        <p class="empty-subtitle">Fast, offline &amp; private desktop PDF reader</p>
+        <button id="btn-open-empty" class="primary-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <path d="M3 9h18" />
+          </svg>
+          Open PDF Document
+        </button>
         <p class="empty-hint">or drop a PDF anywhere in this window</p>
+        
+        <div id="recent-container" hidden>
+          <div class="recent-header">
+            <span>Recent Files</span>
+            <button id="btn-clear-recent" class="text-link-btn">Clear</button>
+          </div>
+          <div id="recent-list"></div>
+        </div>
+
+        <div class="empty-shortcuts">
+          <span class="shortcut-chip"><kbd>Ctrl</kbd>+<kbd>O</kbd> Open</span>
+          <span class="shortcut-chip"><kbd>Ctrl</kbd>+<kbd>F</kbd> Find</span>
+          <span class="shortcut-chip"><kbd>Ctrl</kbd>+<kbd>P</kbd> Print</span>
+          <span class="shortcut-chip"><kbd>Ctrl</kbd>+<kbd>R</kbd> Rotate</span>
+          <span class="shortcut-chip"><kbd>?</kbd> Help</span>
+        </div>
       </div>
     </div>
 
     <div id="error-state" hidden>
       <div class="error-card">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-          <path d="M12 9v4" />
-          <path d="M12 17h.01" />
-        </svg>
+        <div class="error-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+        </div>
         <h1 id="error-title">Couldn't open this file</h1>
         <p id="error-message"></p>
         <div class="error-actions">
@@ -136,9 +209,67 @@
     <div id="loading-bar" hidden></div>
 
     <div id="drop-overlay" hidden>
-      <div class="drop-badge">Drop PDF to open</div>
+      <div class="drop-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
+        Drop PDF to open
+      </div>
     </div>
 
+    <!-- Document Properties Modal -->
+    <div id="properties-modal" hidden>
+      <div class="modal modal-wide">
+        <div class="modal-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="16" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12.01" y2="8" />
+          </svg>
+          <span>Document Properties</span>
+        </div>
+        <div class="properties-grid" id="properties-content">
+          <!-- Filled dynamically -->
+        </div>
+        <div class="modal-actions">
+          <button id="btn-properties-close" class="primary-btn">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Keyboard Shortcuts Modal -->
+    <div id="shortcuts-modal" hidden>
+      <div class="modal modal-wide">
+        <div class="modal-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2" />
+            <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M7 16h10" />
+          </svg>
+          <span>Keyboard Shortcuts</span>
+        </div>
+        <div class="shortcuts-table">
+          <div class="shortcut-row"><span class="shortcut-desc">Open PDF</span><span><kbd>Ctrl</kbd> + <kbd>O</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Find in Document</span><span><kbd>Ctrl</kbd> + <kbd>F</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Print Document</span><span><kbd>Ctrl</kbd> + <kbd>P</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Rotate Clockwise</span><span><kbd>Ctrl</kbd> + <kbd>R</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Zoom In / Out</span><span><kbd>Ctrl</kbd> + <kbd>+</kbd> / <kbd>-</kbd> or <kbd>Ctrl+Wheel</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Actual Size (100%)</span><span><kbd>Ctrl</kbd> + <kbd>0</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Previous / Next Page</span><span><kbd>←</kbd> / <kbd>→</kbd> or <kbd>PgUp</kbd> / <kbd>PgDn</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">First / Last Page</span><span><kbd>Home</kbd> / <kbd>End</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Toggle Sidebar</span><span><kbd>T</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Toggle Dark Mode</span><span><kbd>D</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Document Properties</span><span><kbd>Ctrl</kbd> + <kbd>D</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Show Shortcuts</span><span><kbd>?</kbd> or <kbd>F1</kbd></span></div>
+        </div>
+        <div class="modal-actions">
+          <button id="btn-shortcuts-close" class="primary-btn">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Password Modal -->
     <div id="password-modal" hidden>
       <div class="modal">
         <div class="modal-head">
@@ -159,6 +290,34 @@
     </div>
 
     <div id="print-host"></div>
+
+    <div id="find-bar" hidden>
+      <div class="find-input-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7" />
+          <line x1="21" y1="21" x2="16" y2="16" />
+        </svg>
+        <input type="text" id="find-input" placeholder="Find in document..." autocomplete="off" spellcheck="false" />
+      </div>
+      <span id="find-results"></span>
+      <div class="find-sep"></div>
+      <button id="find-prev" class="icon-btn" title="Previous match (Shift+Enter)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 15l-6-6-6 6"/>
+        </svg>
+      </button>
+      <button id="find-next" class="icon-btn" title="Next match (Enter)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+      </button>
+      <div class="find-sep"></div>
+      <button id="find-close" class="icon-btn" title="Close search (Esc)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
 
     <script type="module" src="./viewer.js"></script>
   </body>

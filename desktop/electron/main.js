@@ -24,6 +24,7 @@ protocol.registerSchemesAsPrivileged([
 
 const RENDERER_DIR = path.join(__dirname, "..", "renderer");
 const PDFJS_BUILD_DIR = path.join(__dirname, "..", "node_modules", "pdfjs-dist", "build");
+const PDFJS_WEB_DIR = path.join(__dirname, "..", "node_modules", "pdfjs-dist", "web");
 
 function looksLikePdf(p) {
   return typeof p === "string" && /\.pdf$/i.test(p) && !p.startsWith("-");
@@ -53,13 +54,23 @@ function registerProtocol() {
     let filePath;
     if (pathname.startsWith("/pdfjs/")) {
       filePath = path.join(PDFJS_BUILD_DIR, path.basename(pathname));
+    } else if (pathname.startsWith("/pdfjs-web/")) {
+      filePath = path.join(PDFJS_WEB_DIR, pathname.substring("/pdfjs-web/".length));
     } else {
       filePath = path.join(RENDERER_DIR, pathname.replace(/^\//, ""));
     }
+    
+    // Simple directory traversal check
+    if (filePath.includes("..")) {
+        return new Response("Forbidden", { status: 403 });
+    }
+
     const allowed =
       filePath === RENDERER_DIR ||
       filePath.startsWith(RENDERER_DIR + path.sep) ||
-      (filePath.startsWith(PDFJS_BUILD_DIR + path.sep) && pathname.startsWith("/pdfjs/"));
+      (filePath.startsWith(PDFJS_BUILD_DIR + path.sep) && pathname.startsWith("/pdfjs/")) ||
+      (filePath.startsWith(PDFJS_WEB_DIR + path.sep) && pathname.startsWith("/pdfjs-web/"));
+      
     if (!allowed) {
       return new Response("Forbidden", { status: 403 });
     }
@@ -73,6 +84,7 @@ function sendReadyFile(filePath) {
       if (!mainWindow || mainWindow.isDestroyed()) return;
       mainWindow.webContents.send("open-file", {
         name: path.basename(filePath),
+        path: filePath,
         data: new Uint8Array(buf),
       });
     })
@@ -122,7 +134,9 @@ function buildMenu() {
     {
       label: "File",
       submenu: [
-        { label: "Open PDF…", click: () => send("open") },
+        { label: "Open PDF…", accelerator: "CmdOrCtrl+O", click: () => send("open") },
+        { label: "Print…", accelerator: "CmdOrCtrl+P", click: () => send("print") },
+        { label: "Document Properties…", accelerator: "CmdOrCtrl+D", click: () => send("properties") },
         { type: "separator" },
         isMac ? { role: "close" } : { role: "quit" },
       ],
@@ -130,21 +144,46 @@ function buildMenu() {
     {
       label: "View",
       submenu: [
-        { label: "Zoom In", click: () => send("zoom-in") },
-        { label: "Zoom Out", click: () => send("zoom-out") },
-        { label: "Actual Size", click: () => send("actual-size") },
+        { label: "Zoom In", accelerator: "CmdOrCtrl+=", click: () => send("zoom-in") },
+        { label: "Zoom Out", accelerator: "CmdOrCtrl+-", click: () => send("zoom-out") },
+        { label: "Actual Size", accelerator: "CmdOrCtrl+0", click: () => send("actual-size") },
         { label: "Fit to Width", click: () => send("fit-width") },
         { label: "Fit to Page", click: () => send("fit-page") },
+        { type: "separator" },
+        { label: "Rotate Clockwise", accelerator: "CmdOrCtrl+R", click: () => send("rotate") },
         { type: "separator" },
         { label: "Toggle Thumbnails", click: () => send("toggle-thumbnails") },
         { label: "Toggle Dark Mode", click: () => send("toggle-theme") },
         { type: "separator" },
-        { role: "reload" },
+        { role: "forceReload", accelerator: "CmdOrCtrl+Shift+R" },
         { role: "togglefullscreen" },
         { role: "toggleDevTools" },
       ],
     },
-    { role: "editMenu" },
+    {
+      label: "Edit",
+      submenu: [
+        { role: "undo" },
+        { role: "redo" },
+        { type: "separator" },
+        { role: "cut" },
+        { role: "copy" },
+        { role: "paste" },
+        { role: "selectAll" },
+        { type: "separator" },
+        {
+          label: "Find…",
+          accelerator: "CmdOrCtrl+F",
+          click: () => send("find"),
+        },
+      ],
+    },
+    {
+      label: "Help",
+      submenu: [
+        { label: "Keyboard Shortcuts", accelerator: "F1", click: () => send("shortcuts") },
+      ],
+    },
   ];
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
