@@ -1,0 +1,25 @@
+const { contextBridge, ipcRenderer, webUtils } = require("electron");
+
+function subscribe(channel) {
+  return (callback) => {
+    const listener = (_event, payload) => callback(payload);
+    ipcRenderer.on(channel, listener);
+    return () => ipcRenderer.removeListener(channel, listener);
+  };
+}
+
+contextBridge.exposeInMainWorld("pdfViewer", {
+  openDialog: () => ipcRenderer.invoke("dialog:open-pdf"),
+  readFile: (filePath) => ipcRenderer.invoke("file:read", filePath),
+  getPathForFile: (file) => {
+    try {
+      return webUtils.getPathForFile(file);
+    } catch {
+      return null;
+    }
+  },
+  setTheme: (theme) => ipcRenderer.invoke("app:set-theme", theme),
+  getTheme: () => ipcRenderer.invoke("app:get-theme"),
+  onOpenFile: subscribe("open-file"),
+  onCommand: subscribe("menu:command"),
+});
