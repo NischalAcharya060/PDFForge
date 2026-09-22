@@ -151,7 +151,7 @@ function renderPng(size) {
 }
 
 const png256 = renderPng(BASE);
-writeFileSync(path.join(outDir, "icon.png"), png256);
+writeFileSync(path.join(outDir, "app-icon.png"), png256);
 
 function makeIco(pngs) {
   const count = pngs.length;
@@ -177,6 +177,6 @@ function makeIco(pngs) {
 
 const sizes = [16, 24, 32, 48, 64, 128, 256];
 const pngs = sizes.map((size) => ({ size, png: renderPng(size) }));
-writeFileSync(path.join(outDir, "icon.ico"), makeIco(pngs));
+writeFileSync(path.join(outDir, "app-icon.ico"), makeIco(pngs));
 
 console.log("icons written to", outDir);

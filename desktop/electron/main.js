@@ -98,7 +98,7 @@ function createWindow() {
     minHeight: 480,
     backgroundColor: nativeTheme.shouldUseDarkColors ? "#101318" : "#f2f3f5",
     show: false,
-    icon: path.join(__dirname, "..", "assets", "icon.png"),
+    icon: path.join(__dirname, "..", "assets", "app-icon.png"),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
