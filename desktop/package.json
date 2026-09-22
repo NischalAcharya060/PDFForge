@@ -40,7 +40,7 @@
       "target": [
         "nsis"
       ],
-      "icon": "assets/icon.ico",
+      "icon": "assets/brand-icon.png",
       "fileAssociations": [
         {
           "ext": "pdf",

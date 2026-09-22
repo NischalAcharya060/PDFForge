@@ -7,6 +7,12 @@ export const siteConfig = {
   ogImage: "/og-image.png",
   twitterImage: "/twitter.png",
   supportEmail: "Nischal060@gmail.com",
+  desktop: {
+    name: "PDFForge Viewer",
+    version: "1.0.0",
+    downloadUrl: "/PDFForge-Setup.exe",
+    downloadLabel: "PDFForge-Setup.exe",
+  },
 } as const;
 
 export const navLinks = [
