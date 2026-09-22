@@ -10,7 +10,7 @@ export const siteConfig = {
   desktop: {
     name: "PDFForge Viewer",
     version: "1.0.0",
-    downloadUrl: "/PDFForge-Setup.exe",
+    downloadUrl: "/releases/1.0.0/PDFForge-Setup.exe",
     downloadLabel: "PDFForge-Setup.exe",
   },
 } as const;

@@ -2,7 +2,6 @@ const { app, BrowserWindow, dialog, ipcMain, Menu, nativeTheme, net, protocol, s
 const path = require("node:path");
 const fs = require("node:fs/promises");
 const { pathToFileURL } = require("node:url");
-const { fileURLToPath } = require("node:url");
 
 const SMOKE = process.env.PDFVIEWER_SMOKE === "1";
 

@@ -1,3 +1,10 @@
 {
-  "installCommand": "git lfs install && git lfs pull && npm install"
+  "installCommand": "git lfs install && git lfs pull && npm install",
+  "redirects": [
+    {
+      "source": "/PDFForge-Setup.exe",
+      "destination": "/releases/1.0.0/PDFForge-Setup.exe",
+      "permanent": true
+    }
+  ]
 }
