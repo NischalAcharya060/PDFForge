@@ -4,8 +4,9 @@ const fs = require("node:fs/promises");
 const { pathToFileURL } = require("node:url");
 const { textToPdf } = require("./text-to-pdf");
 const { richToPdf } = require("./rich-to-pdf");
+const { PDFDocument } = require("pdf-lib");
 
-const SMOKE = process.env.PDFVIEWER_SMOKE === "1";
+const SMOKE = process.argv.includes("--smoke") || process.env.PDFVIEWER_SMOKE === "1";
 
 let mainWindow = null;
 let pendingFile = null;
@@ -123,6 +124,9 @@ function createWindow() {
   });
 
   win.webContents.on("will-navigate", (event) => event.preventDefault());
+  win.webContents.on("console-message", (_event, _level, message) => {
+    console.log("[RENDERER]", message);
+  });
 
   win.on("closed", () => {
     if (mainWindow === win) mainWindow = null;
@@ -139,9 +143,11 @@ function buildMenu() {
     {
       label: "File",
       submenu: [
+        { label: "New Tab", accelerator: "CmdOrCtrl+T", click: () => send("new-tab") },
+        { label: "Close Tab", accelerator: "CmdOrCtrl+W", click: () => send("close-tab") },
+        { type: "separator" },
         { label: "New Document…", accelerator: "CmdOrCtrl+N", click: () => send("new-text-file") },
         { label: "Open PDF…", accelerator: "CmdOrCtrl+O", click: () => send("open") },
-        { label: "Edit PDF Text…", accelerator: "CmdOrCtrl+E", click: () => send("edit-pdf-text") },
         { label: "Save Document as PDF…", accelerator: "CmdOrCtrl+S", click: () => send("save-pdf") },
         { type: "separator" },
         { label: "Print…", accelerator: "CmdOrCtrl+P", click: () => send("print") },
@@ -158,6 +164,11 @@ function buildMenu() {
         { label: "Actual Size", accelerator: "CmdOrCtrl+0", click: () => send("actual-size") },
         { label: "Fit to Width", click: () => send("fit-width") },
         { label: "Fit to Page", click: () => send("fit-page") },
+        { label: "Two-Page View", accelerator: "CmdOrCtrl+Alt+2", click: () => send("toggle-two-page") },
+        { label: "Split View", accelerator: "CmdOrCtrl+Alt+S", click: () => send("toggle-split-view") },
+        { type: "separator" },
+        { label: "Next Tab", accelerator: "Ctrl+Tab", click: () => send("next-tab") },
+        { label: "Previous Tab", accelerator: "Ctrl+Shift+Tab", click: () => send("prev-tab") },
         { type: "separator" },
         { label: "Rotate Clockwise", accelerator: "CmdOrCtrl+R", click: () => send("rotate") },
         { type: "separator" },
@@ -285,6 +296,29 @@ async function runSmoke() {
     if (thumbs !== Number(expectedPages || 1)) {
       throw new Error(`expected ${expectedPages} thumbnails, found ${thumbs}`);
     }
+    const allThumbsRendered = await poll(
+      () =>
+        mainWindow.webContents.executeJavaScript(
+          "document.querySelectorAll('.thumb canvas').length === " +
+            (expectedPages || 1) +
+            " && Array.from(document.querySelectorAll('.thumb canvas')).every((c) => c.width > 0 && c.height > 0)"
+        ),
+      10000
+    );
+    console.log("[smoke] all thumbnails rendered:", Boolean(allThumbsRendered));
+    if (!allThumbsRendered) throw new Error("thumbnails failed to render");
+
+    const allViewerPagesRendered = await poll(
+      () =>
+        mainWindow.webContents.executeJavaScript(
+          "document.querySelectorAll('#page-host .pdf-canvas').length === " +
+            (expectedPages || 1) +
+            " && Array.from(document.querySelectorAll('#page-host .pdf-canvas')).every((c) => c.width > 0)"
+        ),
+      10000
+    );
+    console.log("[smoke] all viewer pages rendered:", Boolean(allViewerPagesRendered));
+    if (!allViewerPagesRendered) throw new Error("viewer pages failed to render");
     const editorOpened = await mainWindow.webContents.executeJavaScript(
       "document.getElementById('btn-new').click(); true"
     );
@@ -300,6 +334,15 @@ async function runSmoke() {
     if (!editorOk) {
       throw new Error("editor did not initialize");
     }
+    const wordElementsOk = await mainWindow.webContents.executeJavaScript(
+      "Boolean(document.getElementById('quill-toolbar') && " +
+        "document.getElementById('word-workspace') && " +
+        "document.getElementById('word-page-sheet') && " +
+        "document.getElementById('editor-name-input') && " +
+        "document.getElementById('btn-insert-page-break'))"
+    );
+    console.log("[smoke] word elements ok:", wordElementsOk);
+    if (!wordElementsOk) throw new Error("Word UI elements missing");
     const seeded = await mainWindow.webContents.executeJavaScript(
       "window.__quill.setContents([{ insert: 'Hello ', attributes: { bold: true } }, { insert: 'World! Great day.' }]); " +
         "window.__quill.formatLine(0, 1, 'align', 'center'); " +
@@ -310,6 +353,17 @@ async function runSmoke() {
       "(() => { window.__quill.setText('Intro text.\\n\\f\\nSecond page text.'); return window.__quill.getSemanticHTML(); })()"
     );
     console.log("[smoke] page break html:", pageBreakSeed);
+    const tabsOk = await mainWindow.webContents.executeJavaScript(
+      "Boolean(document.getElementById('tab-bar') && " +
+        "document.getElementById('btn-new-tab') && " +
+        "document.getElementById('btn-split-view') && " +
+        "document.getElementById('btn-two-page') && " +
+        "document.getElementById('btn-add-page') && " +
+        "document.querySelectorAll('.chrome-tab').length >= 1)"
+    );
+    console.log("[smoke] tabs and layout controls ok:", tabsOk);
+    if (!tabsOk) throw new Error("Chrome tab bar or layout controls missing");
+
     mainWindow.webContents.executeJavaScript("document.title").then((title) => console.log("[smoke] title:", title));
     console.log("[smoke] PASS");
     app.exit(0);
@@ -343,13 +397,51 @@ if (!gotLock) {
     ipcMain.handle("dialog:open-pdf", async () => {
       const result = await dialog.showOpenDialog(mainWindow, {
         title: "Open PDF",
-        properties: ["openFile"],
+        properties: ["openFile", "multiSelections"],
         filters: [{ name: "PDF documents", extensions: ["pdf"] }],
       });
       if (result.canceled || !result.filePaths.length) return { canceled: true };
-      const filePath = result.filePaths[0];
-      const data = await fs.readFile(filePath);
-      return { canceled: false, name: path.basename(filePath), path: filePath, data: new Uint8Array(data) };
+      const files = [];
+      for (const filePath of result.filePaths) {
+        const data = await fs.readFile(filePath);
+        files.push({ name: path.basename(filePath), path: filePath, data: new Uint8Array(data) });
+      }
+      return {
+        canceled: false,
+        files,
+        name: files[0].name,
+        path: files[0].path,
+        data: files[0].data,
+      };
+    });
+
+    ipcMain.handle("pdf:add-blank-page", async (_event, pdfData) => {
+      try {
+        const doc = await PDFDocument.load(pdfData);
+        const count = doc.getPageCount();
+        const [w, h] = count > 0 ? [doc.getPage(count - 1).getWidth(), doc.getPage(count - 1).getHeight()] : [595.28, 841.89];
+        doc.addPage([w, h]);
+        const modified = await doc.save();
+        return { success: true, data: new Uint8Array(modified) };
+      } catch (err) {
+        return { success: false, error: err && err.message ? err.message : String(err) };
+      }
+    });
+
+    ipcMain.handle("pdf:append-pdf", async (_event, { baseData, appendData }) => {
+      try {
+        const doc = await PDFDocument.load(baseData);
+        const donor = await PDFDocument.load(appendData);
+        const indices = donor.getPageIndices();
+        const copied = await doc.copyPages(donor, indices);
+        for (const p of copied) {
+          doc.addPage(p);
+        }
+        const modified = await doc.save();
+        return { success: true, data: new Uint8Array(modified) };
+      } catch (err) {
+        return { success: false, error: err && err.message ? err.message : String(err) };
+      }
     });
 
     ipcMain.handle("file:read", async (_event, filePath) => {

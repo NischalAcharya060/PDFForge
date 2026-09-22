@@ -67,7 +67,7 @@ function parseColor(str) {
 }
 
 function parseStyle(styleStr) {
-  const out = { color: null, bg: null };
+  const out = { color: null, bg: null, factor: null };
   if (!styleStr) return out;
   for (const part of styleStr.split(";")) {
     const idx = part.indexOf(":");
@@ -76,12 +76,20 @@ function parseStyle(styleStr) {
     const value = part.slice(idx + 1).trim();
     if (key === "color") out.color = parseColor(value);
     else if (key === "background" || key === "background-color") out.bg = parseColor(value);
+    else if (key === "font-size") {
+      const m = value.match(/^([\d.]+)(pt|px)?$/);
+      if (m) {
+        const val = parseFloat(m[1]);
+        if (m[2] === "px") out.factor = (val * 0.75) / 11;
+        else out.factor = val / 11;
+      }
+    }
   }
   return out;
 }
 
 function parseClass(cls) {
-  const out = { align: "left", size: null, indent: 0 };
+  const out = { align: "left", size: null, indent: 0, isPageBreak: false };
   if (!cls) return out;
   const align = cls.match(/ql-align-(left|center|right|justify)/);
   if (align) out.align = align[1];
@@ -89,6 +97,7 @@ function parseClass(cls) {
   if (size) out.size = size[1];
   const indent = cls.match(/ql-indent-(\d)/);
   if (indent) out.indent = Number(indent[1]);
+  if (cls.includes("page-break") || cls.includes("word-page-break")) out.isPageBreak = true;
   return out;
 }
 
@@ -114,7 +123,8 @@ function inlineDeltaFor(tag, attrsRaw) {
     const delta = {};
     if (style.color) delta.color = style.color;
     if (style.bg) delta.bg = style.bg;
-    if (cls.size) delta.factor = SIZE_CLASS[cls.size] || null;
+    if (style.factor) delta.factor = style.factor;
+    if (cls.size) delta.factor = SIZE_CLASS[cls.size] || delta.factor || null;
     return delta.color || delta.bg || delta.factor ? delta : null;
   }
   return null;
@@ -189,6 +199,20 @@ function parseHtml(html) {
       if (currentBlock) currentBlock.runs.push({ text: "\n", break: true });
       continue;
     }
+    if (tag === "hr") {
+      const attrs = parseAttrs(attrsRaw);
+      const isPageBreak = (attrs.class && (attrs.class.includes("page-break") || attrs.class.includes("word-page-break"))) || attrs["data-page-break"] === "true";
+      if (currentBlock && currentBlock.runs.length) {
+        blocks.push(currentBlock);
+      }
+      if (isPageBreak) {
+        blocks.push({ align: "left", header: 0, quote: false, code: false, list: null, indent: 0, runs: [{ text: "\f" }] });
+      } else {
+        blocks.push({ hr: true, runs: [] });
+      }
+      currentBlock = null;
+      continue;
+    }
     if (tag === "img") continue;
 
     if (closing) {
@@ -213,6 +237,13 @@ function parseHtml(html) {
       }
       const attrs = parseAttrs(attrsRaw);
       const cls = parseClass(attrs.class);
+      const isPageBreak = cls.isPageBreak || attrs["data-page-break"] === "true";
+      if (isPageBreak) {
+        if (currentBlock && currentBlock.runs.length) blocks.push(currentBlock);
+        blocks.push({ align: "left", header: 0, quote: false, code: false, list: null, indent: 0, runs: [{ text: "\f" }] });
+        currentBlock = null;
+        continue;
+      }
       const headerMatch = /^h([1-6])$/.exec(tag);
       const list = tag === "li" ? withinList() : null;
       const block = {
@@ -522,6 +553,18 @@ async function richTextToPdf(html, options = {}) {
   for (let b = 0; b < blocks.length; b++) {
     const block = blocks[b];
     if (block.pageBreakBefore) newPage();
+    if (block.hr) {
+      y -= 8;
+      if (y < margin) newPage();
+      page.drawLine({
+        start: { x: margin, y },
+        end: { x: pageW - margin, y },
+        thickness: 0.75,
+        color: rgb(0.8, 0.8, 0.8),
+      });
+      y -= 12;
+      continue;
+    }
     if (block.list === "ol") listCounter += 1;
     else if (!block.list) listCounter = 0;
 
