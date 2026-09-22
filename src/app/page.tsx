@@ -5,16 +5,19 @@ import {
   Check,
   CheckCircle2,
   Cpu,
+  Download,
   FileCheck2,
   HardDrive,
   Laptop,
   Layers,
   Lock,
+  MonitorDown,
   MousePointerClick,
   Play,
   ShieldCheck,
   Smartphone,
   Sparkles,
+  WifiOff,
   XCircle,
   Zap,
 } from "lucide-react";
@@ -253,6 +256,83 @@ export default function HomePage() {
 
       {/* Interactive Tool Browser (Search & Categories & Cards Grid) */}
       <HomeToolBrowser />
+
+      {/* Desktop App Download Section */}
+      <section className="relative border-t bg-gradient-to-b from-background via-card/40 to-background py-16 sm:py-24 overflow-hidden">
+        <div className="pointer-events-none absolute -top-24 right-1/4 size-[480px] rounded-full bg-primary/10 blur-3xl" />
+
+        <Container className="relative">
+          <div className="mx-auto max-w-3xl text-center mb-10 sm:mb-12 space-y-3">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
+              <MonitorDown className="size-3.5" />
+              <span>WINDOWS DESKTOP APP</span>
+            </div>
+            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+              Take PDFForge offline with the desktop app
+            </h2>
+            <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
+              A fast, private PDF viewer that works offline. Open, zoom, navigate, print, and
+              organize PDFs right from your files — no internet, no uploads, ever.
+            </p>
+          </div>
+
+          <div className="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-border/90 bg-card shadow-xl">
+            <div className="grid lg:grid-cols-2">
+              <div className="border-b lg:border-b-0 lg:border-r border-border/80 p-6 sm:p-9">
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-xs">
+                    <Laptop className="size-6" />
+                  </span>
+                  <div>
+                    <div className="text-lg font-bold text-foreground tracking-tight">
+                      {siteConfig.desktop.name}
+                    </div>
+                    <div className="text-xs font-semibold text-muted-foreground">
+                      Version {siteConfig.desktop.version} • Windows 10/11
+                    </div>
+                  </div>
+                </div>
+
+                <ul className="mt-6 space-y-2.5 text-sm">
+                  {[
+                    { icon: WifiOff, label: "100% offline — no cloud, no account" },
+                    { icon: ShieldCheck, label: "Local rendering with pdf.js" },
+                    { icon: Zap, label: "Zoom, thumbnails, print & shortcuts" },
+                    { icon: FileCheck2, label: "Opens via double-click on any .pdf" },
+                  ].map((point) => (
+                    <li key={point.label} className="flex items-start gap-2.5 text-foreground/90">
+                      <point.icon className="size-4 shrink-0 mt-0.5 text-primary" />
+                      <span className="font-medium">{point.label}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="flex flex-col items-center justify-center gap-4 p-6 sm:p-9 text-center bg-gradient-to-br from-primary/5 to-transparent">
+                <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Free download for Windows
+                </span>
+                <Button
+                  size="lg"
+                  asChild
+                  className="h-14 px-9 text-base font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl shadow-xl shadow-primary/25 hover:scale-105 active:scale-95 transition-all gap-2"
+                >
+                  <Link href="/download">
+                    <Download className="size-5" />
+                    Get the desktop app
+                  </Link>
+                </Button>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Windows 10/11 • Free & offline •{" "}
+                  <Link href="/download" className="text-primary underline-offset-4 hover:underline">
+                    View download page
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
 
       {/* Product Demo Showcase (Mac Window Mockup) */}
       <section className="relative border-t py-16 sm:py-24 bg-gradient-to-b from-background via-muted/20 to-background overflow-hidden">

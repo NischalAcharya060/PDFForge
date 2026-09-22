@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   ChevronDown,
+  Download,
   LayoutGrid,
   Menu,
   Sparkles,
@@ -209,6 +210,18 @@ export function Header() {
             <Link href="/tools">All tools</Link>
           </Button>
 
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
+            className="hidden md:inline-flex font-semibold shadow-xs"
+          >
+            <Link href="/download">
+              <Download className="size-3.5" />
+              Download
+            </Link>
+          </Button>
+
           {/* Mobile Menu Button */}
           <Button
             variant="ghost"
@@ -233,6 +246,17 @@ export function Header() {
                   Explore All {tools.length} PDF Tools
                 </Link>
               </Button>
+            </div>
+
+            <div className="space-y-5">
+              <Link
+                href="/download"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 p-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/15"
+              >
+                <Download className="size-4" />
+                Download PDFForge Viewer (Desktop)
+              </Link>
             </div>
 
             <div className="space-y-5">
