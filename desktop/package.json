@@ -1,6 +1,6 @@
 {
   "name": "pdfforge-viewer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A fast, private, offline desktop PDF viewer.",
   "main": "electron/main.js",
   "author": "PDFForge",
@@ -8,13 +8,15 @@
   "scripts": {
     "dev": "electron .",
     "start": "electron .",
-    "make-icon": "node scripts/make-icon.mjs",
     "smoke": "electron . --smoke",
-    "dist": "npm run make-icon && electron-builder --win nsis",
-    "lint": "node --check electron/main.js && node --check electron/preload.js && node --check renderer/viewer.js"
+    "dist": "electron-builder --win nsis",
+    "lint": "node --check electron/main.js && node --check electron/preload.js && node --check electron/rich-to-pdf.js && node --check renderer/viewer.js",
+    "test:rich": "node scripts/rich-smoke.js"
   },
   "dependencies": {
-    "pdfjs-dist": "^6.3.289"
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^6.3.289",
+    "quill": "^2.0.3"
   },
   "devDependencies": {
     "electron": "^44.4.3",
@@ -33,7 +35,11 @@
       "renderer/**/*",
       "node_modules/pdfjs-dist/build/**/*",
       "node_modules/pdfjs-dist/web/**/*",
+      "node_modules/pdf-lib/**/*",
+      "node_modules/quill/dist/**/*",
       "!node_modules/pdfjs-dist/**/*.map",
+      "!node_modules/pdf-lib/**/*.map",
+      "!node_modules/quill/**/*.map",
       "package.json"
     ],
     "win": {

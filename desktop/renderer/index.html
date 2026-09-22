@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23e5484d'/%3E%3Cpath d='M6 9V4h8l3 3v13H6V9z' fill='%23fff'/%3E%3C/svg%3E" />
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./quill/quill.snow.css" />
     <title>PDFForge Viewer</title>
   </head>
   <body>
@@ -22,6 +23,21 @@
             <text x="8" y="16" font-size="6" font-weight="900" fill="#e5484d" font-family="system-ui">PDF</text>
           </svg>
         </div>
+        <button id="btn-new" class="icon-btn" title="New document (Ctrl+N)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <path d="M14 2v6h6" />
+            <path d="M12 18v-6" />
+            <path d="M9 15h6" />
+          </svg>
+        </button>
+        <button id="btn-edit-pdf" class="icon-btn" title="Edit PDF text (Ctrl+E)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <path d="M14 2v6h6" />
+            <path d="M12.5 15.5l6-6a1.414 1.414 0 0 1 2 2l-6 6-3 .5z" />
+          </svg>
+        </button>
         <button id="btn-open" class="icon-btn" title="Open PDF (Ctrl+O)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -161,13 +177,32 @@
         </div>
         <h1>PDFForge Viewer</h1>
         <p class="empty-subtitle">Fast, offline &amp; private desktop PDF reader</p>
-        <button id="btn-open-empty" class="primary-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <path d="M3 9h18" />
-          </svg>
-          Open PDF Document
-        </button>
+        <div class="empty-actions">
+          <button id="btn-open-empty" class="primary-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <path d="M3 9h18" />
+            </svg>
+            Open PDF Document
+          </button>
+          <button id="btn-new-empty" class="feature-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <path d="M14 2v6h6" />
+              <path d="M12 18v-6" />
+              <path d="M9 15h6" />
+            </svg>
+            New Document
+          </button>
+          <button id="btn-edit-pdf-empty" class="feature-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <path d="M14 2v6h6" />
+              <path d="M12.5 15.5l6-6a1.414 1.414 0 0 1 2 2l-6 6-3 .5z" />
+            </svg>
+            Edit PDF Text
+          </button>
+        </div>
         <p class="empty-hint">or drop a PDF anywhere in this window</p>
         
         <div id="recent-container" hidden>
@@ -179,6 +214,9 @@
         </div>
 
         <div class="empty-shortcuts">
+          <span class="shortcut-chip"><kbd>Ctrl</kbd>+<kbd>N</kbd> New Document</span>
+          <span class="shortcut-chip"><kbd>Ctrl</kbd>+<kbd>E</kbd> Edit PDF Text</span>
+          <span class="shortcut-chip"><kbd>Ctrl</kbd>+<kbd>S</kbd> Save Document as PDF</span>
           <span class="shortcut-chip"><kbd>Ctrl</kbd>+<kbd>O</kbd> Open</span>
           <span class="shortcut-chip"><kbd>Ctrl</kbd>+<kbd>F</kbd> Find</span>
           <span class="shortcut-chip"><kbd>Ctrl</kbd>+<kbd>P</kbd> Print</span>
@@ -203,6 +241,145 @@
           <button id="btn-error-open" class="primary-btn">Open another PDF</button>
           <button id="btn-error-dismiss" class="plain-btn">Dismiss</button>
         </div>
+      </div>
+    </div>
+
+    <div id="editor-view" hidden>
+      <div id="editor-toolbar">
+        <div class="editor-file-info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <path d="M14 2v6h6" />
+            <path d="M16 13H8" />
+            <path d="M16 17H8" />
+            <path d="M10 9H8" />
+          </svg>
+          <div class="editor-file-meta">
+            <span id="editor-name">untitled</span>
+            <span id="editor-subtitle">Document editor — saves as a styled PDF</span>
+          </div>
+        </div>
+        <div class="editor-actions">
+          <span id="editor-status"></span>
+          <button id="btn-editor-options" class="plain-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
+            PDF Options
+          </button>
+          <button id="btn-editor-close" class="plain-btn">Close</button>
+          <button id="btn-editor-save" class="primary-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+              <polyline points="17 21 17 13 7 13 7 21" />
+              <polyline points="7 3 7 8 15 8" />
+            </svg>
+            <span id="editor-save-label">Save as PDF</span>
+          </button>
+        </div>
+      </div>
+      <div id="editor-options" hidden>
+        <label class="opt-field">
+          <span>Paper size</span>
+          <select id="opt-paper-size">
+            <option value="a4">A4</option>
+            <option value="letter">Letter</option>
+          </select>
+        </label>
+        <label class="opt-field">
+          <span>Font size</span>
+          <select id="opt-font-size">
+            <option value="10">10 pt</option>
+            <option value="11">11 pt</option>
+            <option value="12">12 pt</option>
+            <option value="14">14 pt</option>
+            <option value="16">16 pt</option>
+          </select>
+        </label>
+        <label class="opt-field">
+          <span>Line spacing</span>
+          <select id="opt-line-spacing">
+            <option value="1.15">Compact</option>
+            <option value="1.45">Normal</option>
+            <option value="1.75">Relaxed</option>
+          </select>
+        </label>
+        <label class="opt-field">
+          <span>Margins</span>
+          <select id="opt-margin">
+            <option value="40">Compact</option>
+            <option value="56">Normal</option>
+            <option value="72">Wide</option>
+          </select>
+        </label>
+        <label class="opt-field opt-check">
+          <input type="checkbox" id="opt-page-numbers" checked />
+          <span>Page numbers</span>
+        </label>
+        <label class="opt-field opt-grow">
+          <span>Document title</span>
+          <input type="text" id="opt-title" placeholder="Same as file name" />
+        </label>
+        <label class="opt-field opt-grow">
+          <span>Author</span>
+          <input type="text" id="opt-author" placeholder="PDFForge" />
+        </label>
+      </div>
+      <div id="quill-toolbar">
+        <span class="ql-formats">
+          <select class="ql-header" title="Paragraph style">
+            <option value="1"></option>
+            <option value="2"></option>
+            <option value="3"></option>
+            <option value="4"></option>
+            <option value="5"></option>
+            <option value="6"></option>
+            <option selected></option>
+          </select>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-bold" title="Bold"></button>
+          <button class="ql-italic" title="Italic"></button>
+          <button class="ql-underline" title="Underline"></button>
+          <button class="ql-strike" title="Strikethrough"></button>
+        </span>
+        <span class="ql-formats">
+          <select class="ql-color" title="Text color"></select>
+          <select class="ql-background" title="Highlight color"></select>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-list" value="ordered" title="Numbered list"></button>
+          <button class="ql-list" value="bullet" title="Bulleted list"></button>
+          <button class="ql-indent" value="-1" title="Decrease indent"></button>
+          <button class="ql-indent" value="+1" title="Increase indent"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-align" value="" title="Align left"></button>
+          <button class="ql-align" value="center" title="Align center"></button>
+          <button class="ql-align" value="right" title="Align right"></button>
+          <button class="ql-align" value="justify" title="Justify"></button>
+        </span>
+        <span class="ql-formats">
+          <select class="ql-size" title="Font size">
+            <option value="small"></option>
+            <option selected></option>
+            <option value="large"></option>
+            <option value="huge"></option>
+          </select>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-blockquote" title="Block quote"></button>
+          <button class="ql-clean" title="Clear formatting"></button>
+        </span>
+      </div>
+      <div id="editor-content">
+        <p><br /></p>
+      </div>
+      <div id="editor-footer">
+        <span id="editor-stats">0 characters · 0 words</span>
+        <span id="editor-hint"><kbd>Ctrl</kbd>+<kbd>S</kbd> Save Document as PDF</span>
+          <span id="editor-format-hint">Ctrl+B bold · Ctrl+I italic · Ctrl+U underline</span>
       </div>
     </div>
 
@@ -250,6 +427,9 @@
           <span>Keyboard Shortcuts</span>
         </div>
         <div class="shortcuts-table">
+          <div class="shortcut-row"><span class="shortcut-desc">New Document</span><span><kbd>Ctrl</kbd> + <kbd>N</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Edit PDF Text</span><span><kbd>Ctrl</kbd> + <kbd>E</kbd></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Save Document as PDF</span><span><kbd>Ctrl</kbd> + <kbd>S</kbd></span></div>
           <div class="shortcut-row"><span class="shortcut-desc">Open PDF</span><span><kbd>Ctrl</kbd> + <kbd>O</kbd></span></div>
           <div class="shortcut-row"><span class="shortcut-desc">Find in Document</span><span><kbd>Ctrl</kbd> + <kbd>F</kbd></span></div>
           <div class="shortcut-row"><span class="shortcut-desc">Print Document</span><span><kbd>Ctrl</kbd> + <kbd>P</kbd></span></div>
@@ -319,6 +499,7 @@
       </button>
     </div>
 
+    <script src="./quill/quill.js"></script>
     <script type="module" src="./viewer.js"></script>
   </body>
 </html>

@@ -50,4 +50,3 @@ npm run smoke
 - `electron/main.js` — main process, window, `app://` protocol serving the renderer and the pdf.js worker, IPC, menu
 - `electron/preload.js` — sandboxed bridge exposing file open, theme, and menu commands
 - `renderer/` — the viewer UI (vanilla JS + pdf.js, no bundler)
-- `scripts/make-icon.mjs` — dependency-free PNG/ICO icon generator

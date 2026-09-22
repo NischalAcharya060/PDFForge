@@ -11,6 +11,7 @@ function subscribe(channel) {
 contextBridge.exposeInMainWorld("pdfViewer", {
   openDialog: () => ipcRenderer.invoke("dialog:open-pdf"),
   readFile: (filePath) => ipcRenderer.invoke("file:read", filePath),
+  createTextPdf: (payload) => ipcRenderer.invoke("dialog:create-text-pdf", payload),
   getPathForFile: (file) => {
     try {
       return webUtils.getPathForFile(file);

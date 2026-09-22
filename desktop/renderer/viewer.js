@@ -10,10 +10,12 @@ const ZOOM_PRESETS = [0.25, 0.33, 0.5, 0.67, 0.75, 0.83, 1, 1.25, 1.5, 2, 2.5, 3
 const MIN_ZOOM = 0.1;
 const MAX_ZOOM = 4;
 const RECENT_KEY = "pdfforge-recent-files";
+const PDF_OPTIONS_KEY = "pdfforge-pdf-options";
 
 const state = {
   doc: null,
   loadingTask: null,
+  editLoadingTask: null,
   name: "",
   filePath: null,
   layoutMode: "fit-width",
@@ -35,9 +37,19 @@ const state = {
     matches: [],
     currentMatchIndex: -1,
   },
+  editor: {
+    active: false,
+    fileName: "untitled",
+    dirty: false,
+    saving: false,
+    source: null,
+    options: null,
+  },
 };
 
 const el = {
+  btnNew: document.getElementById("btn-new"),
+  btnEditPdf: document.getElementById("btn-edit-pdf"),
   btnOpen: document.getElementById("btn-open"),
   btnPrint: document.getElementById("btn-print"),
   btnFind: document.getElementById("btn-find"),
@@ -64,6 +76,8 @@ const el = {
   pageHost: document.getElementById("page-host"),
   emptyState: document.getElementById("empty-state"),
   btnOpenEmpty: document.getElementById("btn-open-empty"),
+  btnNewEmpty: document.getElementById("btn-new-empty"),
+  btnEditPdfEmpty: document.getElementById("btn-edit-pdf-empty"),
   recentContainer: document.getElementById("recent-container"),
   recentList: document.getElementById("recent-list"),
   btnClearRecent: document.getElementById("btn-clear-recent"),
@@ -92,6 +106,24 @@ const el = {
   findNext: document.getElementById("find-next"),
   findResults: document.getElementById("find-results"),
   findClose: document.getElementById("find-close"),
+  editorView: document.getElementById("editor-view"),
+  editorName: document.getElementById("editor-name"),
+  editorSubtitle: document.getElementById("editor-subtitle"),
+  editorStatus: document.getElementById("editor-status"),
+  editorContent: document.getElementById("editor-content"),
+  editorStats: document.getElementById("editor-stats"),
+  btnEditorClose: document.getElementById("btn-editor-close"),
+  btnEditorSave: document.getElementById("btn-editor-save"),
+  editorSaveLabel: document.getElementById("editor-save-label"),
+  btnEditorOptions: document.getElementById("btn-editor-options"),
+  editorOptions: document.getElementById("editor-options"),
+  optPaperSize: document.getElementById("opt-paper-size"),
+  optFontSize: document.getElementById("opt-font-size"),
+  optLineSpacing: document.getElementById("opt-line-spacing"),
+  optMargin: document.getElementById("opt-margin"),
+  optPageNumbers: document.getElementById("opt-page-numbers"),
+  optTitle: document.getElementById("opt-title"),
+  optAuthor: document.getElementById("opt-author"),
 };
 
 for (const preset of ZOOM_PRESETS) {
@@ -99,6 +131,47 @@ for (const preset of ZOOM_PRESETS) {
   option.value = String(Math.round(preset * 100));
   option.textContent = `${Math.round(preset * 100)}%`;
   el.zoomSelect.appendChild(option);
+}
+
+let quill = null;
+let editorBusy = false;
+if (typeof Quill !== "undefined" && el.editorContent) {
+  quill = new Quill(el.editorContent, {
+    theme: "snow",
+    modules: {
+      toolbar: "#quill-toolbar",
+      keyboard: {
+        bindings: {
+          tab: false,
+        },
+      },
+    },
+    placeholder: "Start typing your document here… When you save, PDFForge turns it into a clean, print-ready PDF.",
+  });
+  window.__quill = quill;
+}
+
+function editorHasContent() {
+  if (!quill) return false;
+  return Boolean(quill.getText().replace(/\n/g, "").trim());
+}
+
+function editorCharCount() {
+  if (!quill) return 0;
+  return quill.getText().replace(/\n/g, "").length;
+}
+
+function editorWordCount() {
+  if (!quill) return 0;
+  const text = quill.getText().trim();
+  return text ? text.trim().split(/\s+/).length : 0;
+}
+
+function applyEditorFontSize() {
+  if (quill && state.editor.options && el.editorContent) {
+    const editable = el.editorContent.querySelector(".ql-editor");
+    if (editable) editable.style.fontSize = `${state.editor.options.fontSize}pt`;
+  }
 }
 
 function clamp(value, min, max) {
@@ -679,6 +752,253 @@ function hideAllOverlays() {
   if (el.shortcutsModal) el.shortcutsModal.hidden = true;
 }
 
+function setEditorStatus(message) {
+  el.editorStatus.textContent = message || "";
+}
+
+function updateEditorChrome() {
+  const { fileName, dirty, saving, source } = state.editor;
+  el.editorName.textContent = fileName;
+  if (dirty) {
+    el.editorSubtitle.textContent = "Edited — unsaved changes";
+  } else if (source) {
+    el.editorSubtitle.textContent = `Editing text from ${source}`;
+  } else {
+    el.editorSubtitle.textContent = "Document editor — saves as a styled PDF";
+  }
+  el.docName.textContent = fileName;
+  el.docName.title = `Editing ${fileName}`;
+  document.title = `${fileName}${dirty ? " *" : ""} — PDFForge Editor`;
+  const chars = editorCharCount();
+  const words = editorWordCount();
+  el.editorStats.textContent = `${chars} characters · ${words} words`;
+  el.editorSaveLabel.textContent = saving ? "Saving…" : "Save as PDF";
+  el.btnEditorSave.disabled = saving || !editorHasContent();
+}
+
+function defaultPdfOptions() {
+  return {
+    pageSize: "a4",
+    fontSize: 11,
+    lineSpacing: 1.45,
+    margin: 56,
+    pageNumbers: true,
+    title: "",
+    author: "PDFForge",
+  };
+}
+
+function loadPdfOptions() {
+  const options = defaultPdfOptions();
+  try {
+    const raw = localStorage.getItem(PDF_OPTIONS_KEY);
+    if (raw) Object.assign(options, JSON.parse(raw));
+  } catch {}
+  return options;
+}
+
+function persistPdfOptions() {
+  const o = state.editor.options;
+  try {
+    localStorage.setItem(
+      PDF_OPTIONS_KEY,
+      JSON.stringify({
+        pageSize: o.pageSize,
+        fontSize: o.fontSize,
+        lineSpacing: o.lineSpacing,
+        margin: o.margin,
+        pageNumbers: o.pageNumbers,
+        author: o.author,
+      })
+    );
+  } catch {}
+}
+
+function syncOptionsToFields() {
+  const o = state.editor.options;
+  el.optPaperSize.value = o.pageSize === "letter" ? "letter" : "a4";
+  el.optFontSize.value = String(o.fontSize);
+  el.optLineSpacing.value = String(o.lineSpacing);
+  el.optMargin.value = String(o.margin);
+  el.optPageNumbers.checked = !!o.pageNumbers;
+  el.optAuthor.value = o.author || "";
+  applyEditorFontSize();
+}
+
+function syncOptionsFromFields() {
+  const o = state.editor.options;
+  o.pageSize = el.optPaperSize.value === "letter" ? "letter" : "a4";
+  o.fontSize = Number(el.optFontSize.value) || 11;
+  o.lineSpacing = Number(el.optLineSpacing.value) || 1.45;
+  o.margin = Number(el.optMargin.value) || 56;
+  o.pageNumbers = el.optPageNumbers.checked;
+  o.title = el.optTitle.value.trim();
+  o.author = el.optAuthor.value.trim();
+  persistPdfOptions();
+}
+
+function toggleEditorOptions() {
+  const show = el.editorOptions.hidden;
+  el.editorOptions.hidden = !show;
+  if (el.btnEditorOptions) el.btnEditorOptions.classList.toggle("active", show);
+}
+
+function openTextEditor({ text = "", fileName = "untitled", source = null } = {}) {
+  state.editor.active = true;
+  state.editor.fileName = fileName;
+  state.editor.dirty = false;
+  state.editor.saving = false;
+  state.editor.source = source;
+  state.editor.options = loadPdfOptions();
+  state.editor.options.title = "";
+  hideAllOverlays();
+  el.errorState.hidden = true;
+  el.emptyState.hidden = true;
+  el.editorView.hidden = false;
+  editorBusy = true;
+  if (text) {
+    quill.setText(text);
+  } else {
+    quill.setContents([{ insert: "\n" }]);
+  }
+  editorBusy = false;
+  el.optTitle.value = fileName;
+  syncOptionsToFields();
+  setEditorStatus("");
+  updateEditorChrome();
+  quill.focus();
+}
+
+function newTextFile() {
+  if (!leaveEditor()) return;
+  openTextEditor({ text: "", fileName: "untitled" });
+}
+
+function exitEditor() {
+  if (!state.editor.active) return true;
+  if (state.editor.dirty && !window.confirm("Discard this text? You have unsaved changes that will be lost.")) {
+    return false;
+  }
+  state.editor.active = false;
+  state.editor.dirty = false;
+  state.editor.saving = false;
+  state.editor.source = null;
+  el.editorView.hidden = true;
+  setEditorStatus("");
+  showEmpty();
+  return true;
+}
+
+function leaveEditor() {
+  if (!state.editor.active) return true;
+  return exitEditor();
+}
+
+function textContentToString(content) {
+  const lines = [];
+  let buffer = "";
+  for (const item of content.items) {
+    if (!item.str) continue;
+    if (buffer) buffer += item.hasEOL ? "\n" : " ";
+    buffer += item.str;
+    if (item.hasEOL) {
+      lines.push(buffer);
+      buffer = "";
+    }
+  }
+  if (buffer) lines.push(buffer);
+  return lines.join("\n");
+}
+
+function loadPdfTextForEdit(data) {
+  return new Promise((resolve, reject) => {
+    const task = getDocument({ data, password: state.passwordValue });
+    task.onPassword = (update) => {
+      state.passwordCallback = update;
+      showPasswordModal("This PDF requires a password to open its text.");
+    };
+    state.editLoadingTask = task;
+    task.promise
+      .then(async (doc) => {
+        const parts = [];
+        for (let i = 1; i <= doc.numPages; i++) {
+          const page = await doc.getPage(i);
+          const content = await page.getTextContent();
+          parts.push(textContentToString(content));
+          await new Promise((r) => setTimeout(r, 0));
+        }
+        try {
+          await doc.destroy();
+        } catch {}
+        resolve(parts);
+      })
+      .catch((err) => reject(err));
+  });
+}
+
+async function editPdfText() {
+  if (!leaveEditor()) return;
+  const res = await window.pdfViewer.openDialog();
+  if (!res || res.canceled) return;
+  setLoading(true);
+  try {
+    state.passwordValue = null;
+    const parts = await loadPdfTextForEdit(res.data);
+    const text = parts.join("\n\f\n");
+    const fileName = res.name.replace(/\.pdf$/i, "") || "document";
+    openTextEditor({ text, fileName, source: res.name });
+    setEditorStatus(`Loaded text from ${res.name} — page markers are preserved`);
+  } catch (err) {
+    if (err && err.name === "PasswordException") {
+      showPasswordModal("This PDF requires a password to open its text.");
+    } else {
+      showError(err);
+    }
+  } finally {
+    setLoading(false);
+  }
+}
+
+async function savePdf() {
+  if (!state.editor.active) return;
+  if (!editorHasContent()) return;
+  const html = quill.getSemanticHTML();
+  syncOptionsFromFields();
+  const o = state.editor.options;
+  const options = {
+    pageSize: o.pageSize,
+    fontSize: o.fontSize,
+    lineSpacing: o.lineSpacing,
+    margin: o.margin,
+    pageNumbers: o.pageNumbers,
+    title: o.title || state.editor.fileName,
+    author: o.author || "PDFForge",
+  };
+  const prevName = state.editor.fileName;
+  state.editor.saving = true;
+  setEditorStatus("Creating PDF…");
+  updateEditorChrome();
+  try {
+    const res = await window.pdfViewer.createTextPdf({ text: html, rich: true, suggestedName: state.editor.fileName, options });
+    if (res && !res.canceled && res.filePath) {
+      const base = String(res.filePath).split(/[\\/]/).pop().replace(/\.pdf$/i, "") || state.editor.fileName;
+      state.editor.fileName = base;
+      state.editor.dirty = false;
+      if (!el.optTitle.value.trim() || el.optTitle.value.trim() === prevName) {
+        el.optTitle.value = base;
+      }
+      setEditorStatus(`Saved ${base}.pdf`);
+    } else {
+      setEditorStatus("Save canceled");
+    }
+  } catch (err) {
+    setEditorStatus(`Save failed — ${err && err.message ? err.message : "unknown error"}`);
+  } finally {
+    state.editor.saving = false;
+    updateEditorChrome();
+  }
+}
+
 function getRecentFiles() {
   try {
     const raw = localStorage.getItem(RECENT_KEY);
@@ -749,6 +1069,7 @@ async function openRecentFile(item) {
 }
 
 async function openDocument(data, name, filePath) {
+  if (!leaveEditor()) return;
   hideAllOverlays();
   setLoading(true);
   el.errorState.hidden = true;
@@ -1098,8 +1419,12 @@ function clearAllHighlights() {
 let dragDepth = 0;
 
 function bindEvents() {
+  if (el.btnNew) el.btnNew.addEventListener("click", newTextFile);
+  if (el.btnEditPdf) el.btnEditPdf.addEventListener("click", editPdfText);
   el.btnOpen.addEventListener("click", openFromDialog);
   el.btnOpenEmpty.addEventListener("click", openFromDialog);
+  if (el.btnNewEmpty) el.btnNewEmpty.addEventListener("click", newTextFile);
+  if (el.btnEditPdfEmpty) el.btnEditPdfEmpty.addEventListener("click", editPdfText);
   el.btnErrorOpen.addEventListener("click", openFromDialog);
   el.btnErrorDismiss.addEventListener("click", showEmpty);
   el.btnPrint.addEventListener("click", printDocument);
@@ -1138,6 +1463,24 @@ function bindEvents() {
   el.btnFitPage.addEventListener("click", () => setFit("fit-page"));
   el.btnThumbs.addEventListener("click", toggleThumbnails);
   el.btnTheme.addEventListener("click", toggleTheme);
+
+  if (el.btnEditorClose) el.btnEditorClose.addEventListener("click", exitEditor);
+  if (el.btnEditorSave) el.btnEditorSave.addEventListener("click", savePdf);
+  if (el.btnEditorOptions) el.btnEditorOptions.addEventListener("click", toggleEditorOptions);
+  if (el.editorOptions) {
+    for (const control of [el.optPaperSize, el.optFontSize, el.optLineSpacing, el.optMargin, el.optPageNumbers, el.optAuthor]) {
+      control.addEventListener("change", syncOptionsFromFields);
+    }
+    if (el.optTitle) el.optTitle.addEventListener("input", syncOptionsFromFields);
+  }
+  if (quill) {
+    quill.on("text-change", () => {
+      if (editorBusy) return;
+      state.editor.dirty = true;
+      setEditorStatus("");
+      updateEditorChrome();
+    });
+  }
 
   if (el.pageJumpInput) {
     el.pageJumpInput.addEventListener("keydown", (e) => {
@@ -1260,6 +1603,21 @@ function bindEvents() {
     const key = e.key;
     if (mod) {
       const k = key.toLowerCase();
+      if (k === "n") {
+        e.preventDefault();
+        newTextFile();
+        return;
+      }
+      if (k === "e") {
+        e.preventDefault();
+        editPdfText();
+        return;
+      }
+      if (k === "s") {
+        e.preventDefault();
+        savePdf();
+        return;
+      }
       if (k === "o") {
         e.preventDefault();
         openFromDialog();
@@ -1365,6 +1723,15 @@ function bindEvents() {
   window.pdfViewer.onOpenFile((payload) => openDocument(payload.data, payload.name, payload.path));
   window.pdfViewer.onCommand((cmd) => {
     switch (cmd) {
+      case "new-text-file":
+        newTextFile();
+        break;
+      case "edit-pdf-text":
+        editPdfText();
+        break;
+      case "save-pdf":
+        savePdf();
+        break;
       case "open":
         openFromDialog();
         break;

@@ -2,6 +2,8 @@ const { app, BrowserWindow, dialog, ipcMain, Menu, nativeTheme, net, protocol, s
 const path = require("node:path");
 const fs = require("node:fs/promises");
 const { pathToFileURL } = require("node:url");
+const { textToPdf } = require("./text-to-pdf");
+const { richToPdf } = require("./rich-to-pdf");
 
 const SMOKE = process.env.PDFVIEWER_SMOKE === "1";
 
@@ -24,6 +26,7 @@ protocol.registerSchemesAsPrivileged([
 const RENDERER_DIR = path.join(__dirname, "..", "renderer");
 const PDFJS_BUILD_DIR = path.join(__dirname, "..", "node_modules", "pdfjs-dist", "build");
 const PDFJS_WEB_DIR = path.join(__dirname, "..", "node_modules", "pdfjs-dist", "web");
+const QUILL_DIR = path.join(__dirname, "..", "node_modules", "quill", "dist");
 
 function looksLikePdf(p) {
   return typeof p === "string" && /\.pdf$/i.test(p) && !p.startsWith("-");
@@ -55,6 +58,8 @@ function registerProtocol() {
       filePath = path.join(PDFJS_BUILD_DIR, path.basename(pathname));
     } else if (pathname.startsWith("/pdfjs-web/")) {
       filePath = path.join(PDFJS_WEB_DIR, pathname.substring("/pdfjs-web/".length));
+    } else if (pathname.startsWith("/quill/")) {
+      filePath = path.join(QUILL_DIR, path.basename(pathname));
     } else {
       filePath = path.join(RENDERER_DIR, pathname.replace(/^\//, ""));
     }
@@ -68,7 +73,8 @@ function registerProtocol() {
       filePath === RENDERER_DIR ||
       filePath.startsWith(RENDERER_DIR + path.sep) ||
       (filePath.startsWith(PDFJS_BUILD_DIR + path.sep) && pathname.startsWith("/pdfjs/")) ||
-      (filePath.startsWith(PDFJS_WEB_DIR + path.sep) && pathname.startsWith("/pdfjs-web/"));
+      (filePath.startsWith(PDFJS_WEB_DIR + path.sep) && pathname.startsWith("/pdfjs-web/")) ||
+      (filePath.startsWith(QUILL_DIR + path.sep) && pathname.startsWith("/quill/"));
       
     if (!allowed) {
       return new Response("Forbidden", { status: 403 });
@@ -98,7 +104,7 @@ function createWindow() {
     minHeight: 480,
     backgroundColor: nativeTheme.shouldUseDarkColors ? "#101318" : "#f2f3f5",
     show: false,
-    icon: path.join(__dirname, "..", "assets", "app-icon.png"),
+    icon: path.join(__dirname, "..", "assets", "brand-icon.png"),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -133,7 +139,11 @@ function buildMenu() {
     {
       label: "File",
       submenu: [
+        { label: "New Document…", accelerator: "CmdOrCtrl+N", click: () => send("new-text-file") },
         { label: "Open PDF…", accelerator: "CmdOrCtrl+O", click: () => send("open") },
+        { label: "Edit PDF Text…", accelerator: "CmdOrCtrl+E", click: () => send("edit-pdf-text") },
+        { label: "Save Document as PDF…", accelerator: "CmdOrCtrl+S", click: () => send("save-pdf") },
+        { type: "separator" },
         { label: "Print…", accelerator: "CmdOrCtrl+P", click: () => send("print") },
         { label: "Document Properties…", accelerator: "CmdOrCtrl+D", click: () => send("properties") },
         { type: "separator" },
@@ -275,6 +285,31 @@ async function runSmoke() {
     if (thumbs !== Number(expectedPages || 1)) {
       throw new Error(`expected ${expectedPages} thumbnails, found ${thumbs}`);
     }
+    const editorOpened = await mainWindow.webContents.executeJavaScript(
+      "document.getElementById('btn-new').click(); true"
+    );
+    const editorOk = await poll(
+      () =>
+        mainWindow.webContents.executeJavaScript(
+          "!document.getElementById('editor-view').hidden && " +
+            "!!document.querySelector('#editor-content .ql-editor') && " +
+            "typeof window.Quill === 'function'"
+        ),
+      15000
+    );
+    if (!editorOk) {
+      throw new Error("editor did not initialize");
+    }
+    const seeded = await mainWindow.webContents.executeJavaScript(
+      "window.__quill.setContents([{ insert: 'Hello ', attributes: { bold: true } }, { insert: 'World! Great day.' }]); " +
+        "window.__quill.formatLine(0, 1, 'align', 'center'); " +
+        "window.__quill.getSemanticHTML();"
+    );
+    console.log("[smoke] rich html:", seeded);
+    const pageBreakSeed = await mainWindow.webContents.executeJavaScript(
+      "(() => { window.__quill.setText('Intro text.\\n\\f\\nSecond page text.'); return window.__quill.getSemanticHTML(); })()"
+    );
+    console.log("[smoke] page break html:", pageBreakSeed);
     mainWindow.webContents.executeJavaScript("document.title").then((title) => console.log("[smoke] title:", title));
     console.log("[smoke] PASS");
     app.exit(0);
@@ -323,6 +358,36 @@ if (!gotLock) {
       }
       const data = await fs.readFile(filePath);
       return { name: path.basename(filePath), data: new Uint8Array(data) };
+    });
+
+    ipcMain.handle("dialog:create-text-pdf", async (_event, payload) => {
+      const text = typeof payload?.text === "string" ? payload.text : "";
+      const suggested = typeof payload?.suggestedName === "string" ? payload.suggestedName : "document";
+      const base = suggested.replace(/\.(pdf|txt)$/i, "") || "document";
+      const opts = payload?.options && typeof payload.options === "object" ? payload.options : {};
+      const fontSize = Number.isFinite(opts.fontSize) && opts.fontSize > 0 ? opts.fontSize : 11;
+      const lineSpacing = Number.isFinite(opts.lineSpacing) && opts.lineSpacing >= 1 ? opts.lineSpacing : 1.45;
+      const margin = Number.isFinite(opts.margin) && opts.margin >= 0 ? opts.margin : 56;
+      const title = typeof opts.title === "string" && opts.title.trim() ? opts.title.trim() : base;
+      const result = await dialog.showSaveDialog(mainWindow, {
+        title: "Save as PDF",
+        defaultPath: `${base}.pdf`,
+        filters: [{ name: "PDF documents", extensions: ["pdf"] }],
+      });
+      if (result.canceled || !result.filePath) return { canceled: true };
+      const pdfOptions = {
+        pageSize: opts.pageSize === "letter" ? "letter" : "a4",
+        fontSize,
+        lineSpacing,
+        lineHeight: Math.round(fontSize * lineSpacing),
+        margin,
+        pageNumbers: opts.pageNumbers !== false,
+        title,
+        author: opts.author,
+      };
+      const data = payload?.rich === true ? await richToPdf(text, pdfOptions) : await textToPdf(text, pdfOptions);
+      await fs.writeFile(result.filePath, Buffer.from(data));
+      return { canceled: false, filePath: result.filePath };
     });
 
     ipcMain.handle("app:set-theme", (_event, theme) => {
