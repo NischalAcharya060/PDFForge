@@ -88,6 +88,14 @@ export function Footer() {
               ))}
               <li>
                 <Link
+                  href="/download"
+                  className="font-medium text-primary hover:underline"
+                >
+                  Download Desktop App →
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/tools"
                   className="font-medium text-primary hover:underline"
                 >
