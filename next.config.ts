@@ -8,6 +8,22 @@ const nextConfig: NextConfig = {
       "pdf-lib-with-encrypt": "./node_modules/pdf-lib-with-encrypt/cjs/index.js",
     },
   },
+  async redirects() {
+    return [
+      {
+        source: "/PDFForge-Setup.exe",
+        destination:
+          "https://github.com/NischalAcharya060/PDFForge/releases/download/v1.0.0/PDFForge-Setup.exe",
+        permanent: false,
+      },
+      {
+        source: "/releases/1.0.0/PDFForge-Setup.exe",
+        destination:
+          "https://github.com/NischalAcharya060/PDFForge/releases/download/v1.0.0/PDFForge-Setup.exe",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -56,7 +56,9 @@ const downloadSchemas = [
       priceCurrency: "USD",
     },
     url: siteConfig.url,
-    downloadUrl: `${siteConfig.url}${siteConfig.desktop.downloadUrl}`,
+    downloadUrl: siteConfig.desktop.downloadUrl.startsWith("http")
+      ? siteConfig.desktop.downloadUrl
+      : `${siteConfig.url}${siteConfig.desktop.downloadUrl}`,
     description:
       "A fast, private, offline desktop PDF viewer. Open, zoom, navigate, print, and organize PDFs entirely on your device.",
   },
