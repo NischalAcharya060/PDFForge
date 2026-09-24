@@ -12,12 +12,12 @@ export const siteConfig = {
     version: "1.1.0",
     downloadUrl:
       process.env.NEXT_PUBLIC_DESKTOP_DOWNLOAD_URL ??
-      "https://pdfforge.acharyanischal.com.np/releases/1.1.0/PDFForge-Setup.exe",
+      "https://github.com/NischalAcharya060/PDFForge-Viewer/releases/download/v1.1.0/PDFForge-Setup.exe",
     downloadLabel: "PDFForge-Setup.exe",
     releases: [
       {
         version: "1.1.0",
-        url: "https://pdfforge.acharyanischal.com.np/releases/1.1.0/PDFForge-Setup.exe",
+        url: "https://github.com/NischalAcharya060/PDFForge-Viewer/releases/download/v1.1.0/PDFForge-Setup.exe",
         label: "PDFForge-Setup.exe",
         size: "123 MB",
         released: "Sep 24, 2026",
@@ -37,7 +37,7 @@ export const siteConfig = {
       },
       {
         version: "1.0.0",
-        url: "https://pdfforge.acharyanischal.com.np/releases/1.0.0/PDFForge-Setup.exe",
+        url: "https://github.com/NischalAcharya060/PDFForge-Viewer/releases/download/v1.0.0/PDFForge-Setup.exe",
         label: "PDFForge-Setup.exe",
         size: "119 MB",
         released: "Sep 23, 2026",
