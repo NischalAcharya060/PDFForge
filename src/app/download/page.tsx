@@ -16,6 +16,7 @@ import {
   Printer,
   Search,
   ShieldCheck,
+  Sparkles,
   SunMoon,
   WifiOff,
   Zap,
@@ -142,7 +143,7 @@ const faqs = [
   {
     question: "What are the system requirements?",
     answer:
-      "Windows 10 or Windows 11 (64-bit). The installer is about 119 MB and the app runs fine on modest hardware.",
+      "Windows 10 or Windows 11 (64-bit). The installer is about 123 MB and the app runs fine on modest hardware.",
   },
   {
     question: "My browser shows an 'unknown publisher' warning — what should I do?",
@@ -229,7 +230,7 @@ export default function DownloadPage() {
               Windows 10 / 11
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border bg-card/80 px-3.5 py-1.5 text-muted-foreground shadow-2xs backdrop-blur-xs">
-              ~119 MB
+              ~123 MB
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1.5 text-emerald-600 dark:text-emerald-400 shadow-2xs">
               <CheckCircle2 className="size-3" />
@@ -275,6 +276,129 @@ export default function DownloadPage() {
           </div>
         </Container>
       </section>
+
+      {/* ─── Download Versions ─── */}
+      <section className="border-b bg-muted/20 py-16 sm:py-24">
+        <Container>
+          <div className="mx-auto max-w-3xl text-center mb-10 sm:mb-14 space-y-3">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
+              <Download className="size-3.5" />
+              <span>ALL VERSIONS</span>
+            </div>
+            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+              Every release, ready to download
+            </h2>
+            <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
+              Grab the latest build for the newest features, or stick with a previous release.
+              Both installers run on Windows 10 and Windows 11.
+            </p>
+          </div>
+
+          <div className="mx-auto max-w-3xl space-y-4">
+            {siteConfig.desktop.releases.map((release) => (
+              <div
+                key={release.version}
+                className={`flex flex-col sm:flex-row sm:items-center gap-5 rounded-3xl border p-6 sm:p-7 backdrop-blur-xs transition-all ${
+                  release.latest
+                    ? "border-primary/40 bg-gradient-to-br from-primary/[0.07] via-card to-card shadow-lg shadow-primary/10"
+                    : "border-border/80 bg-card/90 shadow-2xs hover:shadow-md"
+                }`}
+              >
+                <div className="min-w-0 flex-1 space-y-2">
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <span className="text-lg font-extrabold tracking-tight text-foreground">
+                      v{release.version}
+                    </span>
+                    {release.latest && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-sm shadow-primary/25">
+                        <Check className="size-3" />
+                        Latest
+                      </span>
+                    )}
+                    <span className="text-xs font-semibold text-muted-foreground">
+                      Released {release.released}
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
+                    {release.note}
+                  </p>
+                  <p className="text-[11px] font-semibold text-muted-foreground/80">
+                    {release.size} • {release.label}
+                  </p>
+                </div>
+                <Button
+                  size="lg"
+                  asChild
+                  variant={release.latest ? "default" : "outline"}
+                  className={`w-full sm:w-auto h-12 px-6 text-sm font-bold rounded-2xl gap-2 transition-all hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap ${
+                    release.latest
+                      ? "bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25"
+                      : "border-primary/30 hover:bg-primary/5 hover:border-primary/50"
+                  }`}
+                >
+                  <a href={release.url} download>
+                    <Download className="size-4" />
+                    Download v{release.version}
+                  </a>
+                </Button>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* ─── What's New ─── */}
+      {siteConfig.desktop.releases
+        .filter((release) => release.latest && release.changes?.length)
+        .map((release) => (
+          <section key={`whats-new-${release.version}`} className="relative border-b py-16 sm:py-24 overflow-hidden">
+            <div className="pointer-events-none absolute -top-24 right-0 size-[420px] rounded-full bg-primary/10 blur-3xl" />
+            <Container className="relative">
+              <div className="mx-auto max-w-3xl text-center mb-10 sm:mb-14 space-y-3">
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
+                  <Sparkles className="size-3.5" />
+                  <span>WHAT&apos;S NEW</span>
+                </div>
+                <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+                  New in v{release.version}
+                </h2>
+                <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
+                  {siteConfig.desktop.name} v{release.version} is a packed update — here&apos;s
+                  everything that changed.
+                </p>
+              </div>
+
+              <div className="mx-auto max-w-3xl grid gap-3 sm:grid-cols-2">
+                {release.changes.map((change) => (
+                  <div
+                    key={change}
+                    className="flex items-start gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-2xs transition-all hover:border-primary/40 hover:shadow-md"
+                  >
+                    <span className="mt-0.5 inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <Check className="size-3.5" />
+                    </span>
+                    <span className="text-sm font-medium leading-relaxed text-foreground/90">
+                      {change}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-10 text-center">
+                <Button
+                  size="lg"
+                  asChild
+                  className="h-14 px-9 text-base font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl shadow-xl shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all gap-2.5"
+                >
+                  <a href={release.url} download>
+                    <Download className="size-5" />
+                    Download v{release.version}
+                  </a>
+                </Button>
+              </div>
+            </Container>
+          </section>
+        ))}
 
       {/* ─── Screenshot Showcase ─── */}
       <section className="relative border-b py-16 sm:py-24 bg-gradient-to-b from-background via-muted/20 to-background overflow-hidden">
@@ -457,7 +581,7 @@ export default function DownloadPage() {
                 <div className="mt-6 space-y-3">
                   {[
                     { label: "Operating System", value: "Windows 10 / 11 (64-bit)" },
-                    { label: "Disk Space", value: "~119 MB" },
+                    { label: "Disk Space", value: "~123 MB" },
                     { label: "RAM", value: "4 GB minimum (8 GB recommended)" },
                     { label: "Display", value: "1280×720 or higher" },
                     { label: "Internet", value: "Not required (fully offline)" },
