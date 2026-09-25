@@ -13,13 +13,19 @@ const nextConfig: NextConfig = {
       {
         source: "/PDFForge-Setup.exe",
         destination:
-          "https://github.com/NischalAcharya060/PDFForge-Viewer/releases/download/v1.0.0/PDFForge-Setup.exe",
+          "https://github.com/NischalAcharya060/PDFForge-Viewer/releases/download/v1.1.0/PDFForge-Setup.exe",
         permanent: false,
       },
       {
         source: "/releases/1.0.0/PDFForge-Setup.exe",
         destination:
           "https://github.com/NischalAcharya060/PDFForge-Viewer/releases/download/v1.0.0/PDFForge-Setup.exe",
+        permanent: false,
+      },
+      {
+        source: "/releases/1.1.0/PDFForge-Setup.exe",
+        destination:
+          "https://github.com/NischalAcharya060/PDFForge-Viewer/releases/download/v1.1.0/PDFForge-Setup.exe",
         permanent: false,
       },
     ];
