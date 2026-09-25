@@ -108,10 +108,46 @@ const highlights = [
   { icon: Eye, label: "PDF Viewing", detail: "Open & read any PDF" },
   { icon: Search, label: "Text Search", detail: "Find in document" },
   { icon: Layers, label: "Page Thumbnails", detail: "Visual navigation" },
-  { icon: Printer, label: "System Print", detail: "Print to any printer" },
-  { icon: SunMoon, label: "Dark & Light", detail: "Theme auto-switch" },
+  { icon: Printer, label: "Print Preview", detail: "Page range, copies & color" },
+  { icon: SunMoon, label: "Multiple Themes", detail: "Dark, classic, minimal & custom" },
   { icon: FileCheck2, label: ".pdf Association", detail: "Double-click to open" },
 ];
+
+const screenshots = [
+  {
+    src: "/screenshots/viewer-idle.png",
+    label: "Welcome Screen",
+    caption: "Jump right back into recent files with built-in keyboard shortcuts.",
+    alt: "PDFForge Viewer welcome screen with recent files and keyboard shortcuts",
+  },
+  {
+    src: "/screenshots/viewer-open.png",
+    label: "Reading a PDF",
+    caption: "Read multi-page PDFs with zoom, search, and a thumbnail sidebar.",
+    alt: "PDFForge Viewer open on a multi-page PDF with zoom controls and page thumbnails",
+  },
+  {
+    src: "/screenshots/new-document.png",
+    label: "Create a PDF",
+    caption: "Create new documents from rich text, plain text, or images in seconds.",
+    alt: "PDFForge Viewer new document screen with rich text, plain text, and image creation options",
+  },
+  {
+    src: "/screenshots/preference.png",
+    label: "Settings & Themes",
+    caption: "Tune themes, preferences, and default behaviors to match your workflow.",
+    alt: "PDFForge Viewer preferences screen showing theme and app options",
+  },
+];
+
+const screenshotChrome = (label: string) => (
+  <div className="flex items-center gap-2 border-b border-border/70 bg-muted/40 px-4 py-2.5">
+    <span className="size-2.5 rounded-full bg-red-500/80" />
+    <span className="size-2.5 rounded-full bg-amber-500/80" />
+    <span className="size-2.5 rounded-full bg-emerald-500/80" />
+    <span className="ml-2 text-[10px] font-semibold text-muted-foreground">{label}</span>
+  </div>
+);
 
 const installSteps = [
   {
@@ -409,65 +445,54 @@ export default function DownloadPage() {
               <span>SEE IT IN ACTION</span>
             </div>
             <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
-              Clean, focused, distraction-free
+              Create, read, and organize — beautifully
             </h2>
             <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
-              A minimal interface designed to get out of your way. Dark theme by default, with
-              a light theme one click away.
+              A clean, fast interface that gets out of your way. View, create, and tune
+              PDFForge Viewer to match exactly how you like to work.
             </p>
           </div>
 
-          {/* Dual Screenshot Showcase */}
-          <div className="mx-auto max-w-5xl grid gap-6 lg:grid-cols-2">
-            {/* Screenshot 1: Idle / Welcome */}
-            <div className="relative group">
-              <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-gradient-to-br from-primary/15 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
-              <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-background/80 shadow-lg transition-all group-hover:shadow-xl group-hover:border-primary/30">
-                <div className="flex items-center gap-2 border-b border-border/70 bg-muted/40 px-4 py-2.5">
-                  <span className="size-2.5 rounded-full bg-red-500/80" />
-                  <span className="size-2.5 rounded-full bg-amber-500/80" />
-                  <span className="size-2.5 rounded-full bg-emerald-500/80" />
-                  <span className="ml-2 text-[10px] font-semibold text-muted-foreground">
-                    Welcome Screen
-                  </span>
+          {/* Uniform Screenshot Grid */}
+          <div className="mx-auto max-w-5xl grid gap-6 sm:grid-cols-2">
+            {screenshots.map((shot) => (
+              <div key={shot.src} className="relative group">
+                <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-gradient-to-br from-primary/15 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
+                <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-background/80 shadow-lg transition-all group-hover:shadow-xl group-hover:border-primary/30">
+                  {screenshotChrome(shot.label)}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={shot.src}
+                    alt={shot.alt}
+                    className="w-full aspect-[16/10] object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/90 to-transparent px-5 pb-4 pt-10 text-left sm:opacity-0 sm:translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                    <p className="text-sm font-bold text-foreground">{shot.label}</p>
+                    <p className="text-xs text-muted-foreground">{shot.caption}</p>
+                  </div>
                 </div>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/screenshots/viewer-idle.png"
-                  alt={`${siteConfig.desktop.name} welcome screen with recent files and keyboard shortcuts`}
-                  className="w-full aspect-[16/10] object-cover object-top"
-                  loading="lazy"
-                />
+                <p className="mt-3 px-1 text-left text-xs font-semibold text-muted-foreground sm:hidden">
+                  {shot.caption}
+                </p>
               </div>
-              <p className="mt-3 text-center text-xs font-semibold text-muted-foreground">
-                Welcome screen with recent files & keyboard shortcuts
-              </p>
-            </div>
+            ))}
+          </div>
 
-            {/* Screenshot 2: Active PDF */}
-            <div className="relative group">
-              <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-gradient-to-br from-primary/15 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
-              <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-background/80 shadow-lg transition-all group-hover:shadow-xl group-hover:border-primary/30">
-                <div className="flex items-center gap-2 border-b border-border/70 bg-muted/40 px-4 py-2.5">
-                  <span className="size-2.5 rounded-full bg-red-500/80" />
-                  <span className="size-2.5 rounded-full bg-amber-500/80" />
-                  <span className="size-2.5 rounded-full bg-emerald-500/80" />
-                  <span className="ml-2 text-[10px] font-semibold text-muted-foreground">
-                    Reading a PDF
-                  </span>
-                </div>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/screenshots/viewer-open.png"
-                  alt={`${siteConfig.desktop.name} showing an open PDF with zoom controls and page thumbnails`}
-                  className="w-full aspect-[16/10] object-cover object-top"
-                  loading="lazy"
-                />
-              </div>
-              <p className="mt-3 text-center text-xs font-semibold text-muted-foreground">
-                Reading a multi-page PDF with sidebar thumbnails
-              </p>
-            </div>
+          {/* Mini trust strip under gallery */}
+          <div className="mx-auto mt-10 flex max-w-2xl flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-semibold text-muted-foreground">
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
+              No accounts, no telemetry
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Zap className="size-4 text-primary" />
+              Instant open & render
+            </span>
+            <span className="flex items-center gap-1.5">
+              <WifiOff className="size-4 text-primary" />
+              100% offline
+            </span>
           </div>
         </Container>
       </section>
