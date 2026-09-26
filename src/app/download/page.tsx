@@ -26,6 +26,9 @@ import { siteConfig } from "@/config/site";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
+import { Reveal, RevealGroup } from "@/components/motion/reveal";
+import { AnimatedUnderline } from "@/components/motion/animated-underline";
+import { Spotlight } from "@/components/motion/spotlight";
 
 export const metadata: Metadata = {
   title: "Download PDFForge Viewer for Windows — Free Offline PDF App",
@@ -211,133 +214,135 @@ export default function DownloadPage() {
       ))}
 
       {/* ─── Hero Section ─── */}
-      <section className="relative overflow-hidden border-b bg-gradient-to-b from-background via-card/40 to-background pt-12 sm:pt-20 pb-16 sm:pb-24">
+      <section className="relative isolate overflow-hidden border-b pt-12 pb-16 sm:pt-20 sm:pb-24">
         {/* Background Dot Pattern */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#d1d5db_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:28px_28px] opacity-40 [mask-image:radial-gradient(ellipse_60%_60%_at_50%_20%,#000_70%,transparent_100%)]" />
+        <div
+          aria-hidden="true"
+          className="grid-pattern-sm pointer-events-none absolute inset-0 -z-10 opacity-35 mask-radial-hero"
+        />
 
         {/* Ambient Glow */}
-        <div className="pointer-events-none absolute -top-28 left-1/2 -translate-x-1/2 size-[680px] rounded-full bg-gradient-to-b from-primary/20 via-amber-500/10 to-transparent blur-3xl opacity-80" />
+        <div
+          aria-hidden="true"
+          className="animate-aurora pointer-events-none absolute -top-28 left-1/2 size-[680px] -translate-x-1/2 -z-10 rounded-full bloom-primary"
+        />
 
         <Container className="relative text-center">
           {/* Badge */}
-          <div className="mx-auto mb-6 inline-flex items-center gap-2.5 rounded-full border border-primary/25 bg-card/85 px-4 py-1.5 text-xs font-semibold text-foreground shadow-xs backdrop-blur-md transition-all hover:border-primary/40">
+          <Reveal className="mx-auto mb-6 inline-flex items-center gap-2.5 rounded-full border border-primary/25 bg-card/80 px-4 py-1.5 text-xs font-semibold text-muted-foreground shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40">
             <MonitorDown className="size-4 text-primary" aria-hidden="true" />
             <span className="font-medium text-muted-foreground">
               Windows Desktop App •{" "}
-              <strong className="text-foreground font-semibold">Free & Offline</strong>
+              <strong className="font-semibold text-foreground">Free &amp; Offline</strong>
             </span>
-          </div>
+          </Reveal>
 
           {/* Headline */}
-          <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight text-balance sm:text-5xl lg:text-6xl text-foreground">
-            The fastest way to{" "}
-            <span className="relative inline-block whitespace-nowrap text-primary">
-              <span className="relative z-10">read PDFs</span>
-              <svg
-                className="absolute -bottom-2 left-0 -z-0 h-3 w-full text-primary/30"
-                viewBox="0 0 358 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M3 9C118.5 2.5 239.5 2.5 355 9"
-                  stroke="currentColor"
-                  strokeWidth="5"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </span>{" "}
-            on your desktop
-          </h1>
+          <Reveal delay={80}>
+            <h1 className="mx-auto max-w-4xl text-balance text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+              The fastest way to{" "}
+              <AnimatedUnderline delay={420} className="whitespace-nowrap">
+                read PDFs
+              </AnimatedUnderline>{" "}
+              on your desktop
+            </h1>
 
-          {/* Subtitle */}
-          <p className="mx-auto mt-5 max-w-2xl text-balance text-base leading-relaxed text-muted-foreground sm:text-lg">
-            {siteConfig.desktop.name} is a fast, private, offline PDF viewer for Windows.
-            Open, zoom, navigate, and print PDFs right from your files — no uploads, no
-            account, no internet required.
-          </p>
+            {/* Subtitle */}
+            <p className="mx-auto mt-5 max-w-2xl text-balance text-base leading-relaxed text-muted-foreground sm:text-lg">
+              {siteConfig.desktop.name} is a fast, private, offline PDF viewer for Windows. Open,
+              zoom, navigate, and print PDFs right from your files — no uploads, no account, no
+              internet required.
+            </p>
+          </Reveal>
 
           {/* Meta Chips */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-xs font-semibold">
-            <span className="inline-flex items-center gap-1.5 rounded-full border bg-card/80 px-3.5 py-1.5 text-muted-foreground shadow-2xs backdrop-blur-xs">
+          <RevealGroup
+            className="mt-6 flex flex-wrap items-center justify-center gap-2"
+            step={60}
+            y={10}
+          >
+            <span className="press rounded-full border border-border/80 bg-card/70 px-3.5 py-1.5 text-xs font-semibold text-muted-foreground shadow-2xs backdrop-blur-sm transition-transform duration-300 hover:-translate-y-0.5">
               v{siteConfig.desktop.version}
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border bg-card/80 px-3.5 py-1.5 text-muted-foreground shadow-2xs backdrop-blur-xs">
+            <span className="press rounded-full border border-border/80 bg-card/70 px-3.5 py-1.5 text-xs font-semibold text-muted-foreground shadow-2xs backdrop-blur-sm transition-transform duration-300 hover:-translate-y-0.5">
               Windows 10 / 11
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border bg-card/80 px-3.5 py-1.5 text-muted-foreground shadow-2xs backdrop-blur-xs">
+            <span className="press rounded-full border border-border/80 bg-card/70 px-3.5 py-1.5 text-xs font-semibold text-muted-foreground shadow-2xs backdrop-blur-sm transition-transform duration-300 hover:-translate-y-0.5">
               ~123 MB
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1.5 text-emerald-600 dark:text-emerald-400 shadow-2xs">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-semibold text-emerald-600 shadow-2xs dark:text-emerald-400">
               <CheckCircle2 className="size-3" />
               100% Free
             </span>
-          </div>
+          </RevealGroup>
 
           {/* CTA Buttons */}
-          <div className="mt-8 sm:mt-10 flex flex-col items-center justify-center gap-3.5 sm:flex-row">
-            <Button
-              size="lg"
-              asChild
-              className="h-14 px-9 text-base font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 rounded-2xl gap-2.5 hover:scale-[1.02] active:scale-[0.98] transition-all"
-            >
-              <a href={siteConfig.desktop.downloadUrl} download>
-                <Download className="size-5" />
-                Download for Windows
-              </a>
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              asChild
-              className="h-14 px-8 text-base font-semibold rounded-2xl border-border/80 bg-card/70 backdrop-blur-xs hover:bg-muted/80 shadow-xs hover:scale-[1.02] active:scale-[0.98] transition-all"
-            >
-              <Link href="/tools">
-                Use the online tools
-                <ArrowRight className="size-4" />
-              </Link>
-            </Button>
-          </div>
+          <Reveal delay={160} className="mt-8 sm:mt-10">
+            <div className="flex flex-col items-center justify-center gap-3.5 sm:flex-row">
+              <Button
+                size="xl"
+                asChild
+                className="shine-loop press group/dl h-14 w-full gap-2.5 rounded-2xl px-9 text-base font-bold shadow-premium-lg sm:w-auto"
+              >
+                <a href={siteConfig.desktop.downloadUrl} download>
+                  <Download className="size-5 transition-transform duration-500 ease-[var(--ease-spring)] group-hover/dl:-translate-y-0.5" />
+                  Download for Windows
+                </a>
+              </Button>
+              <Button
+                size="xl"
+                variant="outline"
+                asChild
+                className="press h-14 w-full gap-2 rounded-2xl border-border/80 bg-card/70 px-8 text-base font-semibold shadow-sm backdrop-blur-sm hover:bg-muted/80 sm:w-auto"
+              >
+                <Link href="/tools">
+                  Use the online tools
+                  <ArrowRight className="size-4" />
+                </Link>
+              </Button>
+            </div>
+          </Reveal>
 
           {/* SmartScreen notice */}
-          <div className="mx-auto mt-6 max-w-xl flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/5 p-3.5 text-xs leading-relaxed text-foreground/80 text-left backdrop-blur-xs">
-            <Info className="size-4 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
-            <span>
-              SmartScreen may show an{" "}
-              <strong className="text-foreground">&ldquo;unknown publisher&rdquo;</strong>{" "}
-              warning because the installer is not yet code-signed. Click{" "}
-              <strong className="text-foreground">More info → Run anyway</strong> to
-              install.
-            </span>
-          </div>
+          <Reveal delay={220} className="mt-6">
+            <div className="mx-auto flex max-w-xl items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/5 p-3.5 text-left text-xs leading-relaxed text-foreground/80 backdrop-blur-sm">
+              <Info className="mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-400" />
+              <span>
+                SmartScreen may show an{" "}
+                <strong className="text-foreground">&ldquo;unknown publisher&rdquo;</strong>{" "}
+                warning because the installer is not yet code-signed. Click{" "}
+                <strong className="text-foreground">More info → Run anyway</strong> to install.
+              </span>
+            </div>
+          </Reveal>
         </Container>
       </section>
 
       {/* ─── Download Versions ─── */}
       <section className="border-b bg-muted/20 py-16 sm:py-24">
         <Container>
-          <div className="mx-auto max-w-3xl text-center mb-10 sm:mb-14 space-y-3">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
+          <Reveal className="mx-auto mb-10 max-w-3xl space-y-4 text-center sm:mb-14">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3.5 py-1 text-xs font-bold text-primary">
               <Download className="size-3.5" />
               <span>ALL VERSIONS</span>
             </div>
-            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
               Every release, ready to download
             </h2>
-            <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
+            <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
               Grab the latest build for the newest features, or stick with a previous release.
               Both installers run on Windows 10 and Windows 11.
             </p>
-          </div>
+          </Reveal>
 
-          <div className="mx-auto max-w-3xl space-y-4">
+          <RevealGroup className="mx-auto max-w-3xl space-y-4" step={90} y={28}>
             {siteConfig.desktop.releases.map((release) => (
-              <div
+              <Spotlight
                 key={release.version}
-                className={`flex flex-col sm:flex-row sm:items-center gap-5 rounded-3xl border p-6 sm:p-7 backdrop-blur-xs transition-all ${
+                className={`lift border-gradient-hover flex flex-col gap-5 rounded-3xl border p-6 transition-colors duration-300 sm:flex-row sm:items-center sm:p-7 ${
                   release.latest
-                    ? "border-primary/40 bg-gradient-to-br from-primary/[0.07] via-card to-card shadow-lg shadow-primary/10"
-                    : "border-border/80 bg-card/90 shadow-2xs hover:shadow-md"
+                    ? "border-primary/40 bg-gradient-to-br from-primary/[0.07] via-card to-card shadow-premium"
+                    : "border-border/80 bg-card/90 shadow-2xs hover:border-primary/30"
                 }`}
               >
                 <div className="min-w-0 flex-1 space-y-2">
@@ -346,7 +351,7 @@ export default function DownloadPage() {
                       v{release.version}
                     </span>
                     {release.latest && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-sm shadow-primary/25">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-premium">
                         <Check className="size-3" />
                         Latest
                       </span>
@@ -355,7 +360,7 @@ export default function DownloadPage() {
                       Released {release.released}
                     </span>
                   </div>
-                  <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
+                  <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
                     {release.note}
                   </p>
                   <p className="text-[11px] font-semibold text-muted-foreground/80">
@@ -363,13 +368,13 @@ export default function DownloadPage() {
                   </p>
                 </div>
                 <Button
-                  size="lg"
+                  size="xl"
                   asChild
                   variant={release.latest ? "default" : "outline"}
-                  className={`w-full sm:w-auto h-12 px-6 text-sm font-bold rounded-2xl gap-2 transition-all hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap ${
+                  className={`press h-12 w-full shrink-0 gap-2 whitespace-nowrap rounded-2xl px-6 text-sm font-bold transition-all duration-300 hover:scale-[1.02] sm:w-auto ${
                     release.latest
-                      ? "bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25"
-                      : "border-primary/30 hover:bg-primary/5 hover:border-primary/50"
+                      ? "shadow-premium-lg"
+                      : "border-primary/30 hover:border-primary/50 hover:bg-primary/5"
                   }`}
                 >
                   <a href={release.url} download>
@@ -377,9 +382,9 @@ export default function DownloadPage() {
                     Download v{release.version}
                   </a>
                 </Button>
-              </div>
+              </Spotlight>
             ))}
-          </div>
+          </RevealGroup>
         </Container>
       </section>
 
@@ -387,28 +392,38 @@ export default function DownloadPage() {
       {siteConfig.desktop.releases
         .filter((release) => release.latest && release.changes?.length)
         .map((release) => (
-          <section key={`whats-new-${release.version}`} className="relative border-b py-16 sm:py-24 overflow-hidden">
-            <div className="pointer-events-none absolute -top-24 right-0 size-[420px] rounded-full bg-primary/10 blur-3xl" />
+          <section
+            key={`whats-new-${release.version}`}
+            className="relative isolate overflow-hidden border-b py-16 sm:py-24"
+          >
+            <div
+              aria-hidden="true"
+              className="animate-aurora pointer-events-none absolute -right-40 -top-24 size-[420px] -z-10 rounded-full bloom-primary-soft"
+            />
             <Container className="relative">
-              <div className="mx-auto max-w-3xl text-center mb-10 sm:mb-14 space-y-3">
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
+              <Reveal className="mx-auto mb-10 max-w-3xl space-y-4 text-center sm:mb-14">
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3.5 py-1 text-xs font-bold text-primary">
                   <Sparkles className="size-3.5" />
                   <span>WHAT&apos;S NEW</span>
                 </div>
-                <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+                <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
                   New in v{release.version}
                 </h2>
-                <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
+                <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
                   {siteConfig.desktop.name} v{release.version} is a packed update — here&apos;s
                   everything that changed.
                 </p>
-              </div>
+              </Reveal>
 
-              <div className="mx-auto max-w-3xl grid gap-3 sm:grid-cols-2">
+              <RevealGroup
+                className="mx-auto grid max-w-3xl gap-3 sm:grid-cols-2"
+                step={60}
+                y={16}
+              >
                 {release.changes.map((change) => (
                   <div
                     key={change}
-                    className="flex items-start gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-2xs transition-all hover:border-primary/40 hover:shadow-md"
+                    className="lift flex items-start gap-3 rounded-2xl border border-border/80 bg-card/90 p-4 shadow-2xs backdrop-blur-sm transition-all duration-400 ease-[var(--ease-premium)] hover:-translate-y-1 hover:border-primary/40 hover:shadow-md"
                   >
                     <span className="mt-0.5 inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <Check className="size-3.5" />
@@ -418,56 +433,64 @@ export default function DownloadPage() {
                     </span>
                   </div>
                 ))}
-              </div>
+              </RevealGroup>
 
-              <div className="mt-10 text-center">
+              <Reveal delay={120} className="mt-10 text-center">
                 <Button
-                  size="lg"
+                  size="xl"
                   asChild
-                  className="h-14 px-9 text-base font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl shadow-xl shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all gap-2.5"
+                  className="press h-14 gap-2.5 rounded-2xl px-9 text-base font-bold shadow-premium-lg"
                 >
                   <a href={release.url} download>
                     <Download className="size-5" />
                     Download v{release.version}
                   </a>
                 </Button>
-              </div>
+              </Reveal>
             </Container>
           </section>
         ))}
 
       {/* ─── Screenshot Showcase ─── */}
-      <section className="relative border-b py-16 sm:py-24 bg-gradient-to-b from-background via-muted/20 to-background overflow-hidden">
+      <section className="relative isolate overflow-hidden border-b bg-gradient-to-b from-background via-muted/20 to-background py-16 sm:py-24">
+        <div
+          aria-hidden="true"
+          className="grid-pattern-sm pointer-events-none absolute inset-0 -z-10 opacity-30 mask-fade-b"
+        />
         <Container>
-          <div className="mx-auto max-w-3xl text-center mb-10 sm:mb-14 space-y-3">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
+          <Reveal className="mx-auto mb-10 max-w-3xl space-y-4 text-center sm:mb-14">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3.5 py-1 text-xs font-bold text-primary">
               <Eye className="size-3.5" />
               <span>SEE IT IN ACTION</span>
             </div>
-            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
               Create, read, and organize — beautifully
             </h2>
-            <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
+            <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
               A clean, fast interface that gets out of your way. View, create, and tune
               PDFForge Viewer to match exactly how you like to work.
             </p>
-          </div>
+          </Reveal>
 
           {/* Uniform Screenshot Grid */}
-          <div className="mx-auto max-w-5xl grid gap-6 sm:grid-cols-2">
+          <RevealGroup
+            className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2"
+            step={90}
+            y={32}
+          >
             {screenshots.map((shot) => (
-              <div key={shot.src} className="relative group">
-                <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-gradient-to-br from-primary/15 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
-                <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-background/80 shadow-lg transition-all group-hover:shadow-xl group-hover:border-primary/30">
+              <div key={shot.src} className="group relative">
+                <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-gradient-to-br from-primary/15 via-transparent to-primary/10 opacity-0 blur-xl transition-opacity duration-700 group-hover:opacity-100" />
+                <div className="lift relative overflow-hidden rounded-2xl border border-border/80 bg-background/80 shadow-md transition-all duration-500 ease-[var(--ease-premium)] group-hover:-translate-y-1 group-hover:border-primary/30 group-hover:shadow-premium-lg">
                   {screenshotChrome(shot.label)}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={shot.src}
                     alt={shot.alt}
-                    className="w-full aspect-[16/10] object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+                    className="aspect-[16/10] w-full object-cover object-top transition-transform duration-700 ease-[var(--ease-premium)] group-hover:scale-[1.03]"
                     loading="lazy"
                   />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/90 to-transparent px-5 pb-4 pt-10 text-left sm:opacity-0 sm:translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/95 to-transparent px-5 pb-4 pt-10 text-left transition-all duration-300 sm:translate-y-2 sm:opacity-0 group-hover:translate-y-0 group-hover:opacity-100">
                     <p className="text-sm font-bold text-foreground">{shot.label}</p>
                     <p className="text-xs text-muted-foreground">{shot.caption}</p>
                   </div>
@@ -477,50 +500,58 @@ export default function DownloadPage() {
                 </p>
               </div>
             ))}
-          </div>
+          </RevealGroup>
 
           {/* Mini trust strip under gallery */}
-          <div className="mx-auto mt-10 flex max-w-2xl flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-semibold text-muted-foreground">
+          <RevealGroup
+            className="mx-auto mt-10 flex max-w-2xl flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-semibold text-muted-foreground"
+            step={70}
+            y={10}
+          >
             <span className="flex items-center gap-1.5">
               <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
               No accounts, no telemetry
             </span>
             <span className="flex items-center gap-1.5">
               <Zap className="size-4 text-primary" />
-              Instant open & render
+              Instant open &amp; render
             </span>
             <span className="flex items-center gap-1.5">
               <WifiOff className="size-4 text-primary" />
               100% offline
             </span>
-          </div>
+          </RevealGroup>
         </Container>
       </section>
 
       {/* ─── Capability Highlights Grid ─── */}
       <section className="border-b py-16 sm:py-24">
         <Container>
-          <div className="mx-auto max-w-3xl text-center mb-10 sm:mb-14 space-y-3">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
+          <Reveal className="mx-auto mb-10 max-w-3xl space-y-4 text-center sm:mb-14">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3.5 py-1 text-xs font-bold text-primary">
               <Zap className="size-3.5" />
               <span>BUILT-IN CAPABILITIES</span>
             </div>
-            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
               Everything you need to read PDFs
             </h2>
-            <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
+            <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
               {siteConfig.desktop.name} is designed to be fast, private, and effortless.
             </p>
-          </div>
+          </Reveal>
 
-          {/* Compact Highlight Chips */}
-          <div className="mx-auto max-w-3xl grid grid-cols-2 sm:grid-cols-3 gap-3 mb-12">
+          {/* Compact highlight chips */}
+          <RevealGroup
+            className="mx-auto mb-12 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-3"
+            step={55}
+            y={14}
+          >
             {highlights.map((h) => (
               <div
                 key={h.label}
-                className="flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-2xs transition-all hover:border-primary/40 hover:shadow-md"
+                className="lift flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-2xs transition-all duration-400 ease-[var(--ease-premium)] hover:-translate-y-1 hover:border-primary/40 hover:shadow-md"
               >
-                <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-500 ease-[var(--ease-spring)]">
                   <h.icon className="size-5" />
                 </span>
                 <div>
@@ -529,25 +560,29 @@ export default function DownloadPage() {
                 </div>
               </div>
             ))}
-          </div>
+          </RevealGroup>
 
-          {/* Detailed Feature Cards */}
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Detailed feature cards */}
+          <RevealGroup
+            className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+            step={70}
+            y={22}
+          >
             {features.map((feature) => (
-              <div
+              <Spotlight
                 key={feature.title}
-                className="group rounded-3xl border border-border/80 bg-card p-6 shadow-xs space-y-3 transition-all hover:border-primary/40 hover:shadow-md"
+                className="lift border-gradient-hover group space-y-3 rounded-3xl border border-border/80 bg-card p-6 shadow-xs transition-all duration-400 ease-[var(--ease-premium)] hover:-translate-y-1 hover:border-primary/40 hover:shadow-md"
               >
-                <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-all duration-500 ease-[var(--ease-spring)] group-hover:-translate-y-1 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground">
                   <feature.icon className="size-5" />
                 </span>
-                <h3 className="font-bold text-base text-foreground">{feature.title}</h3>
+                <h3 className="text-base font-bold text-foreground">{feature.title}</h3>
                 <p className="text-xs leading-relaxed text-muted-foreground">
                   {feature.description}
                 </p>
-              </div>
+              </Spotlight>
             ))}
-          </div>
+          </RevealGroup>
         </Container>
       </section>
 
@@ -555,86 +590,96 @@ export default function DownloadPage() {
       <section className="border-b bg-muted/20 py-16 sm:py-24">
         <Container>
           <div className="grid items-center gap-12 lg:grid-cols-12">
-            <div className="lg:col-span-6 space-y-6">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
+            <Reveal className="space-y-6 lg:col-span-6" x={-28}>
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3.5 py-1 text-xs font-bold text-primary">
                 <Clock className="size-3.5" />
                 <span>SETUP IN 60 SECONDS</span>
               </div>
-              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+              <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
                 Three steps to your new PDF viewer
               </h2>
-              <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
+              <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
                 No accounts. No registration. No complex configuration. Just download, install,
                 and start reading.
               </p>
 
               <div className="space-y-6 pt-2">
-                {installSteps.map((st) => (
-                  <div key={st.step} className="flex gap-4 group">
-                    <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground font-black text-sm shadow-md shadow-primary/25 transition-transform group-hover:scale-105">
+                {installSteps.map((st, index) => (
+                  <div key={st.step} className="group/step flex gap-4">
+                    <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-primary font-black text-sm text-primary-foreground shadow-premium transition-all duration-500 ease-[var(--ease-spring)] group-hover/step:-rotate-3 group-hover/step:scale-110">
                       {st.step}
                     </span>
                     <div>
-                      <h3 className="font-bold text-base text-foreground group-hover:text-primary transition-colors">
-                        {st.title}
+                      <h3 className="text-base font-bold text-foreground transition-colors duration-300 group-hover/step:text-primary">
+                        <span
+                          className="animate-fade-up inline-block"
+                          style={{ animationDelay: `${index * 90}ms` }}
+                        >
+                          {st.title}
+                        </span>
                       </h3>
-                      <p className="mt-1 text-xs sm:text-sm leading-relaxed text-muted-foreground">
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground sm:text-sm">
                         {st.description}
                       </p>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
+            </Reveal>
 
             {/* System Requirements Card */}
-            <div className="lg:col-span-6">
-              <div className="relative overflow-hidden rounded-3xl border border-border/80 bg-gradient-to-br from-card via-card to-muted/40 p-8 sm:p-10 shadow-xl backdrop-blur-xs">
-                <div className="pointer-events-none absolute -right-12 -bottom-12 size-60 rounded-full bg-primary/10 blur-2xl" />
+            <Reveal className="lg:col-span-6" x={28} delay={120}>
+              <Spotlight className="lift border-gradient-hover relative isolate overflow-hidden rounded-3xl border border-border/80 bg-gradient-to-br from-card via-card to-muted/40 p-8 shadow-premium-lg sm:p-10">
+                <div
+                  aria-hidden="true"
+                  className="animate-float-slow pointer-events-none absolute -bottom-12 -right-12 size-60 rounded-full bloom-primary-soft"
+                />
 
-                <div className="inline-flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-xs">
-                  <Laptop className="size-7" aria-hidden="true" />
-                </div>
+                <div className="relative">
+                  <div className="inline-flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-xs">
+                    <Laptop className="size-7" aria-hidden="true" />
+                  </div>
 
-                <h3 className="mt-6 text-2xl font-extrabold tracking-tight text-foreground">
-                  System Requirements
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  Runs smoothly on any modern Windows machine.
-                </p>
+                  <h3 className="mt-6 text-2xl font-extrabold tracking-tight text-foreground">
+                    System Requirements
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    Runs smoothly on any modern Windows machine.
+                  </p>
 
-                <div className="mt-6 space-y-3">
-                  {[
-                    { label: "Operating System", value: "Windows 10 / 11 (64-bit)" },
-                    { label: "Disk Space", value: "~123 MB" },
-                    { label: "RAM", value: "4 GB minimum (8 GB recommended)" },
-                    { label: "Display", value: "1280×720 or higher" },
-                    { label: "Internet", value: "Not required (fully offline)" },
-                  ].map((req) => (
-                    <div
-                      key={req.label}
-                      className="flex items-center justify-between rounded-xl border border-border/60 bg-background/80 px-4 py-3 text-sm"
+                  <div className="mt-6 space-y-3">
+                    {[
+                      { label: "Operating System", value: "Windows 10 / 11 (64-bit)" },
+                      { label: "Disk Space", value: "~123 MB" },
+                      { label: "RAM", value: "4 GB minimum (8 GB recommended)" },
+                      { label: "Display", value: "1280×720 or higher" },
+                      { label: "Internet", value: "Not required (fully offline)" },
+                    ].map((req) => (
+                      <div
+                        key={req.label}
+                        className="press flex items-center justify-between rounded-xl border border-border/60 bg-background/70 px-4 py-3 text-sm backdrop-blur-sm transition-colors duration-300 hover:border-primary/30"
+                      >
+                        <span className="font-semibold text-muted-foreground">{req.label}</span>
+                        <span className="font-bold text-foreground">{req.value}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-6">
+                    <Button
+                      size="xl"
+                      asChild
+                      className="press h-14 w-full gap-2.5 rounded-2xl text-base font-bold shadow-premium-lg"
                     >
-                      <span className="font-semibold text-muted-foreground">{req.label}</span>
-                      <span className="font-bold text-foreground">{req.value}</span>
-                    </div>
-                  ))}
+                      <a href={siteConfig.desktop.downloadUrl} download>
+                        <Download className="size-5" />
+                        Download {siteConfig.desktop.downloadLabel}
+                      </a>
+                    </Button>
+                  </div>
                 </div>
-
-                <div className="mt-6">
-                  <Button
-                    size="lg"
-                    asChild
-                    className="w-full h-14 text-base font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl shadow-xl shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all gap-2.5"
-                  >
-                    <a href={siteConfig.desktop.downloadUrl} download>
-                      <Download className="size-5" />
-                      Download {siteConfig.desktop.downloadLabel}
-                    </a>
-                  </Button>
-                </div>
-              </div>
-            </div>
+              </Spotlight>
+            </Reveal>
           </div>
         </Container>
       </section>
@@ -642,138 +687,151 @@ export default function DownloadPage() {
       {/* ─── Web App Cross-Promo ─── */}
       <section className="border-b py-16 sm:py-24">
         <Container>
-          <div className="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-border/90 bg-card shadow-xl">
-            <div className="grid lg:grid-cols-2">
-              <div className="border-b lg:border-b-0 lg:border-r border-border/80 p-6 sm:p-9">
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[10px] font-bold text-primary mb-4">
-                  ALSO AVAILABLE
+          <Reveal delay={80} y={36}>
+            <div className="surface mx-auto max-w-4xl overflow-hidden rounded-3xl border shadow-premium-lg">
+              <div className="grid lg:grid-cols-2">
+                <div className="border-b border-border/80 p-6 sm:p-9 lg:border-b-0 lg:border-r">
+                  <div className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-[10px] font-bold text-primary">
+                    ALSO AVAILABLE
+                  </div>
+                  <h3 className="text-xl font-extrabold tracking-tight text-foreground sm:text-2xl">
+                    Prefer the browser?
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    The web app has all 18 PDF tools — merge, split, compress, convert, encrypt,
+                    and more — and still runs 100% on your device with nothing uploaded.
+                  </p>
+                  <ul className="mt-5 space-y-2.5 text-sm">
+                    {[
+                      "18 powerful PDF tools",
+                      "Works on any device — desktop, tablet, mobile",
+                      "No installation required",
+                      "Same local-first privacy guarantee",
+                    ].map((point) => (
+                      <li
+                        key={point}
+                        className="group/pt flex items-start gap-2.5 text-foreground/90"
+                      >
+                        <Check className="mt-0.5 size-4 shrink-0 text-primary transition-transform duration-300 ease-[var(--ease-spring)] group-hover/pt:scale-125" />
+                        <span className="font-medium">{point}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground">
-                  Prefer the browser?
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  The web app has all 18 PDF tools — merge, split, compress, convert, encrypt,
-                  and more — and still runs 100% on your device with nothing uploaded.
-                </p>
-                <ul className="mt-5 space-y-2.5 text-sm">
-                  {[
-                    "18 powerful PDF tools",
-                    "Works on any device — desktop, tablet, mobile",
-                    "No installation required",
-                    "Same local-first privacy guarantee",
-                  ].map((point) => (
-                    <li key={point} className="flex items-start gap-2.5 text-foreground/90">
-                      <Check className="size-4 shrink-0 mt-0.5 text-primary" />
-                      <span className="font-medium">{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="flex flex-col items-center justify-center gap-4 p-6 sm:p-9 text-center bg-gradient-to-br from-primary/5 to-transparent">
-                <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  No download required
-                </span>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  asChild
-                  className="h-14 px-8 text-base font-bold rounded-2xl border-primary/30 hover:bg-primary/5 hover:border-primary/50 shadow-xs hover:scale-[1.02] active:scale-[0.98] transition-all gap-2"
-                >
-                  <Link href="/tools">
-                    Browse all PDF tools
-                    <ArrowRight className="size-4" />
-                  </Link>
-                </Button>
-                <p className="text-xs text-muted-foreground leading-relaxed max-w-xs">
-                  100% free, unlimited, and processed locally on your device with instant speed.
-                </p>
+                <div className="flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-primary/5 to-transparent p-6 text-center sm:p-9">
+                  <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    No download required
+                  </span>
+                  <Button
+                    size="xl"
+                    variant="outline"
+                    asChild
+                    className="press group/btn h-14 gap-2 rounded-2xl border-primary/30 px-8 text-base font-bold shadow-sm transition-all hover:border-primary/50 hover:bg-primary/5"
+                  >
+                    <Link href="/tools">
+                      Browse all PDF tools
+                      <ArrowRight className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                    </Link>
+                  </Button>
+                  <p className="max-w-xs text-xs leading-relaxed text-muted-foreground">
+                    100% free, unlimited, and processed locally on your device with instant speed.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </Reveal>
         </Container>
       </section>
 
       {/* ─── FAQ ─── */}
       <section className="border-b bg-muted/20 py-16 sm:py-24">
         <Container>
-          <div className="mx-auto max-w-3xl text-center mb-10 sm:mb-12 space-y-3">
-            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+          <Reveal className="mx-auto mb-10 max-w-3xl space-y-4 text-center sm:mb-12">
+            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
               Frequently Asked Questions
             </h2>
-            <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
+            <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
               Everything you need to know about {siteConfig.desktop.name}.
             </p>
-          </div>
+          </Reveal>
 
-          <div className="mx-auto max-w-3xl space-y-3.5">
+          <RevealGroup className="mx-auto max-w-3xl space-y-3.5" step={60}>
             {faqs.map((faq) => (
               <details
                 key={faq.question}
-                className="group rounded-2xl border border-border/80 bg-card/90 shadow-2xs backdrop-blur-xs transition-all hover:border-primary/40 open:border-primary/50 open:shadow-md"
+                className="group/faq lift border-gradient-hover overflow-hidden rounded-2xl border border-border/80 bg-card/90 shadow-2xs backdrop-blur-sm open:shadow-md"
               >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 text-sm font-bold text-foreground transition-colors hover:text-primary [&::-webkit-details-marker]:hidden">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 text-sm font-bold text-foreground transition-colors duration-300 hover:text-primary [&::-webkit-details-marker]:hidden">
                   <span>{faq.question}</span>
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    className="shrink-0 transition-transform duration-300 group-open:rotate-180 text-muted-foreground group-hover:text-primary"
-                    aria-hidden="true"
-                  >
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
+                  <span className="flex size-6 shrink-0 items-center justify-center rounded-full border border-border/70 text-muted-foreground transition-all duration-400 ease-[var(--ease-spring)] group-open/faq:rotate-180 group-open/faq:border-primary/40 group-open/faq:bg-primary/10 group-open/faq:text-primary group-hover/faq:border-primary/40 group-hover/faq:text-primary">
+                    <svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      className="shrink-0"
+                      aria-hidden="true"
+                    >
+                      <path d="m6 9 6 6 6-6" />
+                    </svg>
+                  </span>
                 </summary>
-                <div className="px-5 pb-5 text-xs sm:text-sm leading-relaxed text-muted-foreground border-t border-border/60 pt-3.5">
+                <div className="border-t border-border/60 px-5 pb-5 pt-3.5 text-xs leading-relaxed text-muted-foreground sm:text-sm">
                   {faq.answer}
                 </div>
               </details>
             ))}
-          </div>
+          </RevealGroup>
         </Container>
       </section>
 
       {/* ─── Bottom CTA ─── */}
-      <section className="relative py-20 sm:py-28 overflow-hidden">
+      <section className="relative isolate overflow-hidden py-20 sm:py-28">
         {/* Background Dot Pattern */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#d1d5db_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:24px_24px] opacity-30" />
-        <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 size-[600px] rounded-full bg-primary/10 blur-3xl" />
+        <div
+          aria-hidden="true"
+          className="grid-pattern-sm pointer-events-none absolute inset-0 -z-10 opacity-30 mask-fade-b"
+        />
+        <div
+          aria-hidden="true"
+          className="animate-aurora pointer-events-none absolute bottom-0 left-1/2 size-[600px] -translate-x-1/2 -z-10 rounded-full bloom-primary"
+        />
 
         <Container className="relative text-center">
-          <div className="mx-auto max-w-2xl space-y-5">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
+          <Reveal className="mx-auto max-w-2xl space-y-5">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3.5 py-1 text-xs font-bold text-primary">
               <ShieldCheck className="size-3.5" />
               <span>YOUR PDFS, YOUR MACHINE</span>
             </div>
 
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-foreground">
+            <h2 className="text-3xl font-black tracking-tight text-foreground sm:text-5xl">
               Ready to read PDFs offline?
             </h2>
 
-            <p className="text-sm leading-relaxed text-muted-foreground sm:text-base max-w-lg mx-auto">
+            <p className="mx-auto max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
               Whether in your browser or as a desktop app, PDFForge never sends your documents
               anywhere. Download the viewer and start reading — it takes less than a minute.
             </p>
 
-            <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="flex flex-col items-center justify-center gap-3 pt-3 sm:flex-row">
               <Button
-                size="lg"
+                size="xl"
                 asChild
-                className="h-14 px-9 text-base font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl shadow-xl shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all gap-2.5"
+                className="shine-loop press group/dl h-14 w-full gap-2.5 rounded-2xl px-9 text-base font-bold shadow-premium-lg sm:w-auto"
               >
                 <a href={siteConfig.desktop.downloadUrl} download>
-                  <Download className="size-5" />
+                  <Download className="size-5 transition-transform duration-500 ease-[var(--ease-spring)] group-hover/dl:-translate-y-0.5" />
                   Download {siteConfig.desktop.name}
                 </a>
               </Button>
               <Button
-                size="lg"
+                size="xl"
                 variant="outline"
                 asChild
-                className="h-14 px-8 text-base font-semibold rounded-2xl border-border/80 bg-card/60 backdrop-blur-xs hover:bg-muted/80 shadow-xs hover:scale-[1.02] active:scale-[0.98] transition-all"
+                className="press h-14 w-full gap-2 rounded-2xl border-border/80 bg-card/60 px-8 text-base font-semibold shadow-sm backdrop-blur-sm hover:bg-muted/80 sm:w-auto"
               >
                 <Link href="/tools">
                   Explore online tools
@@ -783,23 +841,25 @@ export default function DownloadPage() {
             </div>
 
             {/* Trust Seals */}
-            <div className="pt-6 flex flex-wrap items-center justify-center gap-4 text-xs font-semibold text-muted-foreground">
+            <RevealGroup
+              className="flex flex-wrap items-center justify-center gap-4 pt-6 text-xs font-semibold text-muted-foreground"
+              step={70}
+              y={10}
+            >
               <span className="flex items-center gap-1.5">
                 <ShieldCheck className="size-4 text-emerald-600 dark:text-emerald-400" />
                 Zero Files Uploaded
               </span>
-              <span>•</span>
               <span className="flex items-center gap-1.5">
                 <WifiOff className="size-4 text-primary" />
                 Works Offline
               </span>
-              <span>•</span>
               <span className="flex items-center gap-1.5">
                 <Zap className="size-4 text-amber-500" />
                 Instant Speed
               </span>
-            </div>
-          </div>
+            </RevealGroup>
+          </Reveal>
         </Container>
       </section>
     </>

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Loader2, RotateCw } from "lucide-react";
+import { Loader2, FileText, RotateCw } from "lucide-react";
 
 import {
   destroyPdfDocument,
@@ -195,7 +195,14 @@ export function PageThumbnails({
 
   if (!file) {
     return (
-      <div className="w-full rounded-xl border bg-card p-8 text-center shadow-sm">
+      <div className="surface relative isolate w-full overflow-hidden rounded-2xl border p-10 text-center shadow-xs">
+        <div
+          aria-hidden="true"
+          className="grid-pattern-sm pointer-events-none absolute inset-0 -z-10 opacity-25 mask-radial-hero"
+        />
+        <span className="mx-auto mb-4 flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+          <FileText className="size-6" aria-hidden="true" />
+        </span>
         <p className="text-sm text-muted-foreground">
           Preview appears here once a PDF is selected.
         </p>
@@ -205,8 +212,8 @@ export function PageThumbnails({
 
   if (isLoadingDoc || pageCount === 0) {
     return (
-      <div className="flex w-full items-center justify-center gap-2 rounded-xl border bg-card p-8 text-center shadow-sm">
-        <Loader2 className="size-5 animate-spin text-muted-foreground" aria-hidden="true" />
+      <div className="surface flex w-full items-center justify-center gap-2.5 rounded-2xl border p-10 text-center shadow-xs">
+        <Loader2 className="size-5 animate-spin text-primary" aria-hidden="true" />
         <p className="text-sm text-muted-foreground">
           Loading document preview...
         </p>
@@ -233,7 +240,8 @@ export function PageThumbnails({
               onDragOver={(event) => event.preventDefault()}
               onDrop={() => handleDrop(displayIndex)}
               onDragEnd={() => setDraggedIndex(null)}
-              className="group relative"
+              style={{ animationDelay: `${Math.min(displayIndex, 10) * 55}ms` }}
+              className="group animate-fade-up relative"
             >
               <button
                 type="button"
@@ -246,18 +254,17 @@ export function PageThumbnails({
                     : `Page ${originalIndex + 1}`
                 }
                 className={cn(
-                  "flex w-full flex-col gap-2 rounded-lg border bg-card p-2 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                  onToggleSelection && "cursor-pointer hover:border-primary/50",
-                  isSelected &&
-                    "border-primary bg-primary/5 ring-2 ring-primary/30",
-                  isDragging && "opacity-40",
-                  disabled && "cursor-default",
+                  "flex w-full flex-col gap-2 rounded-xl border border-border/80 bg-card p-2 shadow-2xs transition-all duration-400 ease-[var(--ease-premium)] hover:-translate-y-1 hover:border-primary/40 hover:shadow-md",
+                  onToggleSelection && "cursor-pointer",
+                  isSelected && "border-primary bg-primary/5 ring-2 ring-primary/30 shadow-md",
+                  isDragging && "scale-95 opacity-40",
+                  disabled && "cursor-default hover:translate-y-0",
                 )}
               >
-                <div className="relative aspect-[3/4] w-full overflow-hidden rounded border bg-muted/40 flex items-center justify-center">
+                <div className="relative flex aspect-[3/4] w-full items-center justify-center overflow-hidden rounded-lg border border-border/60 bg-muted/40">
                   {thumb?.status === "ready" && thumb.dataUrl ? (
                     <div
-                      className="relative size-full transition-transform duration-300 ease-in-out"
+                      className="relative size-full transition-transform duration-500 ease-[var(--ease-premium)] group-hover:scale-[1.05]"
                       style={{
                         transform: rotation
                           ? `rotate(${rotation}deg) scale(${rotation % 180 !== 0 ? 0.72 : 1})`
@@ -277,7 +284,7 @@ export function PageThumbnails({
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center">
                       <Loader2
-                        className="size-4 animate-spin text-muted-foreground"
+                        className="size-4 animate-spin text-primary/70"
                         aria-hidden="true"
                       />
                     </div>
@@ -309,12 +316,12 @@ export function PageThumbnails({
                 </div>
               </button>
               {onOrderChange ? (
-                <span className="absolute inset-y-0 right-0 flex -translate-x-1 items-center gap-0.5 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100">
+                <span className="absolute inset-y-0 right-0 flex -translate-x-1 items-center gap-0.5 pr-1.5 opacity-0 transition-all duration-300 group-focus-within:translate-x-0 group-focus-within:opacity-100 group-hover:translate-x-0 group-hover:opacity-100">
                   <Button
                     type="button"
                     variant="ghost"
-                    size="icon"
-                    className="h-7 w-7"
+                    size="icon-sm"
+                    className="size-7 text-muted-foreground hover:bg-primary/10 hover:text-primary"
                     aria-label={`Move page ${originalIndex + 1} earlier`}
                     onClick={() => move(displayIndex, -1)}
                     disabled={displayIndex === 0}
@@ -324,8 +331,8 @@ export function PageThumbnails({
                   <Button
                     type="button"
                     variant="ghost"
-                    size="icon"
-                    className="h-7 w-7"
+                    size="icon-sm"
+                    className="size-7 text-muted-foreground hover:bg-primary/10 hover:text-primary"
                     aria-label={`Move page ${originalIndex + 1} later`}
                     onClick={() => move(displayIndex, 1)}
                     disabled={displayIndex === displayOrder.length - 1}

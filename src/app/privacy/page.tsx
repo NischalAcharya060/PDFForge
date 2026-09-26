@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { CheckCircle2, Lock, ShieldCheck } from "lucide-react";
 
 import { Container } from "@/components/layout/container";
+import { Reveal, RevealGroup } from "@/components/motion/reveal";
 
 export const metadata: Metadata = {
   title: "Privacy Policy — 100% Client-Side Processing | PDFForge",
@@ -22,38 +23,56 @@ const guarantees = [
 
 export default function PrivacyPage() {
   return (
-    <div className="py-16 sm:py-24">
+    <div className="relative isolate overflow-hidden py-16 sm:py-24">
+      <div
+        aria-hidden="true"
+        className="grid-pattern-sm pointer-events-none absolute inset-0 -z-10 opacity-25 mask-fade-b"
+      />
+      <div
+        aria-hidden="true"
+        className="animate-aurora pointer-events-none absolute -top-40 left-1/2 size-[520px] -translate-x-1/2 -z-10 rounded-full bloom-primary-soft"
+      />
+
       <Container className="max-w-3xl space-y-12">
-        <div className="space-y-4">
-          <div className="inline-flex items-center gap-2 rounded-full border bg-emerald-500/10 px-4 py-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+        <Reveal className="space-y-4">
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/8 px-4 py-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
             <ShieldCheck className="size-4" />
             PRIVACY FIRST ARCHITECTURE
           </div>
-          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
-            Privacy Policy & Guarantees
+          <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+            Privacy Policy &amp; Guarantees
           </h1>
           <p className="text-sm text-muted-foreground">
-            Last updated: September 2026. This policy outlines our absolute commitment to your privacy.
+            Last updated: September 2026. This policy outlines our absolute commitment to your
+            privacy.
           </p>
-        </div>
+        </Reveal>
 
-        {/* Guarantees Box */}
-        <div className="rounded-3xl border border-emerald-500/30 bg-emerald-500/5 p-6 sm:p-8 space-y-4">
-          <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-            <Lock className="size-5 text-emerald-600" />
-            Our Core Privacy Guarantees
-          </h2>
-          <ul className="space-y-2.5 text-sm text-foreground/90">
-            {guarantees.map((item, idx) => (
-              <li key={idx} className="flex items-start gap-2.5">
-                <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {/* Guarantees box */}
+        <Reveal delay={100} y={28}>
+          <div className="surface space-y-4 rounded-3xl border border-emerald-500/25 bg-emerald-500/5 p-6 shadow-premium sm:p-8">
+            <h2 className="flex items-center gap-2 text-lg font-extrabold tracking-tight text-foreground">
+              <span className="inline-flex size-9 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                <Lock className="size-4" />
+              </span>
+              Our Core Privacy Guarantees
+            </h2>
+            <ul className="space-y-2.5 text-sm text-foreground/90">
+              {guarantees.map((item, idx) => (
+                <li key={idx} className="group/gl flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-600 transition-transform duration-300 ease-[var(--ease-spring)] group-hover/gl:scale-125 dark:text-emerald-400" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Reveal>
 
-        <div className="prose prose-sm dark:prose-invert space-y-6 text-sm text-muted-foreground leading-relaxed">
+        <RevealGroup
+          className="prose prose-sm space-y-6 text-sm leading-relaxed text-muted-foreground dark:prose-invert"
+          step={70}
+          y={20}
+        >
           <section className="space-y-2">
             <h3 className="text-base font-bold text-foreground">1. How We Treat Your Files</h3>
             <p>
@@ -91,14 +110,14 @@ export default function PrivacyPage() {
               us at{" "}
               <a
                 href="mailto:Nischal060@gmail.com"
-                className="font-mono text-primary hover:underline"
+                className="font-mono text-primary transition-colors hover:text-primary/80 hover:underline"
               >
                 Nischal060@gmail.com
               </a>
               .
             </p>
           </section>
-        </div>
+        </RevealGroup>
       </Container>
     </div>
   );

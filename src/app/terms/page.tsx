@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import { Scale } from "lucide-react";
+
 import { Container } from "@/components/layout/container";
+import { Reveal, RevealGroup } from "@/components/motion/reveal";
 
 export const metadata: Metadata = {
   title: "Terms of Service | PDFForge",
@@ -11,18 +14,35 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="py-16 sm:py-24">
+    <div className="relative isolate overflow-hidden py-16 sm:py-24">
+      <div
+        aria-hidden="true"
+        className="grid-pattern-sm pointer-events-none absolute inset-0 -z-10 opacity-25 mask-fade-b"
+      />
+      <div
+        aria-hidden="true"
+        className="animate-aurora pointer-events-none absolute -top-40 left-1/2 size-[520px] -translate-x-1/2 -z-10 rounded-full bloom-primary-soft"
+      />
+
       <Container className="max-w-3xl space-y-12">
-        <div className="space-y-3">
-          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+        <Reveal className="space-y-3">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/8 px-4 py-1.5 text-xs font-bold text-primary">
+            <Scale className="size-4" />
+            TERMS OF SERVICE
+          </div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
             Terms of Service
           </h1>
           <p className="text-sm text-muted-foreground">
             Effective Date: September 2026. Please read these terms carefully before using PDFForge.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="prose prose-sm dark:prose-invert space-y-6 text-sm text-muted-foreground leading-relaxed">
+        <RevealGroup
+          className="prose prose-sm space-y-6 text-sm leading-relaxed text-muted-foreground dark:prose-invert"
+          step={70}
+          y={20}
+        >
           <section className="space-y-2">
             <h2 className="text-base font-bold text-foreground">1. Acceptance of Terms</h2>
             <p>
@@ -65,7 +85,7 @@ export default function TermsPage() {
               prior notice.
             </p>
           </section>
-        </div>
+        </RevealGroup>
       </Container>
     </div>
   );

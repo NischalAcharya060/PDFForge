@@ -9,6 +9,10 @@ import {
   ThemeInitScript,
   ThemeProvider,
 } from "@/components/theme/theme-provider";
+import { MotionInitScript } from "@/components/motion/motion-init-script";
+import { ScrollProgress } from "@/components/motion/scroll-progress";
+import { ScrollReset } from "@/components/motion/scroll-reset";
+import { ScrollToTop } from "@/components/motion/scroll-to-top";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 
@@ -230,9 +234,13 @@ export default function RootLayout({
     >
       <head>
         <ThemeInitScript />
+        <MotionInitScript />
       </head>
       <body className="flex min-h-full flex-col">
         <ThemeProvider>
+          <ScrollProgress />
+          <ScrollReset />
+          <ScrollToTop />
           <a
             href="#main-content"
             className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"

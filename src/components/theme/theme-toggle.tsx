@@ -17,13 +17,18 @@ export function ThemeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Change color theme">
-          <Sun className="size-5 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-          <Moon className="absolute size-5 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Change color theme"
+          className="press rounded-full border border-transparent hover:border-border/70 hover:bg-card/70"
+        >
+          <Sun className="size-[1.15rem] scale-100 rotate-0 transition-all duration-500 ease-[var(--ease-spring)] dark:scale-0 dark:-rotate-90" />
+          <Moon className="absolute size-[1.15rem] scale-0 rotate-90 transition-all duration-500 ease-[var(--ease-spring)] dark:scale-100 dark:rotate-0" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="min-w-40">
         <DropdownMenuItem onClick={() => setTheme("light")}>
           <Sun /> Light
         </DropdownMenuItem>

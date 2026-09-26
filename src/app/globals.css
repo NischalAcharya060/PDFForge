@@ -85,15 +85,305 @@
   --radius-2xl: calc(var(--radius) + 8px);
 }
 
+/* ==========================================================================
+   Motion Design System
+   Premium easing curves + keyframe-based animation utilities.
+   ========================================================================== */
+@theme {
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-spring: cubic-bezier(0.34, 1.42, 0.52, 1);
+
+  --animate-fade-up: fade-up 0.7s var(--ease-premium) both;
+  --animate-fade-down: fade-down 0.7s var(--ease-premium) both;
+  --animate-fade-in: fade-in 0.6s var(--ease-smooth) both;
+  --animate-fade-left: fade-left 0.7s var(--ease-premium) both;
+  --animate-fade-right: fade-right 0.7s var(--ease-premium) both;
+  --animate-scale-in: scale-in 0.5s var(--ease-out-back) both;
+  --animate-pop-in: pop-in 0.4s var(--ease-out-back) both;
+  --animate-shine: shine 2.4s var(--ease-smooth) infinite;
+  --animate-shimmer: shimmer 2.2s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-slow: float 11s ease-in-out infinite;
+  --animate-drift: drift 18s ease-in-out infinite;
+  --animate-aurora: aurora 22s ease-in-out infinite;
+  --animate-spin-slow: spin 14s linear infinite;
+  --animate-pulse-ring: pulse-ring 2.8s var(--ease-smooth) infinite;
+  --animate-draw: draw 1.2s var(--ease-expo) 0.4s both;
+  --animate-marquee: marquee 42s linear infinite;
+  --animate-marquee-reverse: marquee-reverse 42s linear infinite;
+  --animate-bar-grow: bar-grow 1.4s var(--ease-expo) both;
+  --animate-sheen: sheen 0.9s var(--ease-smooth) both;
+}
+
+/* Keyframes — declared at top level so hand-written classes can use them too. */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fade-down {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-left {
+  from {
+    opacity: 0;
+    transform: translate3d(26px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fade-right {
+  from {
+    opacity: 0;
+    transform: translate3d(-26px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  60% {
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  60%,
+  100% {
+    transform: translateX(220%) skewX(-18deg);
+  }
+}
+
+@keyframes sheen {
+  0% {
+    opacity: 0;
+    transform: translateX(-140%) skewX(-20deg);
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(140%) skewX(-20deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -18px, 0);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(3%, -4%, 0) scale(1.06);
+  }
+  66% {
+    transform: translate3d(-3%, 3%, 0) scale(0.96);
+  }
+}
+
+@keyframes aurora {
+  0%,
+  100% {
+    transform: translate3d(-6%, 0, 0) rotate(0deg);
+    opacity: 0.65;
+  }
+  33% {
+    transform: translate3d(6%, -4%, 0) rotate(8deg);
+    opacity: 0.9;
+  }
+  66% {
+    transform: translate3d(-3%, 5%, 0) rotate(-6deg);
+    opacity: 0.75;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.82);
+    opacity: 0.7;
+  }
+  70% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Expects an SVG path with pathLength={1}, dasharray 1 and dashoffset 1. */
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes progress-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+@keyframes caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   html {
     @apply scroll-smooth;
+    scroll-padding-top: 6rem;
+    -webkit-tap-highlight-color: transparent;
   }
   body {
     @apply bg-background text-foreground antialiased;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Premium focus treatment shared by every interactive element. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Slim, brand-tinted scrollbar. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklch, var(--primary) 40%, transparent)
+      transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in oklch, var(--primary) 32%, transparent);
+    border: 3px solid transparent;
+    background-clip: content-box;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklch, var(--primary) 55%, transparent);
+    background-clip: content-box;
   }
 }
 
@@ -101,3 +391,486 @@
   background: var(--primary);
   color: var(--primary-foreground);
 }
+
+@layer utilities {
+  /* ------------------------------------------------------------------------
+     Scroll reveal
+     Elements start hidden and animate in when marked visible by the
+     <Reveal> observer component. Direction/delay are driven by CSS vars.
+     ------------------------------------------------------------------------ */
+  /* Gated behind .motion-ready (set by an inline script) so content is
+     never trapped in a hidden state when JavaScript is unavailable. */
+  .motion-ready .reveal {
+    opacity: 0;
+    transform: translate3d(
+        var(--reveal-x, 0px),
+        var(--reveal-y, 26px),
+        0
+      )
+      scale(var(--reveal-scale, 1));
+    filter: blur(var(--reveal-blur, 0px));
+    transition:
+      opacity 0.75s var(--ease-premium),
+      transform 0.85s var(--ease-premium),
+      filter 0.75s var(--ease-smooth);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+
+  .motion-ready .reveal.reveal-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+
+  /* Child stagger: apply .reveal-stagger to a parent, each direct child
+     reveals in sequence. Delays are assigned by the <RevealGroup> observer
+     via --reveal-delay, so the sequence is not limited to a fixed count. */
+  .motion-ready .reveal-stagger > * {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-y, 18px), 0);
+    transition:
+      opacity 0.7s var(--ease-premium),
+      transform 0.8s var(--ease-premium);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .motion-ready .reveal-stagger.reveal-visible > * {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* ------------------------------------------------------------------------
+     Surfaces
+     ------------------------------------------------------------------------ */
+  .glass {
+    background: color-mix(in oklch, var(--card) 72%, transparent);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  .glass-strong {
+    background: color-mix(in oklch, var(--card) 88%, transparent);
+    backdrop-filter: blur(28px) saturate(200%);
+    -webkit-backdrop-filter: blur(28px) saturate(200%);
+  }
+
+  /* Elevated card with a light-catching top edge. */
+  .surface {
+    position: relative;
+    background: var(--card);
+    border: 1px solid color-mix(in oklch, var(--border) 85%, transparent);
+    box-shadow:
+      0 1px 2px -1px rgb(0 0 0 / 0.05),
+      0 8px 24px -12px rgb(0 0 0 / 0.12);
+  }
+  .dark .surface {
+    box-shadow:
+      0 1px 2px -1px rgb(0 0 0 / 0.4),
+      0 12px 32px -16px rgb(0 0 0 / 0.6);
+  }
+
+  .surface::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in oklch, var(--primary) 45%, transparent),
+      transparent
+    );
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* Gradient hairline border that fades in on hover. */
+  .border-gradient-hover {
+    position: relative;
+  }
+  .border-gradient-hover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      140deg,
+      var(--primary),
+      color-mix(in oklch, var(--primary) 35%, transparent) 45%,
+      transparent 75%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.45s var(--ease-smooth);
+    pointer-events: none;
+  }
+  .border-gradient-hover:hover::after,
+  .border-gradient-hover:focus-within::after {
+    opacity: 1;
+  }
+
+  /* Mouse-tracked radial spotlight. Set --mx/--my from JS. */
+  .spotlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in oklch, var(--primary) 13%, transparent),
+      transparent 72%
+    );
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-smooth);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .spotlight:hover::before {
+    opacity: 1;
+  }
+
+  /* ------------------------------------------------------------------------
+     Effects
+     ------------------------------------------------------------------------ */
+  .text-gradient {
+    background-image: linear-gradient(
+      100deg,
+      var(--foreground) 0%,
+      var(--primary) 45%,
+      var(--foreground) 90%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .text-gradient-pan {
+    background-image: linear-gradient(
+      100deg,
+      var(--primary) 0%,
+      color-mix(in oklch, var(--primary) 55%, var(--foreground)) 40%,
+      var(--primary) 80%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 6s linear infinite;
+  }
+
+  /* Light sweep across a button/surface on hover. */
+  .shine {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .shine::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 45%;
+    background: linear-gradient(
+      100deg,
+      transparent,
+      rgb(255 255 255 / 0.35),
+      transparent
+    );
+    transform: translateX(-140%) skewX(-20deg);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .shine:hover::after {
+    animation: sheen 0.9s var(--ease-smooth) both;
+  }
+
+  /* Infinitely looping sweep — for hero buttons. */
+  .shine-loop {
+    position: relative;
+    /* Clips the sweep to the button. Without this the 40%-wide skewed
+       ::after travels from -120% to 220% of its own width and paints straight
+       across the surrounding section. */
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .shine-loop::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 40%;
+    background: linear-gradient(
+      100deg,
+      transparent,
+      rgb(255 255 255 / 0.28),
+      transparent
+    );
+    animation: shine 3.6s var(--ease-smooth) infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .shimmer {
+    background-image: linear-gradient(
+      90deg,
+      var(--muted) 0%,
+      color-mix(in oklch, var(--primary) 12%, var(--muted)) 50%,
+      var(--muted) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2.2s linear infinite;
+  }
+
+  /* Animated gradient underline that draws itself in. */
+  .underline-draw {
+    position: relative;
+  }
+  .underline-draw::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.1em;
+    height: 0.09em;
+    border-radius: 9999px;
+    background: currentColor;
+    opacity: 0.35;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s var(--ease-expo);
+  }
+  .underline-draw:hover::after,
+  .group:hover .underline-draw::after {
+    transform: scaleX(1);
+  }
+
+  /* Nav link with a growing bottom indicator. */
+  .nav-indicator {
+    position: relative;
+  }
+  .nav-indicator::after {
+    content: "";
+    position: absolute;
+    left: 0.6rem;
+    right: 0.6rem;
+    bottom: -0.35rem;
+    height: 2px;
+    border-radius: 9999px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--primary),
+      transparent
+    );
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.4s var(--ease-expo);
+  }
+  .nav-indicator:hover::after,
+  .nav-indicator[data-active="true"]::after {
+    transform: scaleX(1);
+  }
+
+  /* Dotted blueprint grid, faded at the edges. */
+  .grid-pattern {
+    background-image: radial-gradient(
+      color-mix(in oklch, var(--foreground) 16%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 28px 28px;
+  }
+
+  .grid-pattern-sm {
+    background-image: radial-gradient(
+      color-mix(in oklch, var(--foreground) 12%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 20px 20px;
+  }
+
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, #000 20%, transparent 95%);
+    mask-image: linear-gradient(to bottom, #000 20%, transparent 95%);
+  }
+
+  .mask-radial-hero {
+    -webkit-mask-image: radial-gradient(
+      ellipse 65% 62% at 50% 22%,
+      #000 55%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      ellipse 65% 62% at 50% 22%,
+      #000 55%,
+      transparent 100%
+    );
+  }
+
+  /* Layered ambient bloom built from the existing primary token. */
+  .bloom-primary {
+    background: radial-gradient(
+      closest-side,
+      color-mix(in oklch, var(--primary) 26%, transparent),
+      transparent 100%
+    );
+  }
+
+  .bloom-primary-soft {
+    background: radial-gradient(
+      closest-side,
+      color-mix(in oklch, var(--primary) 14%, transparent),
+      transparent 100%
+    );
+  }
+
+  /* Horizontal fade for marquee edges. */
+  .mask-x-fade {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 8%,
+      #000 92%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 8%,
+      #000 92%,
+      transparent
+    );
+  }
+
+  /* Lift + shadow response for premium cards. */
+  .lift {
+    transition:
+      transform 0.45s var(--ease-premium),
+      box-shadow 0.45s var(--ease-premium),
+      border-color 0.45s var(--ease-smooth);
+    will-change: transform;
+  }
+  .lift:hover {
+    transform: translateY(-5px);
+    box-shadow:
+      0 2px 4px -2px rgb(0 0 0 / 0.06),
+      0 18px 40px -18px rgb(0 0 0 / 0.22);
+  }
+  .dark .lift:hover {
+    box-shadow:
+      0 2px 4px -2px rgb(0 0 0 / 0.5),
+      0 24px 56px -20px rgb(0 0 0 / 0.7);
+  }
+
+  .press {
+    transition:
+      transform 0.25s var(--ease-spring),
+      background-color 0.25s var(--ease-smooth),
+      color 0.25s var(--ease-smooth),
+      border-color 0.25s var(--ease-smooth),
+      box-shadow 0.35s var(--ease-smooth),
+      opacity 0.25s var(--ease-smooth);
+  }
+  .press:active {
+    transform: scale(0.97);
+  }
+
+  /* Gradient bar that fills from the left when it enters the viewport. */
+  .bar-fill {
+    transform-origin: left;
+    animation: bar-grow 1.4s var(--ease-expo) both;
+  }
+
+  /* Sweeping indeterminate rail used while a document is being processed. */
+  .progress-indeterminate {
+    animation: progress-slide 1.6s var(--ease-premium) infinite;
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 42s linear infinite;
+  }
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+  .marquee-track-reverse {
+    animation: marquee-reverse 46s linear infinite;
+  }
+
+  /* Ring pulses behind status icons. */
+  .pulse-ring::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 2px solid currentColor;
+    animation: pulse-ring 2.8s var(--ease-smooth) infinite;
+    pointer-events: none;
+  }
+
+  /* Premium depth for primary CTAs. */
+  .shadow-premium {
+    box-shadow:
+      0 1px 2px -1px rgb(0 0 0 / 0.1),
+      0 8px 20px -6px color-mix(in oklch, var(--primary) 45%, transparent),
+      0 18px 40px -16px color-mix(in oklch, var(--primary) 35%, transparent);
+  }
+  .shadow-premium-lg {
+    box-shadow:
+      0 1px 2px -1px rgb(0 0 0 / 0.1),
+      0 10px 28px -8px color-mix(in oklch, var(--primary) 50%, transparent),
+      0 28px 60px -20px color-mix(in oklch, var(--primary) 40%, transparent);
+  }
+  .shadow-premium-hover {
+    transition:
+      box-shadow 0.45s var(--ease-smooth),
+      transform 0.45s var(--ease-premium);
+  }
+  .shadow-premium-hover:hover {
+    box-shadow:
+      0 2px 4px -1px rgb(0 0 0 / 0.12),
+      0 14px 34px -8px color-mix(in oklch, var(--primary) 58%, transparent),
+      0 36px 72px -20px color-mix(in oklch, var(--primary) 45%, transparent);
+  }
+
+  /* Inner top highlight for dark surfaces. */
+  .inner-highlight {
+    box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.06);
+  }
+
+  .text-shadow-soft {
+    text-shadow: 0 2px 18px color-mix(in oklch, var(--primary) 25%, transparent);
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — collapse every decorative animation to an instant,
+   fully-visible state so the UI stays usable and content is never hidden.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal,
+  .reveal-stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }}

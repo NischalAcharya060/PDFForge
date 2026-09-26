@@ -30,6 +30,11 @@ import { Container } from "@/components/layout/container";
 import { ToolQuickLink } from "@/components/home/tool-card";
 import { Button } from "@/components/ui/button";
 import { HomeToolBrowser } from "@/components/home/home-tool-browser";
+import { CountUp } from "@/components/motion/count-up";
+import { Reveal, RevealGroup, RevealWords } from "@/components/motion/reveal";
+import { AnimatedUnderline } from "@/components/motion/animated-underline";
+import { Marquee } from "@/components/motion/marquee";
+import { Spotlight } from "@/components/motion/spotlight";
 
 export const metadata: Metadata = {
   title: "Free Online PDF Tools — Merge, Split, Compress & Convert | PDFForge",
@@ -139,6 +144,17 @@ const faqs = [
   },
 ];
 
+const trustStrip = [
+  "No uploads",
+  "No sign-up",
+  "No watermarks",
+  "Unlimited files",
+  "Works offline",
+  "AES-256 encryption",
+  "Cross-platform",
+  "Free forever",
+];
+
 export default function HomePage() {
   const homepageSchemas = [
     faqPageSchema(faqs),
@@ -167,465 +183,590 @@ export default function HomePage() {
       ))}
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden border-b bg-gradient-to-b from-background via-card/40 to-background pt-12 sm:pt-20 pb-16 sm:pb-24">
+      <section className="relative overflow-hidden border-b bg-gradient-to-b from-background via-card/40 to-background pt-12 pb-16 sm:pt-20 sm:pb-24">
         {/* Background Mesh & Dot Pattern */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#d1d5db_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:28px_28px] opacity-40 [mask-image:radial-gradient(ellipse_60%_60%_at_50%_20%,#000_70%,transparent_100%)]" />
-        
-        {/* Ambient Top Glow Bloom */}
-        <div className="pointer-events-none absolute -top-28 left-1/2 -translate-x-1/2 size-[680px] rounded-full bg-gradient-to-b from-primary/20 via-amber-500/10 to-transparent blur-3xl opacity-80" />
+        <div
+          aria-hidden="true"
+          className="grid-pattern mask-radial-hero pointer-events-none absolute inset-0 opacity-50"
+        />
+
+        {/* Drifting ambient orbs */}
+        <div
+          aria-hidden="true"
+          className="animate-drift pointer-events-none absolute -top-40 left-1/2 size-[720px] -translate-x-1/2 rounded-full bloom-primary opacity-70 blur-3xl"
+        />
+        <div
+          aria-hidden="true"
+          className="animate-float-slow pointer-events-none absolute -bottom-32 -left-24 size-[420px] rounded-full bloom-primary-soft opacity-80 blur-3xl"
+        />
+        <div
+          aria-hidden="true"
+          className="animate-float-slow pointer-events-none absolute -right-24 top-40 hidden size-[360px] rounded-full bg-[radial-gradient(closest-side,rgba(245,158,11,0.14),transparent)] blur-3xl lg:block"
+        />
 
         <Container className="relative text-center">
-          {/* Privacy Trust Badge */}
-          <div className="mx-auto mb-6 inline-flex items-center gap-2.5 rounded-full border border-primary/25 bg-card/85 px-4 py-1.5 text-xs font-semibold text-foreground shadow-xs backdrop-blur-md transition-all hover:border-primary/40">
-            <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
-            <span className="font-medium text-muted-foreground">
-              Files never leave your computer • <strong className="text-foreground font-semibold">100% Private In-Browser</strong>
-            </span>
-          </div>
-
           {/* Main Headline */}
-          <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight text-balance sm:text-6xl lg:text-7xl text-foreground">
-            Every tool you need to work with PDFs,{" "}
-            <span className="relative inline-block whitespace-nowrap text-primary">
-              <span className="relative z-10">all in one place</span>
-              <svg
-                className="absolute -bottom-2.5 left-0 -z-0 h-3.5 w-full text-primary/30"
-                viewBox="0 0 358 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M3 9C118.5 2.5 239.5 2.5 355 9"
-                  stroke="currentColor"
-                  strokeWidth="5"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </span>
+          <h1 className="mx-auto max-w-4xl text-balance text-4xl font-extrabold tracking-tight text-foreground sm:text-6xl lg:text-7xl">
+            <RevealWords text="Every tool you need to work with PDFs," delay={60} />
+            <br className="hidden sm:block" />{" "}
+            <AnimatedUnderline delay={470} duration={700} className="whitespace-nowrap">
+              <span className="text-primary">
+                <RevealWords text="all in one place" delay={280} />
+              </span>
+            </AnimatedUnderline>
           </h1>
 
           {/* Subtitle */}
-          <p className="mx-auto mt-6 max-w-2xl text-balance text-base leading-relaxed text-muted-foreground sm:text-lg lg:text-xl">
+          <p
+            className="mx-auto mt-6 max-w-2xl animate-fade-up text-balance text-base leading-relaxed text-muted-foreground sm:text-lg lg:text-xl"
+            style={{ animationDelay: "520ms" }}
+          >
             Merge, split, compress, convert, watermark, and protect your PDF documents.
             100% free, unlimited, and processed locally on your device with instant speed.
           </p>
 
           {/* CTA Buttons */}
-          <div className="mt-8 sm:mt-10 flex flex-col items-center justify-center gap-3.5 sm:flex-row">
+          <div
+            className="mt-8 flex animate-fade-up flex-col items-center justify-center gap-3.5 sm:mt-10 sm:flex-row"
+            style={{ animationDelay: "620ms" }}
+          >
             <Button
-              size="lg"
+              size="xl"
               asChild
-              className="h-13 sm:h-14 px-8 text-base font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 rounded-2xl gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all"
+              className="shine-loop group h-13 w-full gap-2 rounded-2xl text-base font-bold shadow-premium-lg hover:scale-[1.02] active:scale-[0.98] sm:w-auto sm:px-8"
             >
               <Link href="/tools/merge-pdf">
                 Merge PDFs now
-                <ArrowRight className="size-4" aria-hidden="true" />
+                <ArrowRight
+                  className="size-4 transition-transform duration-300 group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
               </Link>
             </Button>
             <Button
-              size="lg"
+              size="xl"
               variant="outline"
               asChild
-              className="h-13 sm:h-14 px-8 text-base font-semibold rounded-2xl border-border/80 bg-card/70 backdrop-blur-xs hover:bg-muted/80 shadow-xs hover:scale-[1.02] active:scale-[0.98] transition-all"
+              className="h-13 w-full rounded-2xl border-border/80 bg-card/70 text-base font-semibold shadow-sm backdrop-blur-sm hover:scale-[1.02] hover:bg-card/90 active:scale-[0.98] sm:w-auto sm:px-8"
             >
               <Link href="#tools">Explore all {tools.length} tools</Link>
             </Button>
           </div>
 
           {/* Quick Launch Dock */}
-          <div className="mx-auto mt-8 sm:mt-10 max-w-4xl">
-            <div className="flex items-center justify-between mb-3 px-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                Popular Quick Tools
-              </span>
-              <Link
-                href="#tools"
-                className="text-xs font-semibold text-primary hover:underline flex items-center gap-1"
-              >
-                View all {tools.length} →
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3">
-              {popularTools.slice(0, 4).map((tool) => (
-                <ToolQuickLink key={tool.slug} tool={tool} />
-              ))}
-            </div>
+          <div className="mx-auto mt-10 max-w-4xl sm:mt-12">
+            <RevealGroup
+              className="glass-strong rounded-3xl border border-border/70 p-3 shadow-lg sm:p-4"
+              step={80}
+            >
+              <div className="mb-3 flex items-center justify-between px-1">
+                <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+                  Popular Quick Tools
+                </span>
+                <Link
+                  href="#tools"
+                  className="group/see flex items-center gap-1 text-xs font-semibold text-primary"
+                >
+                  View all {tools.length}
+                  <span className="inline-block transition-transform duration-300 group-hover/see:translate-x-0.5">
+                    →
+                  </span>
+                </Link>
+              </div>
+              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3">
+                {popularTools.slice(0, 4).map((tool) => (
+                  <ToolQuickLink key={tool.slug} tool={tool} />
+                ))}
+              </div>
+            </RevealGroup>
           </div>
         </Container>
+
+        {/* Trust Strip */}
+        <div className="relative mt-14 sm:mt-16">
+          <Marquee className="py-1" speed={38}>
+            {trustStrip.map((item) => (
+              <span
+                key={item}
+                className="flex items-center gap-2.5 px-5 text-xs font-semibold uppercase tracking-widest text-muted-foreground/80"
+              >
+                <span className="size-1.5 rounded-full bg-primary/60" />
+                {item}
+              </span>
+            ))}
+          </Marquee>
+        </div>
       </section>
 
       {/* Interactive Tool Browser (Search & Categories & Cards Grid) */}
       <HomeToolBrowser />
 
       {/* Desktop App Download Section */}
-      <section className="relative border-t bg-gradient-to-b from-background via-card/40 to-background py-16 sm:py-24 overflow-hidden">
-        <div className="pointer-events-none absolute -top-24 right-1/4 size-[480px] rounded-full bg-primary/10 blur-3xl" />
+      <section className="relative overflow-hidden border-t bg-gradient-to-b from-background via-card/40 to-background py-16 sm:py-24">
+        <div
+          aria-hidden="true"
+          className="animate-float-slow pointer-events-none absolute -top-24 right-1/4 size-[480px] rounded-full bloom-primary-soft"
+        />
 
         <Container className="relative">
-          <div className="mx-auto max-w-3xl text-center mb-10 sm:mb-12 space-y-3">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
+          <Reveal className="mx-auto mb-10 max-w-3xl space-y-4 text-center sm:mb-14">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3.5 py-1 text-xs font-bold text-primary">
               <MonitorDown className="size-3.5" />
               <span>WINDOWS DESKTOP APP</span>
             </div>
-            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
               Take PDFForge offline with the desktop app
             </h2>
-            <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
+            <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
               A fast, private PDF viewer that works offline. Open, zoom, navigate, print, and
               organize PDFs right from your files — no internet, no uploads, ever.
             </p>
-          </div>
+          </Reveal>
 
-          <div className="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-border/90 bg-card shadow-xl">
-            <div className="grid lg:grid-cols-2">
-              <div className="border-b lg:border-b-0 lg:border-r border-border/80 p-6 sm:p-9">
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-xs">
-                    <Laptop className="size-6" />
-                  </span>
-                  <div>
-                    <div className="text-lg font-bold text-foreground tracking-tight">
-                      {siteConfig.desktop.name}
-                    </div>
-                    <div className="text-xs font-semibold text-muted-foreground">
-                      Version {siteConfig.desktop.version} • Windows 10/11
+          <Reveal delay={120} y={40}>
+            <Spotlight className="lift mx-auto max-w-4xl overflow-hidden rounded-3xl border border-border/90 bg-card shadow-xl">
+              <div className="grid lg:grid-cols-2">
+                <div className="border-b border-border/80 p-6 sm:p-9 lg:border-b-0 lg:border-r">
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-xs">
+                      <Laptop className="size-6" />
+                    </span>
+                    <div>
+                      <div className="text-lg font-bold tracking-tight text-foreground">
+                        {siteConfig.desktop.name}
+                      </div>
+                      <div className="text-xs font-semibold text-muted-foreground">
+                        Version {siteConfig.desktop.version} • Windows 10/11
+                      </div>
                     </div>
                   </div>
+
+                  <ul className="mt-6 space-y-3 text-sm">
+                    {[
+                      { icon: WifiOff, label: "100% offline — no cloud, no account" },
+                      { icon: ShieldCheck, label: "Local rendering with pdf.js" },
+                      { icon: Zap, label: "Zoom, thumbnails, print & shortcuts" },
+                      { icon: FileCheck2, label: "Opens via double-click on any .pdf" },
+                    ].map((point) => (
+                      <li
+                        key={point.label}
+                        className="group/point flex items-start gap-2.5 text-foreground/90"
+                      >
+                        <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md bg-primary/10 transition-transform duration-300 ease-[var(--ease-spring)] group-hover/point:scale-110">
+                          <point.icon className="size-3 text-primary" />
+                        </span>
+                        <span className="font-medium transition-colors duration-300 group-hover/point:text-foreground">
+                          {point.label}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
-                <ul className="mt-6 space-y-2.5 text-sm">
-                  {[
-                    { icon: WifiOff, label: "100% offline — no cloud, no account" },
-                    { icon: ShieldCheck, label: "Local rendering with pdf.js" },
-                    { icon: Zap, label: "Zoom, thumbnails, print & shortcuts" },
-                    { icon: FileCheck2, label: "Opens via double-click on any .pdf" },
-                  ].map((point) => (
-                    <li key={point.label} className="flex items-start gap-2.5 text-foreground/90">
-                      <point.icon className="size-4 shrink-0 mt-0.5 text-primary" />
-                      <span className="font-medium">{point.label}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div className="flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-primary/6 to-transparent p-6 text-center sm:p-9">
+                  <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                    Free download for Windows
+                  </span>
+                  <Button
+                    size="xl"
+                    asChild
+                    className="shine-loop group w-full gap-2 rounded-2xl text-base font-bold shadow-premium-lg hover:scale-[1.02] active:scale-[0.98] sm:w-auto"
+                  >
+                    <Link href="/download">
+                      <Download className="size-5" />
+                      Get the desktop app
+                      <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                    </Link>
+                  </Button>
+                  <p className="text-xs leading-relaxed text-muted-foreground">
+                    Windows 10/11 • Free &amp; offline •{" "}
+                    <Link
+                      href="/download"
+                      className="text-primary underline-offset-4 transition-opacity hover:opacity-75 hover:underline"
+                    >
+                      View download page
+                    </Link>
+                  </p>
+                </div>
               </div>
-
-              <div className="flex flex-col items-center justify-center gap-4 p-6 sm:p-9 text-center bg-gradient-to-br from-primary/5 to-transparent">
-                <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Free download for Windows
-                </span>
-                <Button
-                  size="lg"
-                  asChild
-                  className="h-14 px-9 text-base font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl shadow-xl shadow-primary/25 hover:scale-105 active:scale-95 transition-all gap-2"
-                >
-                  <Link href="/download">
-                    <Download className="size-5" />
-                    Get the desktop app
-                  </Link>
-                </Button>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Windows 10/11 • Free & offline •{" "}
-                  <Link href="/download" className="text-primary underline-offset-4 hover:underline">
-                    View download page
-                  </Link>
-                </p>
-              </div>
-            </div>
-          </div>
+            </Spotlight>
+          </Reveal>
         </Container>
       </section>
 
       {/* Product Demo Showcase (Mac Window Mockup) */}
-      <section className="relative border-t py-16 sm:py-24 bg-gradient-to-b from-background via-muted/20 to-background overflow-hidden">
+      <section className="relative overflow-hidden border-t bg-gradient-to-b from-background via-muted/20 to-background py-16 sm:py-24">
         <Container>
-          <div className="mx-auto max-w-3xl text-center mb-10 sm:mb-14 space-y-3">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
+          <Reveal className="mx-auto mb-10 max-w-3xl space-y-4 text-center sm:mb-14">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3.5 py-1 text-xs font-bold text-primary">
               <Play className="size-3.5" />
               <span>LIGHTNING SPEED IN ACTION</span>
             </div>
-            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
               The entire studio, in 20 seconds
             </h2>
-            <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
+            <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
               Watch how PDFForge merges, converts, and protects your documents in real-time —
               completely inside your browser memory, with zero waiting for server queues.
             </p>
-          </div>
+          </Reveal>
 
           {/* Mac-Style Window Frame */}
-          <div className="relative mx-auto max-w-4xl">
-            {/* Ambient Backlight Glow */}
-            <div className="pointer-events-none absolute -inset-2 rounded-3xl bg-gradient-to-r from-primary/20 via-amber-500/15 to-primary/20 opacity-50 blur-2xl" />
+          <Reveal delay={120} y={44} scale={0.98}>
+            <div className="relative mx-auto max-w-4xl">
+              {/* Ambient backlight that breathes gently. */}
+              <div
+                aria-hidden="true"
+                className="animate-pulse pointer-events-none absolute -inset-3 rounded-[2.5rem] bg-gradient-to-r from-primary/25 via-amber-500/15 to-primary/25 opacity-50 blur-2xl"
+              />
 
-            <div className="relative overflow-hidden rounded-3xl border border-border/90 bg-card shadow-2xl shadow-black/10">
-              {/* Window Title Bar */}
-              <div className="flex items-center justify-between border-b border-border/80 bg-muted/40 px-4 py-3 sm:px-6">
-                <div className="flex items-center gap-2">
-                  <span className="size-3 rounded-full bg-red-500/80 shadow-xs" />
-                  <span className="size-3 rounded-full bg-amber-500/80 shadow-xs" />
-                  <span className="size-3 rounded-full bg-emerald-500/80 shadow-xs" />
+              <div className="relative overflow-hidden rounded-3xl border border-border/90 bg-card shadow-2xl shadow-black/10">
+                {/* Window Title Bar */}
+                <div className="flex items-center justify-between border-b border-border/80 bg-muted/40 px-4 py-3 sm:px-6">
+                  <div className="flex items-center gap-2">
+                    <span className="size-3 rounded-full bg-red-500/80 shadow-xs" />
+                    <span className="size-3 rounded-full bg-amber-500/80 shadow-xs" />
+                    <span className="size-3 rounded-full bg-emerald-500/80 shadow-xs" />
+                  </div>
+                  <div className="inline-flex items-center gap-1.5 rounded-lg border border-border/70 bg-background/80 px-3 py-1 font-mono text-[11px] font-medium text-muted-foreground shadow-2xs">
+                    <Lock className="size-3 text-emerald-600 dark:text-emerald-400" />
+                    <span>https://pdfforge.app/tools/merge-pdf</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+                    <span className="relative flex size-1.5">
+                      <span className="absolute inline-flex size-full rounded-full bg-emerald-500/70 pulse-ring" />
+                      <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
+                    </span>
+                    Local RAM
+                  </div>
                 </div>
-                <div className="inline-flex items-center gap-1.5 rounded-lg border border-border/70 bg-background/80 px-3 py-1 font-mono text-[11px] font-medium text-muted-foreground shadow-2xs">
-                  <Lock className="size-3 text-emerald-600 dark:text-emerald-400" />
-                  <span>https://pdfforge.app/tools/merge-pdf</span>
-                </div>
-                <div className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                  <span className="size-1.5 rounded-full bg-emerald-500" />
-                  Local RAM
-                </div>
-              </div>
 
-              {/* Video Player */}
-              <div className="bg-black/95 p-1 sm:p-2">
-                <video
-                  className="w-full aspect-video rounded-2xl bg-black"
-                  src="/brag.mp4"
-                  poster="/brag-poster.jpg"
-                  controls
-                  playsInline
-                  preload="metadata"
-                  aria-label="PDFForge product demo video"
-                >
-                  Your browser does not support the video tag.
-                </video>
+                {/* Video Player */}
+                <div className="bg-black/95 p-1 sm:p-2">
+                  <video
+                    className="aspect-video w-full rounded-2xl bg-black"
+                    src="/brag.mp4"
+                    poster="/brag-poster.jpg"
+                    controls
+                    playsInline
+                    preload="metadata"
+                    aria-label="PDFForge product demo video"
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
               </div>
             </div>
-          </div>
+          </Reveal>
         </Container>
       </section>
 
       {/* Bento Grid: Engineered for Speed, Privacy & Simplicity */}
       <section className="border-t py-16 sm:py-24">
         <Container>
-          <div className="mx-auto max-w-3xl text-center mb-12 sm:mb-16 space-y-3">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
+          <Reveal className="mx-auto mb-12 max-w-3xl space-y-4 text-center sm:mb-16">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3.5 py-1 text-xs font-bold text-primary">
               <Sparkles className="size-3.5" />
               <span>ENGINEERED DIFFERENTLY</span>
             </div>
-            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
               Built for privacy, engineered for speed
             </h2>
-            <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
-              Why settle for clunky cloud upload tools that log your files when you can run state-of-the-art WebAssembly locally?
+            <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Why settle for clunky cloud upload tools that log your files when you can run
+              state-of-the-art WebAssembly locally?
             </p>
-          </div>
+          </Reveal>
 
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {/* Bento Card 1 (Large 2-column span on lg): 100% Private Sandbox */}
-            <div className="group lg:col-span-2 relative overflow-hidden rounded-3xl border border-border/80 bg-gradient-to-br from-card via-card to-muted/30 p-6 sm:p-8 shadow-xs hover:border-primary/40 hover:shadow-lg transition-all duration-300">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors shadow-xs">
-                  <Lock className="size-6" />
-                </span>
-              </div>
+            <Reveal className="relative lg:col-span-2" delay={0}>
+              <Spotlight className="lift border-gradient-hover group h-full overflow-hidden rounded-3xl border border-border/80 bg-gradient-to-br from-card via-card to-muted/30 shadow-xs hover:border-primary/40">
+                <div className="p-6 sm:p-8">
+                  <span className="mb-6 inline-flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-xs transition-all duration-500 ease-[var(--ease-spring)] group-hover:-translate-y-1 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground">
+                    <Lock className="size-6" />
+                  </span>
 
-              <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
-                100% Private In-Browser Sandbox
-              </h3>
-              <p className="mt-2 text-sm text-muted-foreground leading-relaxed max-w-xl">
-                Every operation executes in your browser&apos;s isolated RAM memory. Your confidential legal contracts, financial spreadsheets, and personal IDs never traverse the public internet.
-              </p>
+                  <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+                    100% Private In-Browser Sandbox
+                  </h3>
+                  <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                    Every operation executes in your browser&apos;s isolated RAM memory. Your
+                    confidential legal contracts, financial spreadsheets, and personal IDs never
+                    traverse the public internet.
+                  </p>
 
-              {/* Visual Memory Flow Diagram */}
-              <div className="mt-6 rounded-2xl border border-border/70 bg-background/80 p-4 sm:p-5 backdrop-blur-xs">
-                <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-3">
-                  Architecture Flow
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
-                  <div className="rounded-xl border border-border/60 bg-muted/30 p-3">
-                    <div className="text-xs font-bold text-foreground flex items-center justify-center gap-1.5">
-                      <HardDrive className="size-3.5 text-primary" />
-                      Your Device
+                  {/* Visual Memory Flow Diagram */}
+                  <div className="mt-6 rounded-2xl border border-border/70 bg-background/80 p-4 backdrop-blur-sm sm:p-5">
+                    <div className="mb-3 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+                      Architecture Flow
                     </div>
-                    <div className="text-[11px] text-muted-foreground mt-1">Local PDF File</div>
-                  </div>
-
-                  <div className="rounded-xl border border-primary/30 bg-primary/5 p-3 relative">
-                    <div className="text-xs font-bold text-primary flex items-center justify-center gap-1.5">
-                      <Cpu className="size-3.5" />
-                      Browser RAM (Local)
+                    <div className="grid grid-cols-1 gap-3 text-center sm:grid-cols-3">
+                      {[
+                        {
+                          icon: HardDrive,
+                          title: "Your Device",
+                          sub: "Local PDF File",
+                          box: "rounded-xl border border-border/60 bg-muted/30 p-3",
+                          tone: "text-foreground",
+                          iconTone: "text-primary",
+                        },
+                        {
+                          icon: Cpu,
+                          title: "Browser RAM (Local)",
+                          sub: "Memory Sandbox",
+                          box: "rounded-xl border border-primary/30 bg-primary/5 p-3",
+                          tone: "text-primary",
+                          iconTone: "text-primary",
+                        },
+                        {
+                          icon: FileCheck2,
+                          title: "Instant Output",
+                          sub: "Direct Download",
+                          box: "rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-3",
+                          tone: "text-emerald-600 dark:text-emerald-400",
+                          iconTone: "text-emerald-600 dark:text-emerald-400",
+                        },
+                      ].map((node, index) => (
+                        <div
+                          key={node.title}
+                          className={`${node.box} animate-fade-up transition-transform duration-500 ease-[var(--ease-spring)] hover:-translate-y-1`}
+                          style={{ animationDelay: `${index * 120}ms` }}
+                        >
+                          <div
+                            className={`flex items-center justify-center gap-1.5 text-xs font-bold ${node.tone}`}
+                          >
+                            <node.icon className={`size-3.5 ${node.iconTone}`} />
+                            {node.title}
+                          </div>
+                          <div className="mt-1 text-[11px] text-muted-foreground">
+                            {node.sub}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <div className="text-[11px] text-muted-foreground mt-1">Memory Sandbox</div>
-                  </div>
-
-                  <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-3">
-                    <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-1.5">
-                      <FileCheck2 className="size-3.5" />
-                      Instant Output
+                    <div className="mt-3 flex items-center justify-center gap-1.5 text-[11px] font-semibold text-rose-500/90 dark:text-rose-400">
+                      <XCircle className="size-3.5" />
+                      Remote Cloud Servers: Zero Requests • Zero Storage • Zero Logging
                     </div>
-                    <div className="text-[11px] text-muted-foreground mt-1">Direct Download</div>
                   </div>
                 </div>
-                <div className="mt-3 flex items-center justify-center gap-1.5 text-[11px] font-semibold text-rose-500/90 dark:text-rose-400">
-                  <XCircle className="size-3.5" />
-                  Remote Cloud Servers: Zero Requests • Zero Storage • Zero Logging
-                </div>
-              </div>
-            </div>
+              </Spotlight>
+            </Reveal>
 
             {/* Bento Card 2: Zero Queue & Blazing Speed */}
-            <div className="group relative overflow-hidden rounded-3xl border border-border/80 bg-card p-6 sm:p-8 shadow-xs hover:border-primary/40 hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
-              <div>
-                <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:bg-amber-500 group-hover:text-white transition-colors shadow-xs mb-6">
-                  <Zap className="size-6" />
-                </span>
-                <h3 className="text-xl font-bold tracking-tight text-foreground">
-                  Zero Queue & Blazing Speed
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-                  No server warm-ups, no upload lag. Operations complete at raw CPU clock speed.
-                </p>
-              </div>
-
-              {/* Speed Benchmark Comparison */}
-              <div className="mt-6 space-y-3 rounded-2xl border border-border/70 bg-muted/20 p-4">
-                <div className="space-y-1">
-                  <div className="flex justify-between text-xs font-semibold">
-                    <span className="text-primary flex items-center gap-1">
-                      <Zap className="size-3" /> PDFForge Local
-                    </span>
-                    <span className="font-mono text-emerald-600 dark:text-emerald-400">0.2s</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full w-full rounded-full bg-primary" />
-                  </div>
+            <Reveal className="relative" delay={100}>
+              <Spotlight className="lift border-gradient-hover group flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-border/80 bg-card p-6 shadow-xs hover:border-primary/40 sm:p-8">
+                <div>
+                  <span className="mb-6 inline-flex size-12 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-600 shadow-xs transition-all duration-500 ease-[var(--ease-spring)] group-hover:-translate-y-1 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-white dark:text-amber-400">
+                    <Zap className="size-6" />
+                  </span>
+                  <h3 className="text-xl font-bold tracking-tight text-foreground">
+                    Zero Queue &amp; Blazing Speed
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    No server warm-ups, no upload lag. Operations complete at raw CPU clock speed.
+                  </p>
                 </div>
 
-                <div className="space-y-1">
-                  <div className="flex justify-between text-xs font-semibold text-muted-foreground">
-                    <span>Cloud Converters</span>
-                    <span className="font-mono">8.4s</span>
+                {/* Speed Benchmark Comparison */}
+                <div className="mt-6 space-y-4 rounded-2xl border border-border/70 bg-muted/20 p-4">
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between text-xs font-semibold">
+                      <span className="flex items-center gap-1 text-primary">
+                        <Zap className="size-3" /> PDFForge Local
+                      </span>
+                      <span className="font-mono text-emerald-600 dark:text-emerald-400">
+                        0.2s
+                      </span>
+                    </div>
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+                      <div className="bar-fill h-full w-full rounded-full bg-gradient-to-r from-primary/70 to-primary" />
+                    </div>
                   </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full w-[25%] rounded-full bg-muted-foreground/40" />
+
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between text-xs font-semibold text-muted-foreground">
+                      <span>Cloud Converters</span>
+                      <span className="font-mono">8.4s</span>
+                    </div>
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+                      <div
+                        className="bar-fill h-full w-[25%] rounded-full bg-muted-foreground/40"
+                        style={{ animationDelay: "180ms" }}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </Spotlight>
+            </Reveal>
 
             {/* Bento Card 3: No Accounts or Friction */}
-            <div className="group relative overflow-hidden rounded-3xl border border-border/80 bg-card p-6 sm:p-8 shadow-xs hover:border-primary/40 hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
-              <div>
-                <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-colors shadow-xs mb-6">
-                  <MousePointerClick className="size-6" />
-                </span>
-                <h3 className="text-xl font-bold tracking-tight text-foreground">
-                  Zero Sign-Up or Barriers
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-                  Jump right into productivity with zero friction. No accounts, no subscriptions, and no paywalls.
-                </p>
-              </div>
+            <Reveal className="relative" delay={180}>
+              <Spotlight className="lift border-gradient-hover group flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-border/80 bg-card p-6 shadow-xs hover:border-primary/40 sm:p-8">
+                <div>
+                  <span className="mb-6 inline-flex size-12 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 shadow-xs transition-all duration-500 ease-[var(--ease-spring)] group-hover:-translate-y-1 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white dark:text-emerald-400">
+                    <MousePointerClick className="size-6" />
+                  </span>
+                  <h3 className="text-xl font-bold tracking-tight text-foreground">
+                    Zero Sign-Up or Barriers
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    Jump right into productivity with zero friction. No accounts, no
+                    subscriptions, and no paywalls.
+                  </p>
+                </div>
 
-              <div className="mt-6 space-y-2 text-xs font-semibold text-foreground">
-                <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
-                  <CheckCircle2 className="size-4 shrink-0" />
-                  <span>No credit card or monthly plan</span>
+                <div className="mt-6 space-y-2.5 text-xs font-semibold text-foreground">
+                  {[
+                    "No credit card or monthly plan",
+                    "No email capture or marketing spam",
+                    "No promotional watermark stamps",
+                  ].map((line) => (
+                    <div
+                      key={line}
+                      className="group/check flex items-center gap-2 text-emerald-600 dark:text-emerald-400"
+                    >
+                      <CheckCircle2 className="size-4 shrink-0 transition-transform duration-300 ease-[var(--ease-spring)] group-hover/check:scale-125" />
+                      <span>{line}</span>
+                    </div>
+                  ))}
                 </div>
-                <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
-                  <CheckCircle2 className="size-4 shrink-0" />
-                  <span>No email capture or marketing spam</span>
-                </div>
-                <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
-                  <CheckCircle2 className="size-4 shrink-0" />
-                  <span>No promotional watermark stamps</span>
-                </div>
-              </div>
-            </div>
+              </Spotlight>
+            </Reveal>
 
             {/* Bento Card 4 (Large 2-column span on lg): Wasm & Modern PDF Engine */}
-            <div className="group lg:col-span-2 relative overflow-hidden rounded-3xl border border-border/80 bg-gradient-to-br from-card via-card to-muted/30 p-6 sm:p-8 shadow-xs hover:border-primary/40 hover:shadow-lg transition-all duration-300">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-violet-500/10 text-violet-600 dark:text-violet-400 group-hover:bg-violet-500 group-hover:text-white transition-colors shadow-xs">
-                  <Cpu className="size-6" />
-                </span>
-                <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
-                  <Laptop className="size-4 text-foreground" />
-                  <span>Desktop</span>
-                  <span>•</span>
-                  <Smartphone className="size-4 text-foreground" />
-                  <span>Mobile & Tablet</span>
+            <Reveal className="relative lg:col-span-2" delay={240}>
+              <Spotlight className="lift border-gradient-hover group h-full overflow-hidden rounded-3xl border border-border/80 bg-gradient-to-br from-card via-card to-muted/30 p-6 shadow-xs hover:border-primary/40 sm:p-8">
+                <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                  <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-violet-500/10 text-violet-600 shadow-xs transition-all duration-500 ease-[var(--ease-spring)] group-hover:-translate-y-1 group-hover:scale-110 group-hover:bg-violet-500 group-hover:text-white dark:text-violet-400">
+                    <Cpu className="size-6" />
+                  </span>
+                  <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
+                    <Laptop className="size-4 text-foreground" />
+                    <span>Desktop</span>
+                    <span>•</span>
+                    <Smartphone className="size-4 text-foreground" />
+                    <span>Mobile &amp; Tablet</span>
+                  </div>
+                </div>
+
+                <h3 className="mt-6 text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+                  State-of-the-Art WebAssembly Engine
+                </h3>
+                <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                  Built on modern PDF specifications and native WebAssembly binaries. Ensures
+                  lossless visual fidelity, preserves embedded vector graphics, hyperlinks, and
+                  document metadata without quality degradation.
+                </p>
+
+                <RevealGroup
+                  className="mt-6 flex flex-wrap gap-2"
+                  step={70}
+                  y={12}
+                >
+                  {[
+                    "High-Speed Local Engine",
+                    "AES-256 Encryption",
+                    "Lossless Vector Rendering",
+                    "Cross-Platform Responsive",
+                  ].map((chip) => (
+                    <span
+                      key={chip}
+                      className="press cursor-default rounded-xl border border-border/80 bg-background/80 px-3 py-1.5 text-xs font-semibold shadow-2xs transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+                    >
+                      {chip}
+                    </span>
+                  ))}
+                </RevealGroup>
+              </Spotlight>
+            </Reveal>
+          </div>
+
+          {/* Headline stat strip */}
+          <RevealGroup
+            className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3"
+            step={90}
+          >
+            {[
+              { value: tools.length, suffix: "", label: "PDF tools, all client-side" },
+              { value: 0, suffix: "s", label: "Upload or download latency" },
+              { value: 100, suffix: "%", label: "Processed on your device" },
+            ].map((stat) => (
+              <div
+                key={stat.label}
+                className="surface group/stat relative overflow-hidden rounded-2xl p-5 text-center transition-transform duration-500 ease-[var(--ease-premium)] hover:-translate-y-1"
+              >
+                <div className="text-3xl font-black tracking-tight text-primary sm:text-4xl">
+                  <CountUp
+                    value={stat.value}
+                    suffix={stat.suffix}
+                    decimals={stat.value === 0 ? 1 : 0}
+                  />
+                </div>
+                <div className="mt-1 text-xs font-semibold text-muted-foreground">
+                  {stat.label}
                 </div>
               </div>
-
-              <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
-                State-of-the-Art WebAssembly Engine
-              </h3>
-              <p className="mt-2 text-sm text-muted-foreground leading-relaxed max-w-xl">
-                Built on modern PDF specifications and native WebAssembly binaries. Ensures lossless visual fidelity, preserves embedded vector graphics, hyperlinks, and document metadata without quality degradation.
-              </p>
-
-              <div className="mt-6 flex flex-wrap gap-2 text-xs font-semibold">
-                <span className="rounded-xl border border-border/80 bg-background/80 px-3 py-1.5 shadow-2xs">
-                  ⚡ High-Speed Local Engine
-                </span>
-                <span className="rounded-xl border border-border/80 bg-background/80 px-3 py-1.5 shadow-2xs">
-                  🔒 AES-256 Encryption
-                </span>
-                <span className="rounded-xl border border-border/80 bg-background/80 px-3 py-1.5 shadow-2xs">
-                  🎨 Lossless Vector Rendering
-                </span>
-                <span className="rounded-xl border border-border/80 bg-background/80 px-3 py-1.5 shadow-2xs">
-                  📱 Cross-Platform Responsive
-                </span>
-              </div>
-            </div>
-          </div>
+            ))}
+          </RevealGroup>
         </Container>
       </section>
 
       {/* High-Contrast Comparison Matrix: PDFForge vs Cloud Converters */}
       <section className="border-t bg-muted/20 py-16 sm:py-24">
         <Container>
-          <div className="mx-auto max-w-3xl text-center mb-12 sm:mb-16 space-y-3">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
+          <Reveal className="mx-auto mb-12 max-w-3xl space-y-4 text-center sm:mb-16">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3.5 py-1 text-xs font-bold text-primary">
               <ShieldCheck className="size-3.5" />
               <span>THE PRIVACY ADVANTAGE</span>
             </div>
-            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
               Why PDFForge is built different
             </h2>
-            <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
-              Traditional PDF converters upload your personal tax returns, medical files, and legal documents to undisclosed remote servers. Here is how PDFForge protects you:
+            <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Traditional PDF converters upload your personal tax returns, medical files, and
+              legal documents to undisclosed remote servers. Here is how PDFForge protects you:
             </p>
-          </div>
+          </Reveal>
 
-          <div className="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-border/90 bg-card shadow-lg">
-            {/* Header row */}
-            <div className="grid grid-cols-12 border-b border-border/80 bg-muted/40 p-4 sm:p-5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              <div className="col-span-5 sm:col-span-4">Feature</div>
-              <div className="col-span-7 sm:col-span-4 text-primary font-black flex items-center gap-1.5">
-                <span className="size-2 rounded-full bg-primary" />
-                PDFForge (In-Browser)
-              </div>
-              <div className="hidden sm:block sm:col-span-4 text-muted-foreground">
-                Other PDF Sites
-              </div>
-            </div>
-
-            {/* Comparison Rows */}
-            <div className="divide-y divide-border/60 text-xs sm:text-sm">
-              {comparisonPoints.map((pt) => (
-                <div
-                  key={pt.feature}
-                  className="grid grid-cols-12 items-center p-4 sm:p-5 transition-colors hover:bg-muted/15 gap-2 sm:gap-4"
-                >
-                  <div className="col-span-12 sm:col-span-4 font-bold text-foreground">
-                    {pt.feature}
-                  </div>
-                  <div className="col-span-12 sm:col-span-4 flex items-start gap-2 font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-500/5 sm:bg-transparent p-2.5 sm:p-0 rounded-xl">
-                    <Check className="size-4 shrink-0 mt-0.5" />
-                    <span>{pt.forge}</span>
-                  </div>
-                  <div className="col-span-12 sm:col-span-4 text-muted-foreground text-xs leading-relaxed pl-6 sm:pl-0">
-                    <span className="sm:hidden font-semibold text-foreground/70 block mb-0.5">
-                      Other PDF Sites:
-                    </span>
-                    {pt.cloud}
-                  </div>
+          <Reveal delay={120} y={40}>
+            <div className="surface mx-auto max-w-4xl overflow-hidden rounded-3xl">
+              {/* Header row */}
+              <div className="grid grid-cols-12 border-b border-border/80 bg-muted/40 p-4 text-xs font-bold uppercase tracking-wider text-muted-foreground sm:p-5">
+                <div className="col-span-5 sm:col-span-4">Feature</div>
+                <div className="col-span-7 flex items-center gap-1.5 font-black text-primary sm:col-span-4">
+                  <span className="size-2 rounded-full bg-primary" />
+                  PDFForge (In-Browser)
                 </div>
-              ))}
+                <div className="hidden sm:col-span-4 sm:block">Other PDF Sites</div>
+              </div>
+
+              {/* Comparison Rows */}
+              <div className="divide-y divide-border/60 text-xs sm:text-sm">
+                {comparisonPoints.map((pt) => (
+                  <div
+                    key={pt.feature}
+                    className="group/row grid grid-cols-12 items-center gap-2 p-4 transition-colors duration-300 hover:bg-muted/20 sm:gap-4 sm:p-5"
+                  >
+                    <div className="col-span-12 font-bold text-foreground sm:col-span-4">
+                      {pt.feature}
+                    </div>
+                    <div className="col-span-12 flex items-start gap-2 rounded-xl bg-emerald-500/5 p-2.5 font-medium text-emerald-600 transition-transform duration-500 ease-[var(--ease-premium)] group-hover/row:translate-x-1 sm:col-span-4 sm:bg-transparent sm:p-0 dark:text-emerald-400">
+                      <Check className="mt-0.5 size-4 shrink-0" />
+                      <span>{pt.forge}</span>
+                    </div>
+                    <div className="col-span-12 pl-6 text-xs leading-relaxed text-muted-foreground sm:col-span-4 sm:pl-0">
+                      <span className="mb-0.5 block font-semibold text-foreground/70 sm:hidden">
+                        Other PDF Sites:
+                      </span>
+                      {pt.cloud}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          </Reveal>
         </Container>
       </section>
 
@@ -633,70 +774,79 @@ export default function HomePage() {
       <section className="border-t py-16 sm:py-24">
         <Container>
           <div className="grid items-center gap-12 lg:grid-cols-12">
-            <div className="lg:col-span-6 space-y-6">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
+            <Reveal className="space-y-6 lg:col-span-6" x={-32} y={0}>
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3.5 py-1 text-xs font-bold text-primary">
                 <Layers className="size-3.5" />
                 <span>SIMPLE WORKFLOW</span>
               </div>
-              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+              <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
                 Three easy steps, zero setup required
               </h2>
-              <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
-                Work at full speed without installing desktop software, configuring drivers, or registering user accounts.
+              <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+                Work at full speed without installing desktop software, configuring drivers, or
+                registering user accounts.
               </p>
 
               <div className="space-y-6 pt-2">
-                {steps.map((st) => (
-                  <div key={st.step} className="flex gap-4 group">
-                    <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground font-black text-sm shadow-md shadow-primary/25 transition-transform group-hover:scale-105">
+                {steps.map((st, index) => (
+                  <div key={st.step} className="group/step flex gap-4">
+                    <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-primary font-black text-sm text-primary-foreground shadow-premium transition-all duration-500 ease-[var(--ease-spring)] group-hover/step:scale-110 group-hover/step:-rotate-3">
                       {st.step}
                     </span>
                     <div>
-                      <h3 className="font-bold text-base text-foreground group-hover:text-primary transition-colors">
-                        {st.title}
+                      <h3 className="text-base font-bold text-foreground transition-colors duration-300 group-hover/step:text-primary">
+                        <span className="animate-fade-up inline-block" style={{ animationDelay: `${index * 90}ms` }}>
+                          {st.title}
+                        </span>
                       </h3>
-                      <p className="mt-1 text-xs sm:text-sm leading-relaxed text-muted-foreground">
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground sm:text-sm">
                         {st.description}
                       </p>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
+            </Reveal>
 
-            <div className="lg:col-span-6">
-              <div className="relative overflow-hidden rounded-3xl border border-border/80 bg-gradient-to-br from-card via-card to-muted/40 p-8 sm:p-10 shadow-xl backdrop-blur-xs">
+            <Reveal className="lg:col-span-6" x={32} y={0} delay={120}>
+              <div className="relative overflow-hidden rounded-3xl border border-border/80 bg-gradient-to-br from-card via-card to-muted/40 p-8 shadow-xl backdrop-blur-sm sm:p-10">
                 {/* Decorative background circle */}
-                <div className="pointer-events-none absolute -right-12 -bottom-12 size-60 rounded-full bg-primary/10 blur-2xl" />
+                <div
+                  aria-hidden="true"
+                  className="animate-float-slow pointer-events-none absolute -bottom-12 -right-12 size-60 rounded-full bloom-primary-soft"
+                />
 
-                <div className="inline-flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-xs">
-                  <FileCheck2 className="size-7" aria-hidden="true" />
-                </div>
+                <div className="relative">
+                  <div className="inline-flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-xs">
+                    <FileCheck2 className="size-7" aria-hidden="true" />
+                  </div>
 
-                <h3 className="mt-6 text-2xl font-extrabold tracking-tight text-foreground">
-                  Your documents stay strictly yours
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  When you process a document with PDFForge, your device compiles the PDF locally.
-                  There are no network uploads, no server queues, and zero cached backups left behind on remote machines.
-                </p>
+                  <h3 className="mt-6 text-2xl font-extrabold tracking-tight text-foreground">
+                    Your documents stay strictly yours
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    When you process a document with PDFForge, your device compiles the PDF
+                    locally. There are no network uploads, no server queues, and zero cached
+                    backups left behind on remote machines.
+                  </p>
 
-                <div className="mt-8 flex flex-wrap items-center gap-3">
-                  <Button
-                    asChild
-                    className="font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shadow-md shadow-primary/20 gap-1.5"
-                  >
-                    <Link href="/tools">
-                      Start using tools
-                      <ArrowRight className="size-4" />
-                    </Link>
-                  </Button>
-                  <Button variant="outline" asChild className="rounded-xl font-semibold">
-                    <Link href="/privacy">Read privacy policy</Link>
-                  </Button>
+                  <div className="mt-8 flex flex-wrap items-center gap-3">
+                    <Button
+                      asChild
+                      className="group/btn gap-1.5 rounded-xl font-bold shadow-premium"
+                    >
+                      <Link href="/tools">
+                        Start using tools
+                        <ArrowRight className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                      </Link>
+                    </Button>
+                    <Button variant="outline" asChild className="rounded-xl font-semibold">
+                      <Link href="/privacy">Read privacy policy</Link>
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Reveal>
           </div>
         </Container>
       </section>
@@ -704,109 +854,115 @@ export default function HomePage() {
       {/* FAQ Accordion */}
       <section className="border-t bg-muted/20 py-16 sm:py-24">
         <Container>
-          <div className="mx-auto max-w-3xl text-center mb-12 sm:mb-14 space-y-3">
-            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+          <Reveal className="mx-auto mb-12 max-w-3xl space-y-4 text-center sm:mb-14">
+            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
               Frequently Asked Questions
             </h2>
-            <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
+            <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
               Everything you need to know about PDFForge and client-side PDF manipulation.
             </p>
-          </div>
+          </Reveal>
 
-          <div className="mx-auto max-w-3xl space-y-3.5">
+          <RevealGroup className="mx-auto max-w-3xl space-y-3.5" step={60}>
             {faqs.map((faq) => (
               <details
                 key={faq.question}
-                className="group rounded-2xl border border-border/80 bg-card/90 shadow-2xs backdrop-blur-xs transition-all hover:border-primary/40 open:border-primary/50 open:shadow-md"
+                className="group/faq lift border-gradient-hover overflow-hidden rounded-2xl border border-border/80 bg-card/90 shadow-2xs backdrop-blur-sm open:shadow-md"
               >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 text-sm font-bold text-foreground transition-colors hover:text-primary [&::-webkit-details-marker]:hidden">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 text-sm font-bold text-foreground transition-colors duration-300 hover:text-primary [&::-webkit-details-marker]:hidden">
                   <span>{faq.question}</span>
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    className="shrink-0 transition-transform duration-300 group-open:rotate-180 text-muted-foreground group-hover:text-primary"
-                    aria-hidden="true"
-                  >
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
+                  <span className="flex size-6 shrink-0 items-center justify-center rounded-full border border-border/70 text-muted-foreground transition-all duration-400 ease-[var(--ease-spring)] group-open/faq:rotate-180 group-open/faq:border-primary/40 group-open/faq:bg-primary/10 group-open/faq:text-primary group-hover/faq:border-primary/40 group-hover/faq:text-primary">
+                    <svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      className="shrink-0"
+                      aria-hidden="true"
+                    >
+                      <path d="m6 9 6 6 6-6" />
+                    </svg>
+                  </span>
                 </summary>
-                <div className="px-5 pb-5 text-xs sm:text-sm leading-relaxed text-muted-foreground border-t border-border/60 pt-3.5">
+                <div className="border-t border-border/60 px-5 pb-5 pt-3.5 text-xs leading-relaxed text-muted-foreground sm:text-sm">
                   {faq.answer}
                 </div>
               </details>
             ))}
-          </div>
+          </RevealGroup>
         </Container>
       </section>
 
       {/* Bottom CTA Banner */}
-      <section className="relative border-t bg-gradient-to-b from-card via-background to-card py-20 sm:py-28 overflow-hidden">
+      <section className="relative overflow-hidden border-t bg-gradient-to-b from-card via-background to-card py-20 sm:py-28">
         {/* Background Ambient Mesh */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#d1d5db_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:24px_24px] opacity-30" />
-        <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 size-[600px] rounded-full bg-primary/10 blur-3xl" />
+        <div
+          aria-hidden="true"
+          className="grid-pattern-sm pointer-events-none absolute inset-0 opacity-40 mask-fade-b"
+        />
+        <div
+          aria-hidden="true"
+          className="animate-aurora pointer-events-none absolute -bottom-40 left-1/2 size-[600px] -translate-x-1/2 rounded-full bloom-primary"
+        />
 
         <Container className="relative text-center">
-          <div className="mx-auto max-w-2xl space-y-5">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
+          <Reveal className="mx-auto max-w-2xl space-y-5">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3.5 py-1 text-xs font-bold text-primary">
               <Sparkles className="size-3.5" />
               <span>READY TO BEGIN?</span>
             </div>
 
-            <h2 className="text-3xl font-black tracking-tight sm:text-5xl text-foreground">
+            <h2 className="text-3xl font-black tracking-tight text-foreground sm:text-5xl">
               Ready to forge your PDFs?
             </h2>
 
-            <p className="text-sm leading-relaxed text-muted-foreground sm:text-base max-w-lg mx-auto">
-              Choose from {tools.length} powerful in-browser tools. No registration, no watermarks, completely free forever.
+            <p className="mx-auto max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Choose from {tools.length} powerful in-browser tools. No registration, no
+              watermarks, completely free forever.
             </p>
 
-            <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="flex flex-col items-center justify-center gap-3 pt-3 sm:flex-row">
               <Button
-                size="lg"
+                size="xl"
                 asChild
-                className="h-14 px-8 text-base font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl shadow-xl shadow-primary/25 hover:scale-105 active:scale-95 transition-all gap-2"
+                className="shine-loop group w-full gap-2 rounded-2xl text-base font-bold shadow-premium-lg hover:scale-[1.02] active:scale-[0.98] sm:w-auto sm:px-8"
               >
                 <Link href="/tools">
                   Explore all {tools.length} tools
-                  <ArrowRight className="size-4" aria-hidden="true" />
+                  <ArrowRight
+                    className="size-4 transition-transform duration-300 group-hover:translate-x-1"
+                    aria-hidden="true"
+                  />
                 </Link>
               </Button>
 
               <Button
-                size="lg"
+                size="xl"
                 variant="outline"
                 asChild
-                className="h-14 px-8 text-base font-semibold rounded-2xl border-border/80 bg-card/60 backdrop-blur-xs hover:bg-muted/80 shadow-xs hover:scale-105 active:scale-95 transition-all"
+                className="h-14 w-full rounded-2xl border-border/80 bg-card/60 text-base font-semibold shadow-sm backdrop-blur-sm hover:scale-[1.02] hover:bg-card/90 active:scale-[0.98] sm:w-auto sm:px-8"
               >
-                <Link href="/tools/merge-pdf">
-                  Merge PDFs now
-                </Link>
+                <Link href="/tools/merge-pdf">Merge PDFs now</Link>
               </Button>
             </div>
 
             {/* Micro Trust Seals */}
-            <div className="pt-6 flex flex-wrap items-center justify-center gap-4 text-xs font-semibold text-muted-foreground">
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck className="size-4 text-emerald-600 dark:text-emerald-400" />
-                Zero Files Uploaded
-              </span>
-              <span>•</span>
-              <span className="flex items-center gap-1.5">
-                <Zap className="size-4 text-primary" />
-                Instant Local Engine
-              </span>
-              <span>•</span>
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
-                100% Free Forever
-              </span>
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 pt-6 text-xs font-semibold text-muted-foreground">
+              {[
+                { icon: ShieldCheck, tone: "text-emerald-600 dark:text-emerald-400", label: "Zero Files Uploaded" },
+                { icon: Zap, tone: "text-primary", label: "Instant Local Engine" },
+                { icon: CheckCircle2, tone: "text-emerald-600 dark:text-emerald-400", label: "100% Free Forever" },
+              ].map((seal) => (
+                <span key={seal.label} className="flex items-center gap-1.5">
+                  <seal.icon className={`size-4 ${seal.tone}`} />
+                  {seal.label}
+                </span>
+              ))}
             </div>
-          </div>
+          </Reveal>
         </Container>
       </section>
     </>

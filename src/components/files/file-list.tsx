@@ -81,14 +81,14 @@ export function FileList({
   if (files.length === 0) return null;
 
   return (
-    <div className="w-full space-y-3">
-      {/* Action Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border bg-card/80 p-3 shadow-xs backdrop-blur-sm">
-        <div className="flex items-center gap-2">
-          <span className="inline-flex size-6 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+    <div className="w-full space-y-3.5">
+      {/* Action toolbar */}
+      <div className="surface flex flex-wrap items-center justify-between gap-2 rounded-2xl border p-2.5 shadow-xs sm:p-3">
+        <div className="flex items-center gap-2.5">
+          <span className="inline-flex size-7 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
             {files.length}
           </span>
-          <span className="text-sm font-semibold">
+          <span className="text-sm font-semibold text-foreground">
             {files.length === 1 ? "File loaded" : "Files loaded"}
           </span>
         </div>
@@ -101,7 +101,7 @@ export function FileList({
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="h-8 px-2 text-xs font-medium gap-1 text-muted-foreground hover:text-foreground"
+                className="h-8 gap-1 px-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-primary/5 hover:text-primary"
                 onClick={sortAZ}
                 title="Sort A to Z"
               >
@@ -113,7 +113,7 @@ export function FileList({
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="h-8 px-2 text-xs font-medium gap-1 text-muted-foreground hover:text-foreground"
+                className="h-8 gap-1 px-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-primary/5 hover:text-primary"
                 onClick={sortZA}
                 title="Sort Z to A"
               >
@@ -125,7 +125,7 @@ export function FileList({
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="h-8 px-2 text-xs font-medium gap-1 text-muted-foreground hover:text-foreground"
+                className="h-8 gap-1 px-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-primary/5 hover:text-primary"
                 onClick={reverseOrder}
                 title="Reverse order"
               >
@@ -135,18 +135,19 @@ export function FileList({
             </>
           ) : null}
 
-          {/* View Mode Toggle */}
-          <div className="ml-1 flex items-center rounded-lg border bg-muted/30 p-0.5">
+          {/* View mode toggle */}
+          <div className="ml-1 flex items-center gap-0.5 rounded-xl border border-border/70 bg-muted/40 p-1">
             <button
               type="button"
               onClick={() => setViewMode("grid")}
               className={cn(
-                "rounded p-1 text-xs transition-colors",
+                "press flex size-7 items-center justify-center rounded-lg transition-all duration-300",
                 viewMode === "grid"
-                  ? "bg-card text-foreground shadow-xs"
+                  ? "bg-card text-primary shadow-sm"
                   : "text-muted-foreground hover:text-foreground",
               )}
               aria-label="Grid view"
+              aria-pressed={viewMode === "grid"}
             >
               <LayoutGrid className="size-3.5" />
             </button>
@@ -154,12 +155,13 @@ export function FileList({
               type="button"
               onClick={() => setViewMode("list")}
               className={cn(
-                "rounded p-1 text-xs transition-colors",
+                "press flex size-7 items-center justify-center rounded-lg transition-all duration-300",
                 viewMode === "list"
-                  ? "bg-card text-foreground shadow-xs"
+                  ? "bg-card text-primary shadow-sm"
                   : "text-muted-foreground hover:text-foreground",
               )}
               aria-label="List view"
+              aria-pressed={viewMode === "list"}
             >
               <List className="size-3.5" />
             </button>
@@ -170,7 +172,7 @@ export function FileList({
               type="button"
               variant="ghost"
               size="sm"
-              className="h-8 px-2 text-xs text-muted-foreground hover:text-destructive transition-colors ml-1"
+              className="ml-1 h-8 px-2 text-xs text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
               onClick={onClear}
               disabled={disabled}
             >
@@ -180,7 +182,7 @@ export function FileList({
         </div>
       </div>
 
-      {/* Grid Mode (iLovePDF Style) */}
+      {/* Grid mode */}
       {viewMode === "grid" ? (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
           {files.map((file, index) => (
@@ -191,22 +193,23 @@ export function FileList({
               onDragOver={(event) => event.preventDefault()}
               onDrop={() => handleDrop(index)}
               onDragEnd={() => setDraggedId(null)}
+              style={{ animationDelay: `${Math.min(index, 8) * 60}ms` }}
               className={cn(
-                "group relative flex flex-col justify-between rounded-2xl border bg-card p-3 shadow-xs transition-all hover:border-primary/50 hover:shadow-md",
-                draggedId === file.id && "opacity-40 scale-95 border-dashed border-primary",
+                "group animate-fade-up relative flex flex-col justify-between rounded-2xl border border-border/80 bg-card p-3 shadow-xs transition-all duration-400 ease-[var(--ease-premium)] hover:-translate-y-1 hover:border-primary/40 hover:shadow-md",
+                draggedId === file.id && "scale-95 border-dashed border-primary opacity-40",
               )}
             >
-              {/* Order Number Badge */}
-              <div className="flex items-center justify-between mb-2">
-                <span className="flex size-6 items-center justify-center rounded-full bg-primary/10 text-[11px] font-bold text-primary">
+              {/* Order badge + remove */}
+              <div className="mb-2 flex items-center justify-between">
+                <span className="press flex size-6 items-center justify-center rounded-full bg-primary/10 text-[11px] font-bold text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
                   {index + 1}
                 </span>
 
                 <Button
                   type="button"
                   variant="ghost"
-                  size="icon"
-                  className="size-7 opacity-60 hover:opacity-100 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                  size="icon-sm"
+                  className="size-7 text-muted-foreground opacity-70 transition-all duration-300 hover:bg-destructive/10 hover:text-destructive hover:opacity-100"
                   aria-label={`Remove ${file.name}`}
                   onClick={() => onRemove(file.id)}
                   disabled={disabled}
@@ -215,19 +218,19 @@ export function FileList({
                 </Button>
               </div>
 
-              {/* Thumbnail / Document Preview Card */}
-              <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl border bg-muted/30 flex items-center justify-center">
+              {/* Thumbnail / document preview */}
+              <div className="relative flex aspect-[3/4] w-full items-center justify-center overflow-hidden rounded-xl border border-border/70 bg-muted/30 transition-colors duration-300 group-hover:border-primary/30">
                 {thumbnails?.[file.id] ? (
                   <Image
                     src={thumbnails[file.id]}
                     alt={file.name}
                     fill
                     unoptimized
-                    className="object-cover"
+                    className="object-cover transition-transform duration-700 ease-[var(--ease-premium)] group-hover:scale-[1.06]"
                   />
                 ) : (
-                  <div className="flex flex-col items-center justify-center gap-1.5 p-2 text-center">
-                    <span className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <div className="flex flex-col items-center justify-center gap-2 p-2 text-center">
+                    <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-500 ease-[var(--ease-spring)] group-hover:-translate-y-0.5 group-hover:scale-110">
                       <FileText className="size-5" />
                     </span>
                     <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
@@ -236,10 +239,10 @@ export function FileList({
                   </div>
                 )}
 
-                {/* Drag Handle Overlay */}
+                {/* Drag handle overlay */}
                 {onReorder ? (
-                  <div className="absolute inset-0 flex items-center justify-center bg-background/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing backdrop-blur-[1px]">
-                    <span className="inline-flex items-center gap-1 rounded-full bg-card px-2.5 py-1 text-xs font-semibold shadow-md border">
+                  <div className="absolute inset-0 flex cursor-grab items-center justify-center bg-background/55 opacity-0 backdrop-blur-[1px] transition-opacity duration-300 group-hover:opacity-100 active:cursor-grabbing">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-card px-2.5 py-1 text-xs font-semibold shadow-md">
                       <GripVertical className="size-3.5 text-muted-foreground" />
                       Drag to order
                     </span>
@@ -247,7 +250,7 @@ export function FileList({
                 ) : null}
               </div>
 
-              {/* Filename & Meta */}
+              {/* Filename & meta */}
               <div className="mt-2.5 min-w-0">
                 <p className="truncate text-xs font-semibold text-foreground" title={file.name}>
                   {file.name}
@@ -265,9 +268,9 @@ export function FileList({
           ))}
         </div>
       ) : (
-        /* List Mode */
-        <div className="w-full rounded-2xl border bg-card shadow-xs overflow-hidden">
-          <ul className="divide-y">
+        /* List mode */
+        <div className="w-full overflow-hidden rounded-2xl border border-border/80 bg-card shadow-xs">
+          <ul className="divide-y divide-border/60">
             {files.map((file, index) => (
               <li
                 key={file.id}
@@ -277,12 +280,12 @@ export function FileList({
                 onDrop={() => handleDrop(index)}
                 onDragEnd={() => setDraggedId(null)}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3 transition-colors hover:bg-muted/20",
-                  draggedId === file.id && "opacity-40",
+                  "group flex items-center gap-3 px-4 py-3 transition-colors duration-300 hover:bg-muted/25",
+                  draggedId === file.id && "bg-primary/5 opacity-40",
                 )}
               >
                 {onReorder ? (
-                  <span className="hidden shrink-0 text-muted-foreground/50 sm:inline-flex cursor-grab">
+                  <span className="hidden shrink-0 cursor-grab text-muted-foreground/50 transition-colors group-hover:text-primary sm:inline-flex">
                     <GripVertical className="size-4" aria-hidden="true" />
                   </span>
                 ) : null}
@@ -296,7 +299,7 @@ export function FileList({
                     width={40}
                     height={40}
                     unoptimized
-                    className="size-10 shrink-0 rounded-lg border object-cover"
+                    className="size-10 shrink-0 rounded-lg border border-border/70 object-cover"
                   />
                 ) : (
                   <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -319,8 +322,8 @@ export function FileList({
                 <Button
                   type="button"
                   variant="ghost"
-                  size="icon"
-                  className="size-8 text-muted-foreground hover:text-destructive"
+                  size="icon-sm"
+                  className="size-8 shrink-0 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                   aria-label={`Remove ${file.name}`}
                   onClick={() => onRemove(file.id)}
                   disabled={disabled}

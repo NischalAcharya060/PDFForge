@@ -204,12 +204,17 @@ export function PdfDocumentPreview({
     <div
       ref={containerRef}
       className={cn(
-        "flex flex-col items-center rounded-2xl border bg-card p-4 sm:p-6 shadow-xs",
+        "surface relative isolate flex flex-col items-center overflow-hidden rounded-2xl border p-4 shadow-premium sm:p-6",
         className,
       )}
     >
-      {/* Header / Title bar */}
-      <div className="mb-4 flex w-full flex-wrap items-center justify-between gap-3 border-b pb-3">
+      <div
+        aria-hidden="true"
+        className="grid-pattern-sm pointer-events-none absolute inset-0 -z-10 opacity-20 mask-radial-hero"
+      />
+
+      {/* Header / title bar */}
+      <div className="mb-4 flex w-full flex-wrap items-center justify-between gap-3 border-b border-border/60 pb-3">
         <div>
           {title ? (
             <h3 className="text-sm font-semibold text-foreground">{title}</h3>
@@ -219,28 +224,28 @@ export function PdfDocumentPreview({
           ) : null}
         </div>
 
-        {/* Pagination Controls */}
+        {/* Pagination controls */}
         {pageCount > 1 ? (
-          <div className="flex items-center gap-1.5 rounded-lg border bg-muted/40 px-2 py-1 text-xs">
+          <div className="glass flex items-center gap-1 rounded-xl border px-2 py-1 text-xs shadow-sm">
             <Button
               type="button"
               variant="ghost"
-              size="icon"
-              className="size-6 text-foreground hover:bg-background"
+              size="icon-sm"
+              className="size-6 text-foreground hover:bg-primary/10 hover:text-primary"
               disabled={activePageIndex <= 0 || isRenderingPage}
               onClick={() => handlePageChange(activePageIndex - 1)}
               aria-label="Previous page"
             >
               <ChevronLeft className="size-3.5" />
             </Button>
-            <span className="min-w-16 text-center font-medium tabular-nums text-foreground">
+            <span className="min-w-16 text-center font-semibold tabular-nums text-foreground">
               {activePageIndex + 1} / {pageCount}
             </span>
             <Button
               type="button"
               variant="ghost"
-              size="icon"
-              className="size-6 text-foreground hover:bg-background"
+              size="icon-sm"
+              className="size-6 text-foreground hover:bg-primary/10 hover:text-primary"
               disabled={activePageIndex >= pageCount - 1 || isRenderingPage}
               onClick={() => handlePageChange(activePageIndex + 1)}
               aria-label="Next page"
@@ -253,14 +258,14 @@ export function PdfDocumentPreview({
 
       {/* Error state */}
       {errorMessage ? (
-        <div className="py-8 text-center text-xs text-destructive">
+        <div className="w-full rounded-xl border border-destructive/25 bg-destructive/5 p-6 text-center text-xs text-destructive">
           <p>We couldn&apos;t load the preview: {errorMessage}</p>
         </div>
       ) : null}
 
-      {/* Loading Document Skeleton */}
+      {/* Loading document skeleton */}
       {isLoadingDoc && !errorMessage ? (
-        <div className="flex h-72 w-full max-w-md items-center justify-center rounded-xl border border-dashed bg-muted/20">
+        <div className="flex h-72 w-full max-w-md items-center justify-center rounded-xl border border-dashed border-primary/25 bg-muted/20">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <Loader2 className="size-4 animate-spin text-primary" />
             <span>Loading document preview…</span>
@@ -268,11 +273,11 @@ export function PdfDocumentPreview({
         </div>
       ) : null}
 
-      {/* Visual Page Canvas + Overlay */}
+      {/* Visual page canvas + overlay */}
       {!isLoadingDoc && !errorMessage ? (
         <div className="flex justify-center p-2">
           <div
-            className="relative overflow-hidden rounded-lg shadow-md transition-transform duration-300 ease-in-out border bg-white dark:bg-zinc-950"
+            className="animate-fade-up relative overflow-hidden rounded-lg border border-border/70 bg-white shadow-premium-lg transition-all duration-500 ease-[var(--ease-premium)] dark:bg-zinc-950"
             style={{
               width: dimensions?.displayWidth ? `${dimensions.displayWidth}px` : undefined,
               height: dimensions?.displayHeight ? `${dimensions.displayHeight}px` : undefined,

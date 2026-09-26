@@ -2,20 +2,21 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  ArrowLeftRight,
   Combine,
   Lock,
   PenTool,
   RefreshCw,
   Search,
   Sparkles,
-  Zap,
-  ArrowLeftRight,
   X,
+  Zap,
 } from "lucide-react";
 
 import { tools, type ToolCategory } from "@/config/tools";
 import { ToolCard } from "@/components/home/tool-card";
 import { Container } from "@/components/layout/container";
+import { RevealGroup } from "@/components/motion/reveal";
 import { cn } from "@/lib/utils";
 
 type FilterTab = "all" | ToolCategory;
@@ -72,31 +73,40 @@ export function HomeToolBrowser() {
     });
   }, [selectedCategory, query]);
 
+  const isFiltered = query !== "" || selectedCategory !== "all";
+
   return (
     <section id="tools" className="relative scroll-mt-20 py-16 sm:py-24">
-      <Container>
+      {/* Ambient wash so the grid sits on a softly lit stage. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[520px] bloom-primary-soft opacity-50"
+      />
+
+      <Container className="relative">
         {/* Search & Filter Header Bar */}
-        <div className="mx-auto max-w-4xl space-y-6">
-          <div className="text-center space-y-2">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
+        <div className="mx-auto max-w-4xl space-y-7">
+          <div className="animate-fade-up space-y-3 text-center">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-xs font-semibold text-primary">
               <Sparkles className="size-3.5" />
               <span>COMPLETE CLIENT-SIDE SUITE</span>
             </div>
-            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
+            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
               Explore All {tools.length} PDF Tools
             </h2>
             <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Every tool executes immediately in your browser memory. No queue, no files sent over the wire.
+              Every tool executes immediately in your browser memory. No queue, no
+              files sent over the wire.
             </p>
           </div>
 
           {/* Search Input Box with Ambient Backlight */}
-          <div className="relative mx-auto max-w-2xl group">
-            <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-gradient-to-r from-primary/20 via-amber-500/10 to-primary/20 opacity-40 blur-lg transition duration-500 group-hover:opacity-75" />
-            
-            <div className="relative flex items-center rounded-2xl border-2 border-border/80 bg-card/90 shadow-sm backdrop-blur-md transition-all duration-200 focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
+          <div className="group relative mx-auto max-w-2xl animate-fade-up" style={{ animationDelay: "90ms" }}>
+            <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-gradient-to-r from-primary/25 via-amber-500/12 to-primary/25 opacity-40 blur-lg transition-opacity duration-500 group-hover:opacity-80" />
+
+            <div className="glass relative flex items-center rounded-2xl border-2 border-border/80 bg-card/90 shadow-md transition-all duration-300 focus-within:border-primary focus-within:shadow-premium-lg">
               <div className="pointer-events-none flex items-center pl-4 text-muted-foreground">
-                <Search className="size-5 text-primary transition-transform duration-200 group-focus-within:scale-110" />
+                <Search className="size-5 text-primary transition-transform duration-300 group-focus-within:scale-110" />
               </div>
               <input
                 ref={inputRef}
@@ -104,21 +114,22 @@ export function HomeToolBrowser() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search any tool: merge, split, compress, watermark, protect..."
-                className="w-full bg-transparent py-4 pl-3.5 pr-20 text-sm font-medium placeholder:text-muted-foreground/60 focus:outline-none text-foreground"
+                aria-label="Search PDF tools"
+                className="w-full bg-transparent py-4 pl-3.5 pr-20 text-sm font-medium text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
               />
-              
+
               <div className="absolute right-3 flex items-center gap-1.5">
                 {query ? (
                   <button
                     type="button"
                     onClick={() => setQuery("")}
-                    className="flex size-7 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer transition-colors"
+                    className="press flex size-7 cursor-pointer items-center justify-center rounded-lg text-muted-foreground transition-colors duration-200 hover:bg-muted hover:text-foreground"
                     aria-label="Clear search"
                   >
                     <X className="size-4" />
                   </button>
                 ) : (
-                  <kbd className="pointer-events-none hidden sm:inline-flex h-6 items-center gap-0.5 rounded-md border border-border bg-muted/60 px-2 font-mono text-[10px] font-semibold text-muted-foreground shadow-2xs">
+                  <kbd className="pointer-events-none hidden h-6 items-center gap-0.5 rounded-md border border-border bg-muted/60 px-2 font-mono text-[10px] font-semibold text-muted-foreground shadow-2xs sm:inline-flex">
                     /
                   </kbd>
                 )}
@@ -127,7 +138,10 @@ export function HomeToolBrowser() {
           </div>
 
           {/* Category Filter Pills */}
-          <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+          <div
+            className="flex animate-fade-up flex-wrap items-center justify-center gap-2 pt-1"
+            style={{ animationDelay: "160ms" }}
+          >
             {filterTabs.map((tab) => {
               const count =
                 tab.id === "all"
@@ -142,23 +156,26 @@ export function HomeToolBrowser() {
                   key={tab.id}
                   type="button"
                   onClick={() => setSelectedCategory(tab.id)}
+                  aria-pressed={isSelected}
                   className={cn(
-                    "group relative flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition-all duration-200 cursor-pointer shadow-xs",
+                    "press group/tab relative flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold shadow-xs",
                     isSelected
-                      ? "bg-primary text-primary-foreground shadow-md shadow-primary/25 scale-[1.03]"
-                      : "border border-border/80 bg-card/80 text-muted-foreground hover:border-primary/40 hover:text-foreground backdrop-blur-xs",
+                      ? "bg-primary text-primary-foreground shadow-premium"
+                      : "border border-border/80 bg-card/80 text-muted-foreground backdrop-blur-sm hover:border-primary/40 hover:text-foreground",
                   )}
                 >
                   <TabIcon
                     className={cn(
-                      "size-3.5 transition-transform duration-200 group-hover:rotate-6",
-                      isSelected ? "text-primary-foreground" : "text-muted-foreground/80 group-hover:text-primary",
+                      "size-3.5 transition-transform duration-300 group-hover/tab:rotate-6",
+                      isSelected
+                        ? "text-primary-foreground"
+                        : "text-muted-foreground/80 group-hover/tab:text-primary",
                     )}
                   />
                   <span>{tab.label}</span>
                   <span
                     className={cn(
-                      "rounded-full px-1.5 py-0.2 text-[10px] font-mono",
+                      "rounded-full px-1.5 py-0.2 font-mono text-[10px]",
                       isSelected
                         ? "bg-white/20 text-white"
                         : "bg-muted text-muted-foreground",
@@ -172,10 +189,12 @@ export function HomeToolBrowser() {
           </div>
 
           {/* Results count indication */}
-          {(query || selectedCategory !== "all") && (
-            <div className="flex items-center justify-between text-xs text-muted-foreground px-1 pt-1">
+          {isFiltered && (
+            <div className="flex items-center justify-between px-1 pt-1 text-xs text-muted-foreground">
               <span>
-                Showing <strong className="text-foreground">{filteredTools.length}</strong> of {tools.length} tools
+                Showing{" "}
+                <strong className="text-foreground">{filteredTools.length}</strong>{" "}
+                of {tools.length} tools
                 {selectedCategory !== "all" ? ` in ${selectedCategory}` : ""}
                 {query ? ` matching "${query}"` : ""}
               </span>
@@ -185,7 +204,7 @@ export function HomeToolBrowser() {
                   setQuery("");
                   setSelectedCategory("all");
                 }}
-                className="flex items-center gap-1 font-semibold text-primary hover:underline cursor-pointer"
+                className="flex cursor-pointer items-center gap-1 font-semibold text-primary transition-opacity hover:opacity-75"
               >
                 <RefreshCw className="size-3" />
                 Reset filters
@@ -197,19 +216,23 @@ export function HomeToolBrowser() {
         {/* Tools Grid */}
         <div className="mt-10">
           {filteredTools.length > 0 ? (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <RevealGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" step={55}>
               {filteredTools.map((tool) => (
                 <ToolCard key={tool.slug} tool={tool} />
               ))}
-            </div>
+            </RevealGroup>
           ) : (
-            <div className="rounded-3xl border-2 border-dashed border-border/80 bg-card/50 p-12 text-center backdrop-blur-xs">
-              <span className="inline-flex size-14 items-center justify-center rounded-2xl bg-muted text-muted-foreground mb-3 shadow-inner">
+            <div className="animate-scale-in rounded-3xl border-2 border-dashed border-border/80 bg-card/50 p-12 text-center backdrop-blur-sm">
+              <span className="mb-3 inline-flex size-14 items-center justify-center rounded-2xl bg-muted text-muted-foreground shadow-inner">
                 <Search className="size-6 text-primary" />
               </span>
-              <h3 className="font-bold text-lg text-foreground">No matching PDF tools found</h3>
-              <p className="mt-1 max-w-sm mx-auto text-xs sm:text-sm text-muted-foreground">
-                We couldn&apos;t find anything matching &quot;{query}&quot;. Try searching for &quot;merge&quot;, &quot;compress&quot;, &quot;split&quot;, or &quot;protect&quot;.
+              <h3 className="text-lg font-bold text-foreground">
+                No matching PDF tools found
+              </h3>
+              <p className="mx-auto mt-1 max-w-sm text-xs text-muted-foreground sm:text-sm">
+                We couldn&apos;t find anything matching &quot;{query}&quot;. Try
+                searching for &quot;merge&quot;, &quot;compress&quot;, &quot;split&quot;, or
+                &quot;protect&quot;.
               </p>
               <button
                 type="button"
@@ -217,7 +240,7 @@ export function HomeToolBrowser() {
                   setQuery("");
                   setSelectedCategory("all");
                 }}
-                className="mt-5 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-md shadow-primary/20 hover:bg-primary/90 transition-all cursor-pointer"
+                className="press mt-5 inline-flex cursor-pointer items-center gap-2 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-premium"
               >
                 <RefreshCw className="size-3.5" />
                 Show All {tools.length} Tools
